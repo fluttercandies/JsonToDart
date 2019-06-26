@@ -26,10 +26,11 @@
     <MapFileExtensions>true</MapFileExtensions>
     <SupportUrl>https://github.com/fluttercandies/JsonToDart</SupportUrl>
     <TargetCulture>zh-Hans</TargetCulture>
-    <ProductName>JsonToDart</ProductName>
+    <ProductName>Json To Dart</ProductName>
     <PublisherName>zmtzawqlp</PublisherName>
-    <ApplicationRevision>2</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <SuiteName>Json To Dart</SuiteName>
+    <ApplicationRevision>1</ApplicationRevision>
+    <ApplicationVersion>1.0.0.1</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -54,7 +55,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>29248455F19B3689F9C1C425A314FBC6668A0C23</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>D4D9BAE8A6AAD6272B79EE825D732132DF22BD26</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>FlutterCandiesJsonToDart_TemporaryKey.pfx</ManifestKeyFile>

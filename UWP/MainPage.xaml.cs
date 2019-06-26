@@ -61,6 +61,7 @@ namespace FlutterCandiesJsonToDart
 #if !WINDOWS_UWP
             this.MouseUp += GridSplitter_PointerReleased;
             this.MouseMove += GridSplitter_ManipulationDelta;
+            WindowStartupLocation = WindowStartupLocation.CenterScreen;
 #endif
 
         }

@@ -7,11 +7,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FlutterCandiesJsonToDart")]
+[assembly: AssemblyTitle("Json To Dart")]
 [assembly: AssemblyDescription("Json To Dart")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("zmtzawqlp")]
-[assembly: AssemblyProduct("FlutterCandiesJsonToDart")]
+[assembly: AssemblyProduct("Json To Dart")]
 [assembly: AssemblyCopyright("Copyright ©  2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -11,3 +11,5 @@
 /WPF/.vs/FlutterCandiesJsonToDart/v15
 /UWP/bin/x86/Release
 /WPF/publish
+/WPF/obj/Release
+/WPF/bin/Release
