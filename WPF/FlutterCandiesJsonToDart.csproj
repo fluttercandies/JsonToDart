@@ -70,9 +70,6 @@
     <Compile Include="..\UWP\Models\Config.cs">
       <Link>Models\Config.cs</Link>
     </Compile>
-    <Compile Include="..\UWP\Models\ExtendedArrayProperty.cs">
-      <Link>Models\ExtendedArrayProperty.cs</Link>
-    </Compile>
     <Compile Include="..\UWP\Models\ExtendedJObject.cs">
       <Link>Models\ExtendedJObject.cs</Link>
     </Compile>

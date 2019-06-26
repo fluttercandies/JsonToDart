@@ -100,7 +100,6 @@
     </Compile>
     <Compile Include="Models\BindableBase.cs" />
     <Compile Include="Models\Config.cs" />
-    <Compile Include="Models\ExtendedArrayProperty.cs" />
     <Compile Include="Models\ExtendedJObject.cs" />
     <Compile Include="Models\ExtendedProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,7 +9,7 @@ namespace FlutterCandiesJsonToDart.Utils
 
     public enum DartType : int
     {
-        String=0,
+        String = 0,
         Int,
         Object,
         Bool,
@@ -22,9 +22,13 @@ namespace FlutterCandiesJsonToDart.Utils
         /// <summary>
         /// 默认
         /// </summary>
-        None=0,
+        None = 0,
         /// <summary>
         /// 只读
+        /// </summary>
+        Final,
+        /// <summary>
+        /// get
         /// </summary>
         Get,
         /// <summary>
@@ -39,7 +43,7 @@ namespace FlutterCandiesJsonToDart.Utils
         /// <summary>
         /// 保持原样
         /// </summary>
-        None=0,
+        None = 0,
         /// <summary>
         /// 驼峰式命名小驼峰
         /// </summary>

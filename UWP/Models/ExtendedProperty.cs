@@ -103,9 +103,9 @@ namespace FlutterCandiesJsonToDart.Models
 
             var temp = Value;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"    {setName} = jsonRes['{Key}'] == null ? null : [];");
+            sb.AppendLine($"    {typeString} {setName} = jsonRes['{Key}'] is List ? []: null; ");
             sb.AppendLine($"    if({setName}!=null) {{");
-
+            bool enableTryCatch = ConfigHelper.Instance.Config.EnableArrayProtection;
             int count = 0;
             String result = null;
             while (temp is JArray)
@@ -122,13 +122,12 @@ namespace FlutterCandiesJsonToDart.Models
                         result = $" for (var item{count} in jsonRes['{Key}']) {{ if (item{count} != null) {{ {typeString} items{count + 1} = []; {{}} {setName}.add(items{count + 1}); }}";
                     else
                     {
-                        result = result.Replace("{}", $" for (var item{count} in item{count - 1}) {{ if (item{count} != null) {{ {typeString} items{count + 1} = []; {{}} items{count}.add(items{count + 1}); }}");
+                        result = result.Replace("{}", $" for (var item{count} in item{count - 1} is List ? item{count - 1} :[]) {{ if (item{count} != null) {{ {typeString} items{count + 1} = []; {{}} items{count}.add(items{count + 1}); }}");
                     }
                 }
                 ///下层不为数组
                 else
                 {
-                    bool enableTryCatch = ConfigHelper.Instance.Config.EnableArrayProtection;
                     var item = ("item" + (count == 0 ? "" : count.ToString()));
                     var addString = "";
                     if (className != null)
@@ -156,7 +155,7 @@ namespace FlutterCandiesJsonToDart.Models
                         }
 
 
-                        result = result.Replace("{}", $" for (var item{count} in item{count - 1}) {{ if (item{count} != null) {addString}}}");
+                        result = result.Replace("{}", $" for (var item{count} in item{count - 1} is List ? item{count - 1} :[]) {{ if (item{count} != null) {addString}}}");
                     }
                 }
 
@@ -165,7 +164,10 @@ namespace FlutterCandiesJsonToDart.Models
 
             sb.AppendLine(result);
             sb.AppendLine("    }");
-            sb.AppendLine("    }");
+            sb.AppendLine("    }\n");
+
+
+
             return sb.ToString();
         }
 

@@ -7,9 +7,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Input;
-
-
 
 #if WINDOWS_UWP
 using Windows.UI;
@@ -17,11 +14,13 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
+using Windows.ApplicationModel.DataTransfer;
 #else
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows;
 using System.Windows.Data;
+using System.Windows.Input;
 #endif
 
 
@@ -252,8 +251,18 @@ namespace FlutterCandiesJsonToDart
             }
             else if (isObject)
             {
-                Border border = new Border() { BorderBrush = new SolidColorBrush(Colors.Black), HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Stretch, BorderThickness = new Thickness() { Left = 1.0 } };
-                var textBox = new TextBox() { Foreground = new SolidColorBrush(Colors.Blue), VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Center, BorderThickness = new Thickness() };
+                Border border = new Border()
+                {
+
+#if !WINDOWS_UWP
+                    Padding = new Thickness() { Left = 8.0 },
+#endif
+                    BorderBrush = new SolidColorBrush(Colors.Black),
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    VerticalAlignment = VerticalAlignment.Stretch,
+                    BorderThickness = new Thickness() { Left = 1.0 }
+                };
+                var textBox = new TextBox() { VerticalContentAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Stretch, VerticalAlignment = VerticalAlignment.Center, BorderThickness = new Thickness() };
                 border.Child = textBox;
 
                 Binding binding = new Binding();
@@ -432,6 +441,11 @@ namespace FlutterCandiesJsonToDart
                     }
 
                     sb.AppendLine(DartHelper.JsonImport);
+                    if (ConfigHelper.Instance.Config.AddMethod && (ConfigHelper.Instance.Config.EnableDataProtection || ConfigHelper.Instance.Config.EnableArrayProtection))
+                    {
+                        ///debugPrint
+                        sb.AppendLine(DartHelper.DebugPrintImport);
+                    }
                     sb.AppendLine("");
 
                     if (ConfigHelper.Instance.Config.AddMethod)
@@ -452,8 +466,16 @@ namespace FlutterCandiesJsonToDart
 
                     sb.AppendLine(extendedJObject.ToString());
 
-                    tb.Text = sb.ToString();
+                    var result = sb.ToString();
+                    tb.Text = result;
 
+#if WINDOWS_UWP
+                    var dp = new DataPackage();
+                    dp.SetText(result);
+                    Clipboard.SetContent(dp);
+#else
+                    Clipboard.SetText(result);
+#endif
                 }
             }
             catch (Exception ex)

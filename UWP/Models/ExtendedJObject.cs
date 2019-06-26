@@ -54,7 +54,7 @@ namespace FlutterCandiesJsonToDart.Models
                 }
                 else
                 {
-                    ClassNameColor = null;
+                    ClassNameColor = new SolidColorBrush(Colors.Yellow);
                 }
                 className = value;
                 OnPropertyChanged(nameof(ClassName));
@@ -105,6 +105,7 @@ namespace FlutterCandiesJsonToDart.Models
         {
             if (item.Value.Type == JTokenType.Object && item.Value.Count() > 0)
             {
+
                 if (ObjectKeys.ContainsKey(item.Key))
                 {
                     var temp = ObjectKeys[item.Key];
@@ -198,12 +199,21 @@ namespace FlutterCandiesJsonToDart.Models
 
             if (Properties.Count > 0)
             {
+                StringBuilder factorySb = new StringBuilder();
+                StringBuilder factorySb1 = new StringBuilder();
                 StringBuilder propertySb = new StringBuilder();
+                StringBuilder propertySb1 = new StringBuilder();
                 StringBuilder fromJsonSb = new StringBuilder();
+                //Array
+                StringBuilder fromJsonSb1 = new StringBuilder();
                 StringBuilder toJsonSb = new StringBuilder();
 
-                fromJsonSb.AppendLine(String.Format(DartHelper.FromJsonHeader, this.ClassName));
+                factorySb.AppendLine(String.Format(DartHelper.FactoryStringHeader, this.ClassName));
+
+                //fromJsonSb.AppendLine(String.Format(DartHelper.FromJsonHeader, this.ClassName));
+
                 toJsonSb.AppendLine(DartHelper.ToJsonHeader);
+
 
                 foreach (var item in Properties)
                 {
@@ -211,12 +221,16 @@ namespace FlutterCandiesJsonToDart.Models
                     var name = item.Name;
                     String className = null;
                     String typeString;
-                    var setName = DartHelper.GetSetPropertyString(item.Name);
+                    var setName = DartHelper.GetSetPropertyString(item);
                     var setString = "";
+                    var fss = DartHelper.FactorySetString(item.PropertyAccessorType);
+                    bool isGetSet = fss.StartsWith("{");
+
+
                     if (item is ExtendedJObject)
                     {
                         className = (item as ExtendedJObject).ClassName;
-                        setString = String.Format(DartHelper.SetObjectProperty, setName, item.Key, className);
+                        setString = String.Format(DartHelper.SetObjectProperty, lowName, item.Key, className);
                         typeString = className;
                     }
                     else if (item.JType == JTokenType.Array)
@@ -226,31 +240,76 @@ namespace FlutterCandiesJsonToDart.Models
                             className = ObjectKeys[item.Key].ClassName;
                         }
                         typeString = item.GetTypeString(className: className);
-                        setString = item.GetArraySetPropertyString(setName, typeString, className: className);
+
+                        fromJsonSb1.AppendLine(item.GetArraySetPropertyString(lowName, typeString, className: className));
+
+                        setString = $" {(isGetSet ? lowName : item.Name)}:{lowName},";
 
                     }
                     else
                     {
-                        setString = DartHelper.SetProperty(setName, item, ClassName);
+                        setString = DartHelper.SetProperty(lowName, item, ClassName);
                         typeString = DartHelper.GetDartTypeString(item.Type);
                     }
 
-                    propertySb.AppendLine(String.Format(DartHelper.PropertyS, typeString, name, lowName));
+
+                    if (isGetSet)
+                    {
+                        factorySb.AppendLine(String.Format(fss, typeString, lowName));
+                        if (factorySb1.Length == 0)
+                        {
+                            factorySb1.Append("}):");
+                        }
+                        else
+                        {
+                            factorySb1.Append(",");
+                        }
+                        factorySb1.Append($"{setName}={lowName}");
+                    }
+                    else
+                    {
+                        factorySb.AppendLine(String.Format(fss, item.Name));
+                    }
+
+
+                    propertySb.AppendLine(String.Format(DartHelper.PropertyS(item.PropertyAccessorType), typeString, name, lowName));
                     fromJsonSb.AppendLine(setString);
-                    toJsonSb.AppendLine($"        '{item.Key}': {setName},");
+                    toJsonSb.AppendLine(String.Format(DartHelper.ToJsonSetString, item.Key, setName));
                 }
 
-                fromJsonSb.AppendLine(DartHelper.FromJsonFooter);
+                if (factorySb1.Length == 0)
+                {
+                    factorySb.AppendLine(DartHelper.FactoryStringFooter);
+                }
+                else
+                {
+                    factorySb1.Append(";");
+                    factorySb.Append(factorySb1.ToString());
+                }
+
+                var fromJson = "";
+                if (fromJsonSb1.Length != 0)
+                {
+                    fromJson = String.Format(DartHelper.FromJsonHeader1, this.ClassName) + fromJsonSb1.ToString() + String.Format(DartHelper.FromJsonFooter1, this.ClassName, fromJsonSb.ToString());
+                }
+                else
+                {
+                    fromJson = String.Format(DartHelper.FromJsonHeader, this.ClassName) + fromJsonSb.ToString() + DartHelper.FromJsonFooter;
+                }
+
+
+                //fromJsonSb.AppendLine(DartHelper.FromJsonFooter);
 
                 toJsonSb.AppendLine(DartHelper.ToJsonFooter);
 
-                sb.Append(propertySb.ToString());
 
-                sb.AppendLine(String.Format(DartHelper.FactoryString, this.ClassName));
+                sb.AppendLine(propertySb.ToString());
 
-                sb.Append(fromJsonSb.ToString());
+                sb.AppendLine(factorySb.ToString());
 
-                sb.Append(toJsonSb.ToString());
+                sb.AppendLine(fromJson);
+
+                sb.AppendLine(toJsonSb.ToString());
 
                 sb.AppendLine(DartHelper.ClassToString);
             }
@@ -345,6 +404,14 @@ namespace FlutterCandiesJsonToDart.Models
                 foreach (var item in Properties)
                 {
                     item.UpdatePropertyAccessorType();
+                }
+            }
+
+            if (ObjectKeys != null)
+            {
+                foreach (var item in ObjectKeys)
+                {
+                    item.Value.UpdatePropertyAccessorType();
                 }
             }
         }
