@@ -23,7 +23,7 @@ namespace FlutterCandiesJsonToDart.Models
 
         private JObject jObject;
 
-        public JObject JObject => mergeOject != null ? mergeOject : jObject;
+        public JObject JObject => mergeObject != null ? mergeObject : jObject;
 
 
         private Brush classNameColor;
@@ -114,6 +114,7 @@ namespace FlutterCandiesJsonToDart.Models
                 }
                 else
                 {
+
                     var temp = new ExtendedJObject(Uid + "_" + item.Key, item, depth + 1);
                     if (addProperty)
                         Properties.Add(temp);
@@ -166,25 +167,25 @@ namespace FlutterCandiesJsonToDart.Models
             return hashCode;
         }
 
-        private JObject mergeOject;
+        private JObject mergeObject;
         public void Merge(JObject other)
         {
             if (this.jObject != null)
             {
-                if (mergeOject == null)
-                    mergeOject = new JObject();
+                if (mergeObject == null)
+                    mergeObject = new JObject();
 
-                mergeOject.Merge(this.jObject);
+                mergeObject.Merge(this.jObject);
             }
 
             if (other != null)
             {
-                if (mergeOject == null)
-                    mergeOject = new JObject();
-                mergeOject.Merge(other);
+                if (mergeObject == null)
+                    mergeObject = new JObject();
+                mergeObject.Merge(other);
             }
 
-            if (mergeOject != null)
+            if (mergeObject != null)
             {
                 InitializeProperties();
             }
