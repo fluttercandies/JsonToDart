@@ -15,6 +15,9 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.ApplicationModel.DataTransfer;
+using System.Xml.Linq;
+using Windows.Data.Xml.Dom;
+using Windows.UI.Notifications;
 #else
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -474,6 +477,13 @@ namespace FlutterCandiesJsonToDart
                     var dp = new DataPackage();
                     dp.SetText(result);
                     Clipboard.SetContent(dp);
+
+
+                    XDocument xd = XDocument.Load("Assets/Toast.xml");
+                    XmlDocument doc = new XmlDocument();
+                    doc.LoadXml(xd.ToString());
+                    ToastNotification notification = new ToastNotification(doc);
+                    ToastNotificationManager.CreateToastNotifier().Show(notification);
 #else
                     Clipboard.SetText(result);
 #endif

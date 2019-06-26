@@ -13,3 +13,6 @@
 /WPF/publish
 /WPF/obj/Release
 /WPF/bin/Release
+/UWP/AppPackages/FlutterCandiesJsonToDart_1.0.1.0_Test
+/UWP/bin/x64/Release
+/UWP/BundleArtifacts
