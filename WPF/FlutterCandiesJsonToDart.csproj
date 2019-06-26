@@ -28,7 +28,7 @@
     <TargetCulture>zh-Hans</TargetCulture>
     <ProductName>JsonToDart</ProductName>
     <PublisherName>zmtzawqlp</PublisherName>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>2</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
