@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FlutterCandiesJsonToDart"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" xmlns:ct="clr-namespace:FlutterCandiesJsonToDart.Utils"
+        Title="FlutterCandiesJsonToDart" Height="450" Width="800" xmlns:ct="clr-namespace:FlutterCandiesJsonToDart.Utils"
     >
     <Window.Resources>
         <ct:PropertyNameSortingTypeConverter x:Key="PropertyNameSortingTypeConverter"/>

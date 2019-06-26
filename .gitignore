@@ -9,3 +9,5 @@
 /WPF/obj/Debug
 /WPF/bin/Debug
 /WPF/.vs/FlutterCandiesJsonToDart/v15
+/UWP/bin/x86/Release
+/WPF/publish
