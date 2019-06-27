@@ -1,6 +1,6 @@
 Json To Dart 
 
-![](https://github.com/fluttercandies/JsonToDart/blob/master/UWP/Assets/Wide310x150Logo.scale-100.png)
+![](https://github.com/fluttercandies/JsonToDart/blob/master/UWP/Assets/Wide310x150Logo.scale-400.png)
 
 功能最全面的Json转换Dart的工具。使用[UWP](https://baike.so.com/doc/23718184-24274055.html)和[WPF](https://baike.so.com/doc/2917373-3078588.html)开发，满足Windows桌面上Dart开发者。
 
@@ -30,7 +30,7 @@ Windows10 用户
 
 考虑到应用商店经常大姨妈的情况，就没有上传到商店了，大家到下面地址下载安装
 
-(1.0)[https://github.com/fluttercandies/JsonToDart/blob/master/Release/UWP/JosnToDart_1.0.zip]
+[1.0](https://github.com/fluttercandies/JsonToDart/blob/master/Release/UWP/JosnToDart_1.0.zip)
 
 下载好安装包，解压。
 
@@ -46,7 +46,7 @@ Windows10 用户
 
 Windows7/Windows8 用户
 
-(1.0)[https://github.com/fluttercandies/JsonToDart/blob/master/Release/WPF/JosnToDart_1.0.zip]
+[1.0](https://github.com/fluttercandies/JsonToDart/blob/master/Release/WPF/JosnToDart_1.0.zip)
 
 下载解压，点击setup.exe安装
 
