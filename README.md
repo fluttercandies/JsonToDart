@@ -1,6 +1,6 @@
 ![](https://github.com/fluttercandies/JsonToDart/blob/master/UWP/Assets/Wide310x150Logo.scale-400.png)
 
-Windows桌面上功能最全面的Json转换Dart的工具，使用[UWP](https://baike.so.com/doc/23718184-24274055.html)和[WPF](https://baike.so.com/doc/2917373-3078588.html)开发。
+[Windows桌面上功能最全面的Json转换Dart的工具](https://juejin.im/post/5d1463245188255d0d2f5c81)，使用[UWP](https://baike.so.com/doc/23718184-24274055.html)和[WPF](https://baike.so.com/doc/2917373-3078588.html)开发。
 
 有任何问题可以提Issue 或者 
 
