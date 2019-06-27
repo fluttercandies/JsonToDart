@@ -60,11 +60,12 @@ namespace FlutterCandiesJsonToDart
                 Window.Current.Content = rootFrame;
             }
 
-            await ConfigHelper.Instance.Initialize();
             if (e.PrelaunchActivated == false)
             {
                 if (rootFrame.Content == null)
                 {
+
+                    await ConfigHelper.Instance.Initialize();
                     // When the navigation stack isn't restored navigate to the first page,
                     // configuring the new page by passing required information as a navigation
                     // parameter
@@ -98,6 +99,41 @@ namespace FlutterCandiesJsonToDart
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        protected async override void OnActivated(IActivatedEventArgs args)
+        {// Get the root frame
+            Frame rootFrame = Window.Current.Content as Frame;
+
+            // TODO: Initialize root frame just like in OnLaunched
+
+            // Handle toast activation
+            if (args is ToastNotificationActivatedEventArgs)
+            {
+                var toastActivationArgs = args as ToastNotificationActivatedEventArgs;
+                if (rootFrame == null)
+                {
+                    // Create a Frame to act as the navigation context and navigate to the first page
+                    rootFrame = new Frame();
+
+                    // Place the frame in the current Window
+                    Window.Current.Content = rootFrame;
+                }
+
+
+                if (rootFrame.Content == null)
+                {
+                    await ConfigHelper.Instance.Initialize();
+                    // When the navigation stack isn't restored navigate to the first page,
+                    // configuring the new page by passing required information as a navigation
+                    // parameter
+                    rootFrame.Navigate(typeof(MainPage));
+                }
+                // Ensure the current window is active
+                Window.Current.Activate();
+
+            }
+            base.OnActivated(args);
         }
     }
 }

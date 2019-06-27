@@ -483,9 +483,11 @@ namespace FlutterCandiesJsonToDart
                     XmlDocument doc = new XmlDocument();
                     doc.LoadXml(xd.ToString());
                     ToastNotification notification = new ToastNotification(doc);
+                    notification.ExpirationTime = DateTime.Now.AddSeconds(2);
                     ToastNotificationManager.CreateToastNotifier().Show(notification);
 #else
                     Clipboard.SetText(result);
+                    MyMessageBox.Show("Dart生成成功\n已复制到剪切板");
 #endif
                 }
             }
