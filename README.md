@@ -2,7 +2,10 @@
 
 Windows桌面上功能最全面的Json转换Dart的工具，使用[UWP](https://baike.so.com/doc/23718184-24274055.html)和[WPF](https://baike.so.com/doc/2917373-3078588.html)开发。
 
-有任何问题可以提Issue或者加入QQ群181398081询问
+有任何问题可以提Issue 或者 
+
+加入QQ群181398081询问
+
 - [下载安装](#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85)
   - [UWP(Windows10)](#UWPWindows10)
   - [WPF(Windows7/Windows8)](#WPFWindows7Windows8)
@@ -135,7 +138,7 @@ void tryCatch(Function f) {
 
 选项有1，20，99
 
-99就代表有数组个数有多少个就循环检查多少次
+99就代表循环全部数组进行检查
 
 ### 属性命名
 
