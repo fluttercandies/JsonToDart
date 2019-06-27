@@ -1,5 +1,3 @@
-Json To Dart 
-
 ![](https://github.com/fluttercandies/JsonToDart/blob/master/UWP/Assets/Wide310x150Logo.scale-400.png)
 
 Windows桌面上功能最全面的Json转换Dart的工具，使用[UWP](https://baike.so.com/doc/23718184-24274055.html)和[WPF](https://baike.so.com/doc/2917373-3078588.html)开发。
@@ -28,19 +26,19 @@ Windows桌面上功能最全面的Json转换Dart的工具，使用[UWP](https://
 
 Windows10 用户
 
-考虑到应用商店经常大姨妈的情况，就没有上传到商店了，大家到下面地址下载安装
+考虑到应用商店经常大姨妈，就没有上传到商店了，大家到下面地址下载安装
 
 [1.0](https://github.com/fluttercandies/JsonToDart/blob/master/Release/UWP/JosnToDart_1.0.zip)
 
 下载好安装包，解压。
 
-第一次安装需要安装证书，请按照下图，使用PowerShell打开Add-AppDevPackage.ps1，一路接受就安装完毕
+第一次安装，需要安装证书，请按照下图，使用PowerShell打开Add-AppDevPackage.ps1，一路接受就安装完毕
 
-![](D:\Flutter\github\FlutterCandies\JsonToDart\Image\UWP安装1.png)
+![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/UWP安装1.png)
 
 后面如果工具有更新，可以下载最新的，然后点击FlutterCandiesJsonToDart_x.0.x.0_x86_x64.appxbundle 安装
 
-![](D:\Flutter\github\FlutterCandies\JsonToDart\Image\UWP安装2.png)
+![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/UWP安装2.png)
 
 ## WPF(Windows7/Windows8)
 
@@ -50,12 +48,12 @@ Windows7/Windows8 用户
 
 下载解压，点击setup.exe安装
 
-![](D:\Flutter\github\FlutterCandies\JsonToDart\Image\WPF安装.png)
+![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/WPF安装.png)
 
 
 # 使用
 
-![](D:\Flutter\github\FlutterCandies\JsonToDart\Image\界面.png)
+![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/界面.png)
 
 
 左边是json的输入框以及最后Dart生成的代码，右边是生成的Json类的结构
@@ -167,7 +165,7 @@ dart 推荐是驼峰式命名小驼峰
 
 点击格式化之后，右边会显示可视化的json类结构，在右边一列，就是属性访问器类型设置
 
-![](D:\Flutter\github\FlutterCandies\JsonToDart\Image\属性访问器.png)
+![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/属性访问器.png)
 
 选项：默认，Final，Get，GetSet
 
