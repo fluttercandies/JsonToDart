@@ -1,0 +1,32 @@
+﻿<Application xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             x:Class="FlutterCandiesJsonToDart.App"
+             >
+    <Application.Resources>
+        <Style TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="Button">
+            <Style.Setters>
+                <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="ComboBoxItem">
+            <Style.Setters>
+                <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="CheckBox">
+            <Style.Setters>
+                <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
+            </Style.Setters>
+        </Style>
+        <Style TargetType="TextBox">
+            <Style.Setters>
+                <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
+            </Style.Setters>
+        </Style>
+    </Application.Resources>
+</Application>

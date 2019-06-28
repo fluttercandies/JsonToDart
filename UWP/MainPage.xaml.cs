@@ -37,6 +37,8 @@ namespace FlutterCandiesJsonToDart
     /// </summary>
 #if WINDOWS_UWP
     public sealed partial class MainPage : Page
+#elif SILVERLIGHT
+    public partial class MainPage : UserControl
 #else
     public partial class MainWindow : Window
 #endif
@@ -50,6 +52,8 @@ namespace FlutterCandiesJsonToDart
         JObject obj;
 #if WINDOWS_UWP
         public MainPage()
+#elif SILVERLIGHT
+        public MainPage()
 #else
         public MainWindow()
 #endif
@@ -62,9 +66,14 @@ namespace FlutterCandiesJsonToDart
             Column1.Width = new GridLength(ConfigHelper.Instance.Config.Column1Width, GridUnitType.Star);
             Column2.Width = new GridLength(ConfigHelper.Instance.Config.Column2Width, GridUnitType.Star);
 #if !WINDOWS_UWP
-            this.MouseUp += GridSplitter_PointerReleased;
+            this.Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0));
             this.MouseMove += GridSplitter_ManipulationDelta;
+#if SILVERLIGHT
+            this.MouseLeftButtonUp += GridSplitter_PointerReleased;
+#else
+            this.MouseUp += GridSplitter_PointerReleased;
             WindowStartupLocation = WindowStartupLocation.CenterScreen;
+#endif
 #endif
 
         }
@@ -606,18 +615,30 @@ namespace FlutterCandiesJsonToDart
         {
             if (pointerPressed)
                 return;
+#if SILVERLIGHT
+            this.Cursor = Cursors.Arrow;
+#else
             Application.Current.MainWindow.Cursor = Cursors.Arrow;
+#endif
         }
 
         private void GridSplitter_PointerEntered(object sender, System.Windows.Input.MouseEventArgs e)
         {
+#if SILVERLIGHT
+            this.Cursor = Cursors.SizeWE;
+#else
             Application.Current.MainWindow.Cursor = Cursors.SizeWE;
+#endif
         }
 
         private void GridSplitter_PointerReleased(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             pointerPressed = false;
+#if SILVERLIGHT
+            this.Cursor = Cursors.Arrow;
+#else
             Application.Current.MainWindow.Cursor = Cursors.Arrow;
+#endif
         }
         Point point;
 
@@ -625,8 +646,11 @@ namespace FlutterCandiesJsonToDart
         {
             pointerPressed = true;
             point = e.GetPosition(GridSplitter);
-
+#if SILVERLIGHT
+            this.Cursor = Cursors.SizeWE;
+#else
             Application.Current.MainWindow.Cursor = Cursors.SizeWE;
+#endif
         }
 
 #endif
@@ -636,7 +660,6 @@ namespace FlutterCandiesJsonToDart
         {
             var width1 = Math.Max(Column1.ActualWidth + x, 50.0);
             var width2 = Math.Max(Column2.ActualWidth - x, 50.0);
-
             ConfigHelper.Instance.Config.Column1Width = width1 / (width1 + width2);
             ConfigHelper.Instance.Config.Column2Width = width2 / (width1 + width2);
             Column1.Width = new GridLength(ConfigHelper.Instance.Config.Column1Width, GridUnitType.Star);

@@ -30,7 +30,12 @@ namespace FlutterCandiesJsonToDart
         /// support CallerMemberName.</param>
         /// <returns>True if the value was changed, false if the existing value matched the
         /// desired value.</returns>
-        protected bool SetProperty<T>(ref T storage, T value, [CallerMemberName] string propertyName = null)
+        protected bool SetProperty<T>(ref T storage, T value,
+#if !SILVERLIGHT
+[CallerMemberName] 
+#endif
+            string propertyName = null
+            )
         {
             if (Equals(storage, value))
                 return false;
@@ -46,7 +51,11 @@ namespace FlutterCandiesJsonToDart
         /// <param name="propertyName">Name of the property used to notify listeners.  This
         /// value is optional and can be provided automatically when invoked from compilers
         /// that support <see cref="CallerMemberNameAttribute"/>.</param>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        protected void OnPropertyChanged(
+#if !SILVERLIGHT
+[CallerMemberName] 
+#endif
+        string propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         protected void Dispose<T>(ref T disposable) where T : class, IDisposable

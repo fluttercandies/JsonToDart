@@ -97,9 +97,10 @@ namespace FlutterCandiesJsonToDart.Utils
             }
         }
 
-#else
+#elif SILVERLIGHT
 
-        public void Initialize()
+#else
+          public void Initialize()
         {
             try
             {
