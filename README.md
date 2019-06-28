@@ -1,6 +1,6 @@
 ![](https://github.com/fluttercandies/JsonToDart/blob/master/UWP/Assets/Wide310x150Logo.scale-400.png)
 
-[功能最全面的Json转换Dart的工具](https://juejin.im/post/5d1463245188255d0d2f5c81)，使用[UWP](https://baike.so.com/doc/23718184-24274055.html),[WPF](https://baike.so.com/doc/2917373-3078588.html)和[Silverlight](https://baike.so.com/doc/5402730-5640416.html)开发。
+[功能最全面的Json转换Dart的工具](https://juejin.im/post/5d1463245188255d0d2f5c81)，使用[UWP](https://baike.so.com/doc/23718184-24274055.html),[WPF](https://baike.so.com/doc/2917373-3078588.html)和[Silverlight](https://baike.so.com/doc/5402730-5640416.html)开发，支持桌面和Web。
 
 有任何问题可以提Issue 或者 
 
@@ -64,7 +64,9 @@ Mac的用户下载Mac的，Windows用户下载Windows的
 
 ![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/浏览器.png)
 
-在Mac上面[Firefox](https://mac.filehorse.com/download-firefox/7957/download/)可用
+Mac [Safari 12.0以下的可以尝试这样开启插件](https://www.cnblogs.com/qiumingshanshangjian/p/8413165.html)
+
+Mac [Firefox](https://mac.filehorse.com/download-firefox/7957/download/)这个版本能使用
 
 由于中文字体问题，包含了中文字体文件，第一次会比较久，请耐心等待
 
