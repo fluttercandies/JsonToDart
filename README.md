@@ -1,6 +1,6 @@
 ![](https://github.com/fluttercandies/JsonToDart/blob/master/UWP/Assets/Wide310x150Logo.scale-400.png)
 
-[Windows桌面上功能最全面的Json转换Dart的工具](https://juejin.im/post/5d1463245188255d0d2f5c81)，使用[UWP](https://baike.so.com/doc/23718184-24274055.html)和[WPF](https://baike.so.com/doc/2917373-3078588.html)开发。
+[功能最全面的Json转换Dart的工具](https://juejin.im/post/5d1463245188255d0d2f5c81)，使用[UWP](https://baike.so.com/doc/23718184-24274055.html),[WPF](https://baike.so.com/doc/2917373-3078588.html)和[Silverlight](https://baike.so.com/doc/5402730-5640416.html)开发。
 
 有任何问题可以提Issue 或者 
 
@@ -9,6 +9,7 @@
 - [下载安装](#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85)
   - [UWP(Windows10)](#UWPWindows10)
   - [WPF(Windows7/Windows8)](#WPFWindows7Windows8)
+  - [Web(Silverlight)](#WebSilverlight)
 - [使用](#%E4%BD%BF%E7%94%A8)
   - [格式化](#%E6%A0%BC%E5%BC%8F%E5%8C%96)
   - [更多设置](#%E6%9B%B4%E5%A4%9A%E8%AE%BE%E7%BD%AE)
@@ -53,6 +54,21 @@ Windows7/Windows8 用户
 
 ![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/WPF安装.png)
 
+## Web(Silverlight)
+
+首先需要安装[Silverlight](https://www.microsoft.com/getsilverlight/get-started/install/default?reason=unsupportedbrowser&_helpmsg=ChromeVersionDoesNotSupportPlugins#sysreq)
+
+Mac的用户下载Mac的，Windows用户下载Windows的
+
+然后就是浏览器问题了，因为支持Silverlight的浏览器是有限的，除了Internet Explorer支持，以下版本的浏览器也支持.
+
+![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/浏览器.png)
+
+在Mac上面[Firefox](https://mac.filehorse.com/download-firefox/7957/download/)可用
+
+由于中文字体问题，包含了中文字体文件，第一次会比较久，请耐心等待
+
+[Json To Dart Web地址](https://fluttercandies.github.io/JsonToDart)
 
 # 使用
 
