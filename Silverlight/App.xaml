@@ -28,5 +28,10 @@
                 <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
             </Style.Setters>
         </Style>
+        <Style TargetType="ComboBox">
+            <Style.Setters>
+                <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
+            </Style.Setters>
+        </Style>
     </Application.Resources>
 </Application>

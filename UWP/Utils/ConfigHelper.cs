@@ -2,10 +2,13 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+
 using System.Text;
 using System.Threading.Tasks;
 #if WINDOWS_UWP
 using Windows.Storage;
+#elif SILVERLIGHT
+using System.IO.IsolatedStorage;
 #endif
 
 
@@ -98,6 +101,54 @@ namespace FlutterCandiesJsonToDart.Utils
         }
 
 #elif SILVERLIGHT
+
+        public void Initialize()
+        {
+            try
+            {
+                IsolatedStorageSettings appSettings = IsolatedStorageSettings.ApplicationSettings;
+                if (appSettings.Contains("JsonToDartConfig"))
+                {
+                    String content = appSettings["JsonToDartConfig"] as String;
+                    var temp = JsonConvert.DeserializeObject<Config>(content);
+                    if (temp != null)
+                    {
+                        this.Config = temp;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+            }
+        }
+        public void Save()
+        {
+            lock (sync)
+            {
+                try
+                {
+                    var json = JsonConvert.SerializeObject(Config);
+                    if (json != preJson)
+                    {
+                        IsolatedStorageSettings appSettings = IsolatedStorageSettings.ApplicationSettings;
+                        if (appSettings.Contains("JsonToDartConfig"))
+                        {
+                            appSettings["JsonToDartConfig"] = json;
+                        }
+                        else
+                        {
+                            appSettings.Add("JsonToDartConfig", json);
+                        }
+
+                        appSettings.Save();
+                        preJson = json;
+                    }
+                }
+                catch (Exception e)
+                {
+                }
+            }
+        }
 
 #else
           public void Initialize()

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FlutterCandiesJsonToDart.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -26,12 +27,14 @@ namespace FlutterCandiesJsonToDart
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            ConfigHelper.Instance.Initialize();
             this.RootVisual = new MainPage();
+
         }
 
         private void Application_Exit(object sender, EventArgs e)
         {
-
+            ConfigHelper.Instance.Save();
         }
 
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
