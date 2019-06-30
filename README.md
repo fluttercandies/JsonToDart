@@ -9,7 +9,7 @@
 - [下载安装](#%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85)
   - [UWP(Windows10)](#UWPWindows10)
   - [WPF(Windows7/Windows8)](#WPFWindows7Windows8)
-  - [Web(Silverlight)](#WebSilverlight)
+  - [Silverlight(Web)](#SilverlightWeb)
 - [使用](#%E4%BD%BF%E7%94%A8)
   - [格式化](#%E6%A0%BC%E5%BC%8F%E5%8C%96)
   - [更多设置](#%E6%9B%B4%E5%A4%9A%E8%AE%BE%E7%BD%AE)
@@ -54,7 +54,12 @@ Windows7/Windows8 用户
 
 ![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/WPF安装.png)
 
-## Web(Silverlight)
+## Silverlight(Web)
+
+[不带字体文件Json To Dart地址](https://fluttercandies.github.io/JsonToDart)如果出现乱码，请使用下面地址
+
+[带字体文件Json To Dart地址](https://fluttercandies.github.io/JsonToDartWeb)
+由于中文字体问题，包含了中文字体文件，第一次会比较久，请耐心等待
 
 首先需要安装[Silverlight](https://www.microsoft.com/getsilverlight/get-started/install/default?reason=unsupportedbrowser&_helpmsg=ChromeVersionDoesNotSupportPlugins#sysreq)
 
@@ -68,9 +73,10 @@ Mac [Safari 12.0以下的可以尝试这样开启插件](https://www.cnblogs.com
 
 Mac [Firefox](https://mac.filehorse.com/download-firefox/7957/download/)这个版本能使用
 
-由于中文字体问题，包含了中文字体文件，第一次会比较久，请耐心等待
+[不带字体文件Json To Dart地址](https://fluttercandies.github.io/JsonToDart)如果出现乱码，请使用下面地址
 
-[Json To Dart Web地址](https://fluttercandies.github.io/JsonToDart)
+[带字体文件Json To Dart地址](https://fluttercandies.github.io/JsonToDartWeb)
+由于中文字体问题，包含了中文字体文件，第一次会比较久，请耐心等待
 
 # 使用
 
