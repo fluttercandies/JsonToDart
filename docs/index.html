@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" >
 <!-- saved from url=(0014)about:internet -->
 <head>
-    <title>JsonToDart</title>
+    <title>FlutterCandiesJsonToDart</title>
     <style type="text/css">
     html, body {
 	    height: 100%;
@@ -17,7 +17,7 @@
 	    text-align:center;
     }
     </style>
-    
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
     <script type="text/javascript">
         function onSilverlightError(sender, args) {
             var appSource = "";
@@ -32,23 +32,23 @@
               return;
             }
 
-            var errMsg = "Unhandled Error in Silverlight Application " +  appSource + "\n" ;
+            var errMsg = "Silverlight 应用程序中未处理的错误 " +  appSource + "\n" ;
 
-            errMsg += "Code: "+ iErrorCode + "    \n";
-            errMsg += "Category: " + errorType + "       \n";
-            errMsg += "Message: " + args.ErrorMessage + "     \n";
+            errMsg += "代码: "+ iErrorCode + "    \n";
+            errMsg += "类别: " + errorType + "       \n";
+            errMsg += "消息: " + args.ErrorMessage + "     \n";
 
             if (errorType == "ParserError") {
-                errMsg += "File: " + args.xamlFile + "     \n";
-                errMsg += "Line: " + args.lineNumber + "     \n";
-                errMsg += "Position: " + args.charPosition + "     \n";
+                errMsg += "文件: " + args.xamlFile + "     \n";
+                errMsg += "行: " + args.lineNumber + "     \n";
+                errMsg += "位置: " + args.charPosition + "     \n";
             }
             else if (errorType == "RuntimeError") {           
                 if (args.lineNumber != 0) {
-                    errMsg += "Line: " + args.lineNumber + "     \n";
-                    errMsg += "Position: " +  args.charPosition + "     \n";
+                    errMsg += "行: " + args.lineNumber + "     \n";
+                    errMsg += "位置: " +  args.charPosition + "     \n";
                 }
-                errMsg += "MethodName: " + args.methodName + "     \n";
+                errMsg += "方法名称: " + args.methodName + "     \n";
             }
 
             throw new Error(errMsg);
@@ -56,6 +56,7 @@
     </script>
 </head>
 <body>
+     <span id="busuanzi_container_site_pv">本站总访问量<span id="busuanzi_value_site_pv"></span>次</span>
     <form id="form1" runat="server" style="height:100%">
     <div id="silverlightControlHost">
         <object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="100%">
@@ -65,7 +66,7 @@
 		  <param name="minRuntimeVersion" value="5.0.61118.0" />
 		  <param name="autoUpgrade" value="true" />
 		  <a href="http://go.microsoft.com/fwlink/?LinkID=149156&v=5.0.61118.0" style="text-decoration:none">
- 			  <img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Get Microsoft Silverlight" style="border-style:none"/>
+ 			  <img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="获取 Microsoft Silverlight" style="border-style:none"/>
 		  </a>
 	    </object><iframe id="_sl_historyFrame" style="visibility:hidden;height:0px;width:0px;border:0px"></iframe></div>
     </form>
