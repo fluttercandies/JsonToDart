@@ -149,10 +149,9 @@ namespace FlutterCandiesJsonToDart.Models
 
         public override bool Equals(object obj)
         {
-            if (obj is ExtendedJObject other && other.Key == this.Key)
+            if (obj is ExtendedJObject)
             {
-
-                return true;
+                return (obj as ExtendedJObject).Key == this.Key;
             }
             return false;
         }

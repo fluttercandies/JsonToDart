@@ -60,7 +60,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>D4D9BAE8A6AAD6272B79EE825D732132DF22BD26</ManifestCertificateThumbprint>
@@ -137,9 +137,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FlutterCandiesJsonToDart_TemporaryKey.pfx" />
-    <Resource Include="MSYH.TTC">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
   </ItemGroup>

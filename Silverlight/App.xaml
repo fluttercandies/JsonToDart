@@ -3,7 +3,7 @@
              x:Class="FlutterCandiesJsonToDart.App"
              >
     <Application.Resources>
-        <Style TargetType="TextBlock">
+        <!--<Style TargetType="TextBlock">
             <Style.Setters>
                 <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
             </Style.Setters>
@@ -32,6 +32,6 @@
             <Style.Setters>
                 <Setter Property="FontFamily" Value="MSYH.TTC#Microsoft YaHei"/>
             </Style.Setters>
-        </Style>
+        </Style>-->
     </Application.Resources>
 </Application>
