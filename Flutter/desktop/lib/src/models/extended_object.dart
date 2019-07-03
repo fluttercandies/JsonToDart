@@ -173,7 +173,7 @@ class ExtendedObject extends ExtendedProperty {
     MyStringBuffer sb = MyStringBuffer();
 
     sb.writeLine(
-        stringFormat(DartHelper.classHeader, <dynamic>[this.className]));
+        stringFormat(DartHelper.classHeader, [this.className]));
 
     if (properties.length > 0) {
       MyStringBuffer factorySb = MyStringBuffer();
@@ -186,7 +186,7 @@ class ExtendedObject extends ExtendedProperty {
       MyStringBuffer toJsonSb = MyStringBuffer();
 
       factorySb.writeLine(stringFormat(
-          DartHelper.factoryStringHeader, <dynamic>[this.className]));
+          DartHelper.factoryStringHeader, [this.className]));
 
       toJsonSb.writeLine(DartHelper.toJsonHeader);
 
@@ -204,7 +204,7 @@ class ExtendedObject extends ExtendedProperty {
         if (item is ExtendedObject) {
           className = item.className;
           setString = stringFormat(DartHelper.setObjectProperty,
-              <dynamic>[lowName, item.key, className]);
+              [lowName, item.key, className]);
           typeString = className;
         } else if (item.value.runtimeType == List) {
           if (objectKeys.containsKey(item.key)) {
@@ -224,7 +224,7 @@ class ExtendedObject extends ExtendedProperty {
 
         if (isGetSet) {
           factorySb
-              .writeLine(stringFormat(fss, <dynamic>[typeString, lowName]));
+              .writeLine(stringFormat(fss, [typeString, lowName]));
           if (factorySb1.length == 0) {
             factorySb1.write("}):");
           } else {
@@ -232,15 +232,15 @@ class ExtendedObject extends ExtendedProperty {
           }
           factorySb1.write("$setName=$lowName");
         } else {
-          factorySb.writeLine(stringFormat(fss, <dynamic>[item.name]));
+          factorySb.writeLine(stringFormat(fss, [item.name]));
         }
 
         propertySb.writeLine(stringFormat(
             DartHelper.propertyS(item.propertyAccessorType),
-            <dynamic>[typeString, name, lowName]));
+            [typeString, name, lowName]));
         fromJsonSb.writeLine(setString);
         toJsonSb.writeLine(stringFormat(
-            DartHelper.toJsonSetString, <dynamic>[item.key, setName]));
+            DartHelper.toJsonSetString, [item.key, setName]));
       }
 
       if (factorySb1.length == 0) {
@@ -253,13 +253,13 @@ class ExtendedObject extends ExtendedProperty {
       var fromJson = "";
       if (fromJsonSb1.length != 0) {
         fromJson = stringFormat(
-                DartHelper.fromJsonHeader1, <dynamic>[this.className]) +
+                DartHelper.fromJsonHeader1, [this.className]) +
             fromJsonSb1.toString() +
             stringFormat(DartHelper.fromJsonFooter1,
-                <dynamic>[this.className, fromJsonSb.toString()]);
+                [this.className, fromJsonSb.toString()]);
       } else {
         fromJson =
-            stringFormat(DartHelper.fromJsonHeader, <dynamic>[this.className]) +
+            stringFormat(DartHelper.fromJsonHeader, [this.className]) +
                 fromJsonSb.toString() +
                 DartHelper.fromJsonFooter;
       }

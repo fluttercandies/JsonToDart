@@ -43,7 +43,7 @@ class JsonToDartController with ChangeNotifier {
     if (_extendedObject != null) {
       try {
         MyStringBuffer sb = new MyStringBuffer();
-        if (!IsNullOrWhiteSpace(ConfigHelper().config.fileHeaderInfo)) {
+        if (!isNullOrWhiteSpace(ConfigHelper().config.fileHeaderInfo)) {
           var info = ConfigHelper().config.fileHeaderInfo;
           //[Date MM-dd HH:mm]
           try {
