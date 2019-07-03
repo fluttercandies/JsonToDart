@@ -74,11 +74,11 @@ class _SettingState extends State<Setting> {
               }
 
               Widget result = Wrap(
-               
+               direction: Axis.horizontal,
                 children: <Widget>[
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Checkbox(
                         value: ConfigHelper().config.enableDataProtection,
@@ -92,8 +92,8 @@ class _SettingState extends State<Setting> {
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                   mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Checkbox(
                         value: ConfigHelper().config.enableArrayProtection,
@@ -107,8 +107,8 @@ class _SettingState extends State<Setting> {
                     ],
                   ),
                   Row(
-                   mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                   mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       DropdownButton(
                         value: ConfigHelper().config.traverseArrayCount,
@@ -136,8 +136,8 @@ class _SettingState extends State<Setting> {
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                   mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       DropdownButton(
                         value:
@@ -173,8 +173,8 @@ class _SettingState extends State<Setting> {
                     ],
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       DropdownButton(
                         value: ConfigHelper().config.propertyNameSortingType,
@@ -203,8 +203,8 @@ class _SettingState extends State<Setting> {
                     ],
                   ),
                   Row(
-                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Checkbox(
                         value: ConfigHelper().config.addMethod,
