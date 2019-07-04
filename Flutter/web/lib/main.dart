@@ -17,32 +17,34 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     JsonToDartController controller = JsonToDartController();
-    return OKToast(
-      child: MultiProvider(
-        providers: [
-          Provider.value(
-            value: controller,
+    return DropdownButtonHideUnderline(
+      child: OKToast(
+        child: MultiProvider(
+          providers: [
+            Provider.value(
+              value: controller,
+            ),
+            ValueListenableProvider<TextEditingController>.value(
+              value: controller.textEditingControllerValue,
+            ),
+            ValueListenableProvider<ExtendedObject>.value(
+              value: controller.extendedObjectValue,
+            )
+          ],
+          child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            //debugShowMaterialGrid: false,
+
+            title: 'Json To Dart',
+            theme: ThemeData(
+              primarySwatch: Colors.blue,
+            ),
+            home: MyHomePage(title: 'Json To Dart'),
           ),
-          ValueListenableProvider<TextEditingController>.value(
-            value: controller.textEditingControllerValue,
-          ),
-          ValueListenableProvider<ExtendedObject>.value(
-            value: controller.extendedObjectValue,
-          )
-        ],
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          //debugShowMaterialGrid: false,
-          
-          title: 'Json To Dart',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
-          home: MyHomePage(title: 'Json To Dart'),
-          
         ),
       ),
     );
+    ;
   }
 }
 

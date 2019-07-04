@@ -40,7 +40,7 @@ class _JsonTreeHeaderState extends State<JsonTreeHeader> {
             padding: EdgeInsets.only(left: 8.0),
             child:DropdownButton(
             value: ConfigHelper().config.propertyAccessorType,
-           
+            
             items: [
               DropdownMenuItem(
                 value: PropertyAccessorType.none,

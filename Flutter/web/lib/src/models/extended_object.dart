@@ -169,7 +169,7 @@ class ExtendedObject extends ExtendedProperty {
   }
 
   void orderPropeties() {
-    if (jObject.entries.length > 0) {
+    if (jObject.entries.isNotEmpty) {
       var sortingType = ConfigHelper().config.propertyNameSortingType;
       if (sortingType != PropertyNameSortingType.none) {
         if (sortingType == PropertyNameSortingType.ascending) {
@@ -195,7 +195,7 @@ class ExtendedObject extends ExtendedProperty {
 
     sb.writeLine(stringFormat(DartHelper.classHeader, [this.className]));
 
-    if (properties.length > 0) {
+    if (properties.isNotEmpty) {
       MyStringBuffer factorySb = MyStringBuffer();
       MyStringBuffer factorySb1 = MyStringBuffer();
       MyStringBuffer propertySb = MyStringBuffer();

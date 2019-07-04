@@ -12,7 +12,7 @@ class ExtendedProperty {
   final dynamic value;
   final MapEntry<String, dynamic> keyValuePair;
   String name;
-  PropertyAccessorType propertyAccessorType=PropertyAccessorType.none;
+  PropertyAccessorType propertyAccessorType = PropertyAccessorType.none;
 
   DartType type;
 
@@ -50,17 +50,14 @@ class ExtendedProperty {
 
   String getTypeString({String className}) {
     var temp = value;
-    String result="";
+    String result = "";
 
     while (temp is List) {
-      if (result == null)
-      {
-          result = "List<{0}>";
+      if (result == null) {
+        result = "List<{0}>";
+      } else {
+        result = stringFormat("List<{0}>", <dynamic>[result]);
       }
-      else
-       {
-          result = stringFormat("List<{0}>", <dynamic>[result]);
-       }
       if (temp is List && temp.isNotEmpty) {
         temp = temp.first;
       } else {

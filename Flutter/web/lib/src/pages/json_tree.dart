@@ -40,7 +40,7 @@ class JsonTree extends StatelessWidget {
 
     for (var item in object.properties) {
       bool isArray = item.value is List;
-      bool isObject = (item is ExtendedObject && item.properties.length > 0);
+      bool isObject = (item is ExtendedObject && item.properties.isNotEmpty);
 
       _drawPoperty(result, object, item,
           isArray: isArray, isObject: isObject, depth: depth);

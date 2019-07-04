@@ -36,26 +36,26 @@ class _SettingState extends State<Setting> {
                     showMoreSetting = !showMoreSetting;
                   });
                 }),
-            FlatButton(
-              child: Text("复制"),
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: controller.text));
-              },
-            ),
-            FlatButton(
-              child: Text("粘贴"),
-              onPressed: () {
-                Clipboard.getData("text/plain").then((value) {
-                  controller.text = value.text;
-                });
-              },
-            ),
-            FlatButton(
-              child: Text("全选"),
-              onPressed: () {
-                controller.selectAll();
-              },
-            ),
+            // FlatButton(
+            //   child: Text("复制"),
+            //   onPressed: () {
+            //     Clipboard.setData(ClipboardData(text: controller.text));
+            //   },
+            // ),
+            // FlatButton(
+            //   child: Text("粘贴"),
+            //   onPressed: () {
+            //     Clipboard.getData("text/plain").then((value) {
+            //       controller.text = value.text;
+            //     });
+            //   },
+            // ),
+            // FlatButton(
+            //   child: Text("全选"),
+            //   onPressed: () {
+            //     controller.selectAll();
+            //   },
+            // ),
             FlatButton(
                 child: Text("生成Dart"),
                 onPressed: () {
