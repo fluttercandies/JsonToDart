@@ -4,7 +4,7 @@
 /// <param name="name"></param>
 /// <returns></returns>
 String underScoreName(String name) {
-  if (IsNullOrWhiteSpace(name)) {
+  if (isNullOrWhiteSpace(name)) {
     return "";
   }
 
@@ -13,7 +13,7 @@ String underScoreName(String name) {
   result.write(name.substring(0, 1).toLowerCase());
   for (int i = 1; i < name.length; i++) {
     var temp = name[i];
-    if ((temp == temp.toUpperCase())) {
+    if (!isNullOrWhiteSpace(temp) && temp!="_" && int.tryParse(temp)==null && (temp == temp.toUpperCase()) ) {
       result.write("_");
     }
     result.write(temp.toLowerCase());
@@ -30,7 +30,7 @@ String underScoreName(String name) {
 
 String camelName(String name) {
   StringBuffer result = new StringBuffer();
-  if (IsNullOrWhiteSpace(name)) {
+  if (isNullOrWhiteSpace(name)) {
     return "";
   }
   if (!name.contains("_")) {
@@ -43,8 +43,10 @@ String camelName(String name) {
     if (result.length == 0) {
       result.write(camel.toLowerCase());
     } else {
-      result.write(camel.substring(0, 1).toUpperCase());
-      result.write(camel.substring(1).toLowerCase());
+      if (!isNullOrWhiteSpace(name)) {
+        result.write(camel.substring(0, 1).toUpperCase());
+        result.write(camel.substring(1).toLowerCase());
+      }
     }
   }
 
@@ -58,7 +60,7 @@ String camelName(String name) {
 /// <returns></returns>
 String upcaseCamelName(String name) {
   StringBuffer result = new StringBuffer();
-  if (IsNullOrWhiteSpace(name)) {
+  if (isNullOrWhiteSpace(name)) {
     return "";
   }
   if (!name.contains("_")) {
@@ -68,7 +70,7 @@ String upcaseCamelName(String name) {
   }
   List<String> camels = name.split('_');
   for (var camel in camels) {
-    if (!IsNullOrWhiteSpace(name)) {
+    if (!isNullOrWhiteSpace(name)) {
       result.write(camel.substring(0, 1).toUpperCase());
       result.write(camel.substring(1).toLowerCase());
     }
@@ -77,6 +79,6 @@ String upcaseCamelName(String name) {
   return result.toString();
 }
 
-bool IsNullOrWhiteSpace(String value) {
+bool isNullOrWhiteSpace(String value) {
   return value == null || value == "";
 }

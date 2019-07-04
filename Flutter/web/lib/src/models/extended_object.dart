@@ -1,9 +1,18 @@
+import 'dart:async';
+
+import 'package:json_to_dart/src/utils/camel_under_score_converter.dart';
+import 'package:json_to_dart/src/utils/config_helper.dart';
+import 'package:json_to_dart/src/utils/dart_helper.dart';
+import 'package:json_to_dart/src/utils/enums.dart';
+import 'package:json_to_dart/src/utils/my_string_buffer.dart';
+import 'package:json_to_dart/src/utils/string_helper.dart';
+
 import 'extended_property.dart';
 
 class ExtendedObject extends ExtendedProperty {
   Map _jObject;
   Map _mergeObject;
-  Map get JObject => _mergeObject != null ? _mergeObject : _jObject;
+  Map get jObject => _mergeObject != null ? _mergeObject : _jObject;
 
   String _className;
 
@@ -11,33 +20,52 @@ class ExtendedObject extends ExtendedProperty {
 
   set className(String className) {
     _className = className;
+    if (!rebuildName.isClosed) {
+      rebuildName.sink.add(className);
+    }
   }
+
+  StreamController<String> rebuildName = StreamController<String>.broadcast();
 
   List<ExtendedProperty> properties;
 
   Map<String, ExtendedObject> objectKeys;
 
-  ExtendedObject({String uid, MapEntry<String, Map> keyValuePair, int depth})
-      : super(uid: uid, keyValuePair: keyValuePair, depth: depth) {
-    properties = List<ExtendedProperty>();
-    objectKeys = Map<String, ExtendedObject>();
-    this._jObject = keyValuePair.value;
+  ExtendedObject(
+      {String uid,
+      MapEntry<String, dynamic> keyValuePair,
+      int depth,
+      ExtendedObject source})
+      : super(
+            uid: source?.uid ?? uid,
+            keyValuePair: source?.keyValuePair ?? keyValuePair,
+            depth: source?.depth ?? depth) {
+    if (source != null) {
+      properties = source.properties;
+      objectKeys = source.objectKeys;
+      this._jObject = source.keyValuePair.value as Map;
+      this.className = source.className;
+    } else {
+      properties = List<ExtendedProperty>();
+      objectKeys = Map<String, ExtendedObject>();
+      this._jObject = keyValuePair.value as Map;
 
-    var key = keyValuePair.key;
-    var className = key.substring(0, 1).toUpperCase() + key.substring(1);
-    this.className = className;
-    initializeProperties();
-    updateNameByNamingConventionsType();
+      var key = keyValuePair.key;
+      var className = key.substring(0, 1).toUpperCase() + key.substring(1);
+      this.className = className;
+      initializeProperties();
+      updateNameByNamingConventionsType();
+    }
   }
 
   void initializeProperties() {
     properties.clear();
     objectKeys.clear();
-    if (JObject.isNotEmpty) {
-      for (var item in JObject.entries) {
+    if (jObject != null && jObject.isNotEmpty) {
+      for (var item in jObject.entries) {
         initializePropertyItem(item, depth);
       }
-      // OrderPropeties();
+      orderPropeties();
     }
   }
 
@@ -46,7 +74,7 @@ class ExtendedObject extends ExtendedProperty {
     if (item.value is Map && (item.value as Map).isNotEmpty) {
       if (objectKeys.containsKey(item.key)) {
         var temp = objectKeys[item.key];
-        temp.Merge(item.value as Map);
+        temp.merge(item.value as Map);
         objectKeys[item.key] = temp;
       } else {
         var temp = new ExtendedObject(
@@ -61,11 +89,10 @@ class ExtendedObject extends ExtendedProperty {
       }
       var array = item.value as List;
       if (array.isNotEmpty) {
-        // var count = ConfigHelper.Instance.Config.TraverseArrayCount;
-        // if (count == 99) {
-        //   count = array.Count();
-        // }
-        var count = 1;
+        var count = ConfigHelper().config.traverseArrayCount;
+        if (count == 99) {
+          count = array.length;
+        }
         for (int i = 0; i < array.length && i < count; i++) {
           initializePropertyItem(
               MapEntry<String, dynamic>(item.key, array[i]), depth,
@@ -80,7 +107,7 @@ class ExtendedObject extends ExtendedProperty {
     }
   }
 
-  void Merge(Map other) {
+  void merge(Map other) {
     bool needInitialize = false;
     if (_jObject != null) {
       if (_mergeObject == null) {
@@ -114,19 +141,193 @@ class ExtendedObject extends ExtendedProperty {
   @override
   void updateNameByNamingConventionsType() {
     super.updateNameByNamingConventionsType();
-    for (var item in properties) {
-      item.updateNameByNamingConventionsType();
+    if (properties != null) {
+      for (var item in properties) {
+        item.updateNameByNamingConventionsType();
+      }
     }
   }
 
   @override
   void updatePropertyAccessorType() {
     super.updatePropertyAccessorType();
-     for (var item in properties) {
-      item.updatePropertyAccessorType();
+    if (properties != null) {
+      for (var item in properties) {
+        item.updatePropertyAccessorType();
+      }
     }
+    if (objectKeys != null) {
+      for (var item in objectKeys.entries) {
+        item.value.updatePropertyAccessorType();
+      }
+    }
+  }
+
+  @override
+  String getTypeString({String className}) {
+    return this.className;
+  }
+
+  void orderPropeties() {
+    if (jObject.entries.length > 0) {
+      var sortingType = ConfigHelper().config.propertyNameSortingType;
+      if (sortingType != PropertyNameSortingType.none) {
+        if (sortingType == PropertyNameSortingType.ascending) {
+          properties.sort((left, right) => left.name.compareTo(right.name));
+        } else {
+          properties.sort((left, right) => left.name.compareTo(right.name));
+        }
+      }
+
+      if (objectKeys != null) {
+        for (var item in objectKeys.entries) {
+          item.value.orderPropeties();
+        }
+      }
+    }
+  }
+
+  @override
+  String toString() {
+    orderPropeties();
+
+    MyStringBuffer sb = MyStringBuffer();
+
+    sb.writeLine(stringFormat(DartHelper.classHeader, [this.className]));
+
+    if (properties.length > 0) {
+      MyStringBuffer factorySb = MyStringBuffer();
+      MyStringBuffer factorySb1 = MyStringBuffer();
+      MyStringBuffer propertySb = MyStringBuffer();
+      //StringBuffer propertySb1 = StringBuffer();
+      MyStringBuffer fromJsonSb = MyStringBuffer();
+      //Array
+      MyStringBuffer fromJsonSb1 = MyStringBuffer();
+      MyStringBuffer toJsonSb = MyStringBuffer();
+
+      factorySb.writeLine(
+          stringFormat(DartHelper.factoryStringHeader, [this.className]));
+
+      toJsonSb.writeLine(DartHelper.toJsonHeader);
+
+      for (var item in properties) {
+        var lowName =
+            item.name.substring(0, 1).toLowerCase() + item.name.substring(1);
+        var name = item.name;
+        String className;
+        String typeString;
+        var setName = DartHelper.getSetPropertyString(item);
+        var setString = "";
+        var fss = DartHelper.factorySetString(item.propertyAccessorType);
+        bool isGetSet = fss.startsWith("{");
+
+        if (item is ExtendedObject) {
+          className = item.className;
+          setString = stringFormat(
+              DartHelper.setObjectProperty, [item.name, item.key, className]);
+          typeString = className;
+        } else if (item.value.runtimeType == List) {
+          if (objectKeys.containsKey(item.key)) {
+            className = objectKeys[item.key].className;
+          }
+          typeString = item.getTypeString(className: className);
+
+          fromJsonSb1.writeLine(item.getArraySetPropertyString(
+              lowName, typeString,
+              className: className));
+
+          setString = " ${item.name}:$lowName,";
+        } else {
+          setString = DartHelper.setProperty(item.name, item, className);
+          typeString = DartHelper.getDartTypeString(item.type);
+        }
+
+        if (isGetSet) {
+          factorySb.writeLine(stringFormat(fss, [typeString, lowName]));
+          if (factorySb1.length == 0) {
+            factorySb1.write("}):");
+          } else {
+            factorySb1.write(",");
+          }
+          factorySb1.write("$setName=$lowName");
+        } else {
+          factorySb.writeLine(stringFormat(fss, [item.name]));
+        }
+
+        propertySb.writeLine(stringFormat(
+            DartHelper.propertyS(item.propertyAccessorType),
+            [typeString, name, lowName]));
+        fromJsonSb.writeLine(setString);
+        toJsonSb.writeLine(
+            stringFormat(DartHelper.toJsonSetString, [item.key, setName]));
+      }
+
+      if (factorySb1.length == 0) {
+        factorySb.writeLine(DartHelper.factoryStringFooter);
+      } else {
+        factorySb1.write(";");
+        factorySb.write(factorySb1.toString());
+      }
+
+      var fromJson = "";
+      if (fromJsonSb1.length != 0) {
+        fromJson = stringFormat(DartHelper.fromJsonHeader1, [this.className]) +
+            fromJsonSb1.toString() +
+            stringFormat(DartHelper.fromJsonFooter1,
+                [this.className, fromJsonSb.toString()]);
+      } else {
+        fromJson = stringFormat(DartHelper.fromJsonHeader, [this.className]) +
+            fromJsonSb.toString() +
+            DartHelper.fromJsonFooter;
+      }
+
+      //fromJsonSb.AppendLine(DartHelper.FromJsonFooter);
+
+      toJsonSb.writeLine(DartHelper.toJsonFooter);
+
+      sb.writeLine(propertySb.toString());
+
+      sb.writeLine(factorySb.toString());
+
+      sb.writeLine(fromJson);
+
+      sb.writeLine(toJsonSb.toString());
+
+      sb.writeLine(DartHelper.classToString);
+    }
+
+    sb.writeLine(DartHelper.classFooter);
+
     for (var item in objectKeys.entries) {
-      item.value.updatePropertyAccessorType();
+      sb.writeLine(item.value.toString());
     }
+
+    return sb.toString();
+  }
+
+  String hasEmptyProperties() {
+    if (isNullOrWhiteSpace(className)) return uid + "的类名为空";
+
+    for (var item in properties) {
+      if (item is ExtendedObject) {
+        if (depth > 0 &&
+            !item.uid.endsWith("_Array") &&
+            isNullOrWhiteSpace(item.name)) {
+          return item.uid + "的属性名为空";
+        }
+      } else if (isNullOrWhiteSpace(item.name)) {
+        return item.uid + "的属性名为空";
+      }
+    }
+
+    for (var item in objectKeys.entries) {
+      var msg = item.value.hasEmptyProperties();
+      if (msg != null) return msg;
+    }
+    return null;
+  }
+
+  ExtendedObject copy() {
+    return ExtendedObject(source: this);
   }
 }

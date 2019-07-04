@@ -1,14 +1,14 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_web/material.dart';
+import 'package:flutter_web/services.dart';
 import 'package:json_to_dart/src/models/extended_object.dart';
 import 'package:json_to_dart/src/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/src/utils/config_helper.dart';
 import 'package:json_to_dart/src/utils/dart_helper.dart';
 import 'package:json_to_dart/src/utils/my_string_buffer.dart';
-import 'package:oktoast/oktoast.dart';
 import 'package:intl/intl.dart';
+import 'package:json_to_dart/src/utils/oktoast/oktoast.dart';
 
 class JsonToDartController {
   TextEditingControllerValue _textEditingControllerValue =

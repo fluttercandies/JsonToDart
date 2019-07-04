@@ -1,4 +1,14 @@
 import 'package:flutter_web/material.dart';
+import 'package:json_to_dart/src/models/extended_object.dart';
+import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
+import 'package:json_to_dart/src/pages/json_text_field.dart';
+import 'package:json_to_dart/src/pages/json_tree.dart';
+import 'package:json_to_dart/src/pages/json_tree_header.dart';
+import 'package:json_to_dart/src/pages/setting.dart';
+import 'package:json_to_dart/src/utils/config_helper.dart';
+import 'package:json_to_dart/src/utils/oktoast/oktoast.dart';
+
+import 'src/utils/provider/provider.dart';
 
 void main() => runApp(MyApp());
 
@@ -6,56 +16,93 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    JsonToDartController controller = JsonToDartController();
+    return OKToast(
+      child: MultiProvider(
+        providers: [
+          Provider.value(
+            value: controller,
+          ),
+          ValueListenableProvider<TextEditingController>.value(
+            value: controller.textEditingControllerValue,
+          ),
+          ValueListenableProvider<ExtendedObject>.value(
+            value: controller.extendedObjectValue,
+          )
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          //debugShowMaterialGrid: false,
+          
+          title: 'Json To Dart',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          home: MyHomePage(title: 'Json To Dart'),
+          
+        ),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
   Widget build(BuildContext context) {
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(widget.title),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (choose the "Toggle Debug Paint" action
-          // from the Flutter Inspector in Android Studio, or the "Toggle Debug
-          // Paint" command in Visual Studio Code) to see the wireframe for each
-          // widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Hello, World!',
+      body: Row(
+        children: <Widget>[
+          Expanded(
+            flex: ConfigHelper().config.column1Width,
+            child: Container(
+              margin: EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  Setting(),
+                  Expanded(
+                    child: JsonTextField(),
+                  )
+                ],
+              ),
             ),
-          ],
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+          ),
+          GestureDetector(
+            child: Container(
+              width: 16.0,
+              color: Color(0x01000000),
+              alignment: Alignment.center,
+              height: double.infinity,
+              child: Text("||"),
+            ),
+          ),
+          Expanded(
+            flex: ConfigHelper().config.column2Width,
+            child: Container(
+              margin: EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  JsonTreeHeader(),
+                  Expanded(
+                    child: JsonTree(),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

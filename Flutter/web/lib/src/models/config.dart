@@ -1,66 +1,24 @@
-import 'package:json_to_dart_web/src/utils/enums.dart';
+import 'package:json_to_dart/src/utils/enums.dart';
+import 'dart:convert' show json;
 
 class Config {
-  bool _addMethod = true;
-
   /// <summary>
   /// 是否添加数据类型保护和数组保护的方法
   /// 第一次使用了之后，后面不必须再添加
   /// </summary>
-  bool get addMethod => _addMethod;
-
-  set addMethod(bool addMethod) {
-    _addMethod = addMethod;
-  }
-
-  bool _enableDataProtection;
+  bool addMethod;
+  int column1Width;
+  int column2Width;
+  bool enableArrayProtection;
 
   /// <summary>
   /// 数据类型保护
   /// </summary>
-  bool get enableDataProtection => _enableDataProtection;
-
-  set enableDataProtection(bool enableDataProtection) {
-    _enableDataProtection = enableDataProtection;
-  }
-
-  bool _enableArrayProtection;
-
-  /// <summary>
-  /// 循环数组的时候，防止出错一个，全部挂掉
-  /// </summary>
-  bool get enableArrayProtection => _enableArrayProtection;
-
-  set enableArrayProtection(bool enableArrayProtection) {
-    _enableArrayProtection = enableArrayProtection;
-  }
-
-  int _traverseArrayCount = 1;
-
-  /// <summary>
-  /// 数组循环次数，通过遍历数组来merge属性，防止漏掉属性（有时候同一个类有不同的属性）
-  /// List<T>
-  /// 1,20,99
-  /// </summary>
-  int get traverseArrayCount => _traverseArrayCount;
-
-  set traverseArrayCount(int traverseArrayCount) {
-    _traverseArrayCount = traverseArrayCount;
-  }
-
-  String _fileHeaderInfo;
-
-  /// <summary>
-  /// 文件头部信息，作者，时间，详情等
-  /// [time]
-  /// </summary>
-  String get fileHeaderInfo => _fileHeaderInfo;
-
-  set fileHeaderInfo(String fileHeaderInfo) {
-    _fileHeaderInfo = fileHeaderInfo;
-  }
-
-  PropertyNamingConventionsType _propertyNamingConventionsType;
+  bool enableDataProtection;
+  String fileHeaderInfo;
+  PropertyNamingConventionsType _propertyNamingConventionsType =
+      PropertyNamingConventionsType.camelCase;
+  int _propertyNamingConventionsTypeJson = 0;
 
   /// <summary>
   /// 属性命名规则
@@ -71,9 +29,12 @@ class Config {
   set propertyNamingConventionsType(
       PropertyNamingConventionsType propertyNamingConventionsType) {
     _propertyNamingConventionsType = propertyNamingConventionsType;
+    _propertyNamingConventionsTypeJson = PropertyNamingConventionsType.values
+        .indexOf(_propertyNamingConventionsType);
   }
 
-  PropertyAccessorType _propertyAccessorType;
+  PropertyAccessorType _propertyAccessorType = PropertyAccessorType.none;
+  int _propertyAccessorTypeJson = 0;
 
   /// <summary>
   /// 属性访问器
@@ -82,9 +43,13 @@ class Config {
 
   set propertyAccessorType(PropertyAccessorType propertyAccessorType) {
     _propertyAccessorType = propertyAccessorType;
+    _propertyAccessorTypeJson =
+        PropertyAccessorType.values.indexOf(_propertyAccessorType);
   }
 
-  PropertyNameSortingType _propertyNameSortingType;
+  PropertyNameSortingType _propertyNameSortingType =
+      PropertyNameSortingType.none;
+  int _propertyNameSortingTypeJson = 0;
 
   /// <summary>
   /// 根据属性名字升序/降序/不变排序
@@ -94,21 +59,64 @@ class Config {
 
   set propertyNameSortingType(PropertyNameSortingType propertyNameSortingType) {
     _propertyNameSortingType = propertyNameSortingType;
+    _propertyNameSortingTypeJson =
+        PropertyNameSortingType.values.indexOf(_propertyNameSortingType);
   }
 
-  double _column1Width = 1.5;
+  /// <summary>
+  /// 循环数组的时候，防止出错一个，全部挂掉
+  /// </summary>
+  int traverseArrayCount;
 
-  double get column1Width => _column1Width;
+  Config({
+    this.addMethod = true,
+    this.column1Width = 2,
+    this.column2Width = 3,
+    this.enableArrayProtection = false,
+    this.enableDataProtection = false,
+    this.fileHeaderInfo = "",
+    int propertyAccessorType = 0,
+    int propertyNameSortingType = 0,
+    int propertyNamingConventionsType = 0,
+    this.traverseArrayCount = 1,
+  })  : _propertyAccessorType =
+            PropertyAccessorType.values[propertyAccessorType],
+        _propertyNameSortingType =
+            PropertyNameSortingType.values[propertyNameSortingType],
+        _propertyNamingConventionsType =
+            PropertyNamingConventionsType.values[propertyNamingConventionsType];
 
-  set column1Width(double column1Width) {
-    _column1Width = column1Width;
-  }
+  factory Config.fromJson(jsonRes) => jsonRes == null
+      ? null
+      : Config(
+          addMethod: jsonRes['addMethod'],
+          column1Width: jsonRes['column1Width'],
+          column2Width: jsonRes['column2Width'],
+          enableArrayProtection: jsonRes['enableArrayProtection'],
+          enableDataProtection: jsonRes['enableDataProtection'],
+          fileHeaderInfo: jsonRes['fileHeaderInfo'],
+          propertyAccessorType: jsonRes['propertyAccessorType'],
+          propertyNameSortingType: jsonRes['propertyNameSortingType'],
+          propertyNamingConventionsType:
+              jsonRes['propertyNamingConventionsType'],
+          traverseArrayCount: jsonRes['traverseArrayCount'],
+        );
 
-  double _column2Width = 2.0;
+  Map<String, dynamic> toJson() => {
+        'addMethod': addMethod,
+        'column1Width': column1Width,
+        'column2Width': column2Width,
+        'enableArrayProtection': enableArrayProtection,
+        'enableDataProtection': enableDataProtection,
+        'fileHeaderInfo': fileHeaderInfo,
+        'propertyAccessorType': _propertyAccessorTypeJson,
+        'propertyNameSortingType': _propertyNameSortingTypeJson,
+        'propertyNamingConventionsType': _propertyNamingConventionsTypeJson,
+        'traverseArrayCount': traverseArrayCount,
+      };
 
-  double get column2Width => _column2Width;
-
-  set column2Width(double column2Width) {
-    _column2Width = column2Width;
+  @override
+  String toString() {
+    return json.encode(this);
   }
 }
