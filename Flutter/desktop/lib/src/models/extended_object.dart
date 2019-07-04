@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:json_to_dart/src/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/src/utils/config_helper.dart';
 import 'package:json_to_dart/src/utils/dart_helper.dart';
 import 'package:json_to_dart/src/utils/enums.dart';
@@ -17,30 +20,48 @@ class ExtendedObject extends ExtendedProperty {
 
   set className(String className) {
     _className = className;
+    if (!rebuildName.isClosed) {
+      rebuildName.sink.add(className);
+    }
   }
+
+  StreamController<String> rebuildName = StreamController<String>.broadcast();
 
   List<ExtendedProperty> properties;
 
   Map<String, ExtendedObject> objectKeys;
 
   ExtendedObject(
-      {String uid, MapEntry<String, dynamic> keyValuePair, int depth})
-      : super(uid: uid, keyValuePair: keyValuePair, depth: depth) {
-    properties = List<ExtendedProperty>();
-    objectKeys = Map<String, ExtendedObject>();
-    this._jObject = keyValuePair.value as Map;
+      {String uid,
+      MapEntry<String, dynamic> keyValuePair,
+      int depth,
+      ExtendedObject source})
+      : super(
+            uid: source?.uid ?? uid,
+            keyValuePair: source?.keyValuePair ?? keyValuePair,
+            depth: source?.depth ?? depth) {
+    if (source != null) {
+      properties = source.properties;
+      objectKeys = source.objectKeys;
+      this._jObject = source.keyValuePair.value as Map;
+      this.className = source.className;
+    } else {
+      properties = List<ExtendedProperty>();
+      objectKeys = Map<String, ExtendedObject>();
+      this._jObject = keyValuePair.value as Map;
 
-    var key = keyValuePair.key;
-    var className = key.substring(0, 1).toUpperCase() + key.substring(1);
-    this.className = className;
-    initializeProperties();
-    updateNameByNamingConventionsType();
+      var key = keyValuePair.key;
+      var className = key.substring(0, 1).toUpperCase() + key.substring(1);
+      this.className = className;
+      initializeProperties();
+      updateNameByNamingConventionsType();
+    }
   }
 
   void initializeProperties() {
     properties.clear();
     objectKeys.clear();
-    if (jObject.isNotEmpty) {
+    if (jObject != null && jObject.isNotEmpty) {
       for (var item in jObject.entries) {
         initializePropertyItem(item, depth);
       }
@@ -172,8 +193,7 @@ class ExtendedObject extends ExtendedProperty {
 
     MyStringBuffer sb = MyStringBuffer();
 
-    sb.writeLine(
-        stringFormat(DartHelper.classHeader, [this.className]));
+    sb.writeLine(stringFormat(DartHelper.classHeader, [this.className]));
 
     if (properties.length > 0) {
       MyStringBuffer factorySb = MyStringBuffer();
@@ -185,8 +205,8 @@ class ExtendedObject extends ExtendedProperty {
       MyStringBuffer fromJsonSb1 = MyStringBuffer();
       MyStringBuffer toJsonSb = MyStringBuffer();
 
-      factorySb.writeLine(stringFormat(
-          DartHelper.factoryStringHeader, [this.className]));
+      factorySb.writeLine(
+          stringFormat(DartHelper.factoryStringHeader, [this.className]));
 
       toJsonSb.writeLine(DartHelper.toJsonHeader);
 
@@ -203,8 +223,8 @@ class ExtendedObject extends ExtendedProperty {
 
         if (item is ExtendedObject) {
           className = item.className;
-          setString = stringFormat(DartHelper.setObjectProperty,
-              [lowName, item.key, className]);
+          setString = stringFormat(
+              DartHelper.setObjectProperty, [item.name, item.key, className]);
           typeString = className;
         } else if (item.value.runtimeType == List) {
           if (objectKeys.containsKey(item.key)) {
@@ -216,15 +236,14 @@ class ExtendedObject extends ExtendedProperty {
               lowName, typeString,
               className: className));
 
-          setString = " ${(isGetSet ? lowName : item.name)}:$lowName,";
+          setString = " ${item.name}:$lowName,";
         } else {
-          setString = DartHelper.setProperty(lowName, item, className);
+          setString = DartHelper.setProperty(item.name, item, className);
           typeString = DartHelper.getDartTypeString(item.type);
         }
 
         if (isGetSet) {
-          factorySb
-              .writeLine(stringFormat(fss, [typeString, lowName]));
+          factorySb.writeLine(stringFormat(fss, [typeString, lowName]));
           if (factorySb1.length == 0) {
             factorySb1.write("}):");
           } else {
@@ -239,8 +258,8 @@ class ExtendedObject extends ExtendedProperty {
             DartHelper.propertyS(item.propertyAccessorType),
             [typeString, name, lowName]));
         fromJsonSb.writeLine(setString);
-        toJsonSb.writeLine(stringFormat(
-            DartHelper.toJsonSetString, [item.key, setName]));
+        toJsonSb.writeLine(
+            stringFormat(DartHelper.toJsonSetString, [item.key, setName]));
       }
 
       if (factorySb1.length == 0) {
@@ -252,16 +271,14 @@ class ExtendedObject extends ExtendedProperty {
 
       var fromJson = "";
       if (fromJsonSb1.length != 0) {
-        fromJson = stringFormat(
-                DartHelper.fromJsonHeader1, [this.className]) +
+        fromJson = stringFormat(DartHelper.fromJsonHeader1, [this.className]) +
             fromJsonSb1.toString() +
             stringFormat(DartHelper.fromJsonFooter1,
                 [this.className, fromJsonSb.toString()]);
       } else {
-        fromJson =
-            stringFormat(DartHelper.fromJsonHeader, [this.className]) +
-                fromJsonSb.toString() +
-                DartHelper.fromJsonFooter;
+        fromJson = stringFormat(DartHelper.fromJsonHeader, [this.className]) +
+            fromJsonSb.toString() +
+            DartHelper.fromJsonFooter;
       }
 
       //fromJsonSb.AppendLine(DartHelper.FromJsonFooter);
@@ -286,5 +303,31 @@ class ExtendedObject extends ExtendedProperty {
     }
 
     return sb.toString();
+  }
+
+  String hasEmptyProperties() {
+    if (isNullOrWhiteSpace(className)) return uid + "的类名为空";
+
+    for (var item in properties) {
+      if (item is ExtendedObject) {
+        if (depth > 0 &&
+            !item.uid.endsWith("_Array") &&
+            isNullOrWhiteSpace(item.name)) {
+          return item.uid + "的属性名为空";
+        }
+      } else if (isNullOrWhiteSpace(item.name)) {
+        return item.uid + "的属性名为空";
+      }
+    }
+
+    for (var item in objectKeys.entries) {
+      var msg = item.value.hasEmptyProperties();
+      if (msg != null) return msg;
+    }
+    return null;
+  }
+
+  ExtendedObject copy() {
+    return ExtendedObject(source: this);
   }
 }

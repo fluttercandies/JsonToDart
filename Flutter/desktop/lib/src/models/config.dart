@@ -97,19 +97,20 @@ class Config {
     _propertyNameSortingType = propertyNameSortingType;
   }
 
-  double _column1Width = 1.5;
 
-  double get column1Width => _column1Width;
+  int _column1Width = 2;
 
-  set column1Width(double column1Width) {
+  int get column1Width => _column1Width;
+
+  set column1Width(int column1Width) {
     _column1Width = column1Width;
   }
 
-  double _column2Width = 2.0;
+  int _column2Width = 3;
 
-  double get column2Width => _column2Width;
+  int get column2Width => _column2Width;
 
-  set column2Width(double column2Width) {
+  set column2Width(int column2Width) {
     _column2Width = column2Width;
   }
 }

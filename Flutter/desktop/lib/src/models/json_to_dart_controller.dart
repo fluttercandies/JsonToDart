@@ -10,37 +10,45 @@ import 'package:json_to_dart/src/utils/my_string_buffer.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:intl/intl.dart';
 
-class JsonToDartController with ChangeNotifier {
-  ExtendedObject _extendedObject;
+class JsonToDartController {
+  TextEditingControllerValue _textEditingControllerValue =
+      TextEditingControllerValue(TextEditingController());
 
-  String get value => _textEditingController.text;
+  TextEditingControllerValue get textEditingControllerValue =>
+      _textEditingControllerValue;
 
-  void changeValue(String value, {bool notify: false}) {
-    _textEditingController.text = value;
-    if (notify) {
-      notifyListeners();
-    }
+  ExtendedObjectValue _extendedObjectValue = ExtendedObjectValue(null);
+
+  ExtendedObjectValue get extendedObjectValue => _extendedObjectValue;
+
+  String get text => textEditingControllerValue.value.text;
+  set text(String value) {
+    textEditingControllerValue.value = TextEditingController(text: value);
   }
-
-  TextEditingController _textEditingController = TextEditingController();
-  TextEditingController get textEditingController => _textEditingController;
 
   void formatJson() {
     try {
-      var jsonObject = json.decode(_textEditingController.text);
-      _extendedObject = ExtendedObject(
+      var jsonObject = json.decode(text);
+      var extendedObject = ExtendedObject(
           depth: 0,
           keyValuePair: MapEntry<String, Map>("Root", jsonObject),
           uid: "Root");
-      changeValue(JsonEncoder.withIndent("  ").convert(jsonObject),
-          notify: true);
+      extendedObjectValue.value = extendedObject;
+      textEditingControllerValue.value = TextEditingController()
+        ..text = JsonEncoder.withIndent("  ").convert(jsonObject);
     } catch (e) {
       showToast("json格式错误");
     }
   }
 
   void generateDart() {
-    if (_extendedObject != null) {
+    if (extendedObjectValue.value != null) {
+      var msg = extendedObjectValue.value.hasEmptyProperties();
+      if (!isNullOrWhiteSpace(msg)) {
+        showToast(msg);
+        return;
+      }
+
       try {
         MyStringBuffer sb = new MyStringBuffer();
         if (!isNullOrWhiteSpace(ConfigHelper().config.fileHeaderInfo)) {
@@ -88,9 +96,12 @@ class JsonToDartController with ChangeNotifier {
           }
         }
 
-        sb.writeLine(_extendedObject.toString());
-        changeValue(sb.toString(), notify: true);
-        Clipboard.setData(ClipboardData(text: _textEditingController.text));
+        sb.writeLine(extendedObjectValue.value.toString());
+        var result = sb.toString();
+
+        textEditingControllerValue.value = TextEditingController()
+          ..text = result;
+        Clipboard.setData(ClipboardData(text: result));
         showToast("Dart生成成功\n已复制到剪切板");
       } catch (e, stack) {
         print("$e");
@@ -100,10 +111,40 @@ class JsonToDartController with ChangeNotifier {
   }
 
   void selectAll() {
-    _textEditingController = TextEditingController.fromValue(TextEditingValue(
-        text: value,
-        selection:
-            TextSelection(baseOffset: 0, extentOffset: value.length - 1)));
-    notifyListeners();
+    textEditingControllerValue.value = TextEditingController()
+      ..text = text
+      ..selection = TextSelection(baseOffset: 0, extentOffset: text.length - 1);
   }
+
+  void orderPropeties() {
+    if (extendedObjectValue.value != null) {
+      var temp = extendedObjectValue.value;
+      temp.orderPropeties();
+      extendedObjectValue.value = temp.copy();
+    }
+  }
+
+  void updateNameByNamingConventionsType() {
+    if (extendedObjectValue.value != null) {
+      var temp = extendedObjectValue.value;
+      temp.updateNameByNamingConventionsType();
+      extendedObjectValue.value = temp.copy();
+    }
+  }
+
+  void updatePropertyAccessorType() {
+    if (extendedObjectValue.value != null) {
+      var temp = extendedObjectValue.value;
+      temp.updatePropertyAccessorType();
+      extendedObjectValue.value = temp.copy();
+    }
+  }
+}
+
+class ExtendedObjectValue extends ValueNotifier<ExtendedObject> {
+  ExtendedObjectValue(ExtendedObject value) : super(value);
+}
+
+class TextEditingControllerValue extends ValueNotifier<TextEditingController> {
+  TextEditingControllerValue(TextEditingController value) : super(value);
 }

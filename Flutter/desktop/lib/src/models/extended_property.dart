@@ -11,53 +11,35 @@ class ExtendedProperty {
   final String key;
   final dynamic value;
   final MapEntry<String, dynamic> keyValuePair;
+  String name;
+  PropertyAccessorType propertyAccessorType=PropertyAccessorType.none;
 
-  String _name;
-  String get name => _name;
-  set name(value) {
-    _name = value;
-  }
-
-  PropertyAccessorType _propertyAccessorType;
-
-  PropertyAccessorType get propertyAccessorType => _propertyAccessorType;
-
-  set propertyAccessorType(PropertyAccessorType propertyAccessorType) {
-    _propertyAccessorType = propertyAccessorType;
-  }
-
-  DartType _type;
-
-  DartType get type => _type;
-
-  set type(DartType type) {
-    _type = type;
-  }
+  DartType type;
 
   ExtendedProperty({String uid, this.depth, this.keyValuePair})
       : key = keyValuePair.key,
         uid = uid + "_" + keyValuePair.key,
         value = keyValuePair.value,
-        _name = keyValuePair.key,
-        _propertyAccessorType = PropertyAccessorType.none,
-        _type = DartHelper.converDartType(keyValuePair.value.runtimeType);
+        name = keyValuePair.key,
+        propertyAccessorType = ConfigHelper().config.propertyAccessorType,
+        type = DartHelper.converDartType(keyValuePair.value.runtimeType);
 
   void updateNameByNamingConventionsType() {
     switch (ConfigHelper().config.propertyNamingConventionsType) {
       case PropertyNamingConventionsType.none:
-        this.name = key;
+        this.name = name ?? key;
         break;
       case PropertyNamingConventionsType.camelCase:
-        this.name = camelName(key);
+        this.name = camelName(name ?? key);
         break;
       case PropertyNamingConventionsType.pascal:
-        this.name = upcaseCamelName(key);
+        this.name = upcaseCamelName(name ?? key);
         break;
       case PropertyNamingConventionsType.hungarianNotation:
-        this.name = underScoreName(key);
+        this.name = underScoreName(name ?? key);
         break;
       default:
-        this.name = key;
+        this.name = name ?? key;
         break;
     }
   }
@@ -75,14 +57,18 @@ class ExtendedProperty {
         result = "List<{0}>";
       else
         result = stringFormat("List<{0}>", <dynamic>[result]);
-      temp = temp.First;
+      if (temp is List && temp.length > 0) {
+        temp = temp.first;
+      } else {
+        break;
+      }
     }
 
     if (result != null) {
       result = stringFormat(result, <dynamic>[
         className ??
             DartHelper.getDartTypeString(
-                DartHelper.converDartType(temp?.Type ?? Object))
+                DartHelper.converDartType(temp?.runtimeType ?? Object))
       ]);
     }
 
@@ -100,7 +86,11 @@ class ExtendedProperty {
     int count = 0;
     String result;
     while (temp is List) {
-      temp = temp.First;
+      if (temp is List && temp.length > 0) {
+        temp = temp.first;
+      } else {
+        temp = null;
+      }
 
       ///下层为数组
       if (temp != null && temp is List) {

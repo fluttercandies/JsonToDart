@@ -36,7 +36,7 @@ namespace FlutterCandiesJsonToDart.Utils
             {
                 Char s = name[i];
                 var temp = s.ToString();
-                if ((temp.Equals(temp.ToUpper()) && (!Char.IsDigit(s))))
+                if ((temp.Equals(temp.ToUpper()) && s != '_' && (!Char.IsDigit(s))))
                 {
                     result.Append("_");
                 }

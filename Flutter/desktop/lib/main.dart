@@ -15,9 +15,13 @@
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
+import 'package:json_to_dart/src/models/extended_object.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/src/pages/json_text_field.dart';
+import 'package:json_to_dart/src/pages/json_tree.dart';
+import 'package:json_to_dart/src/pages/json_tree_header.dart';
 import 'package:json_to_dart/src/pages/setting.dart';
+import 'package:json_to_dart/src/utils/config_helper.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
@@ -31,25 +35,33 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     JsonToDartController controller = JsonToDartController();
     return OKToast(
       child: MultiProvider(
         providers: [
-          ChangeNotifierProvider.value(
+          Provider.value(
             value: controller,
           ),
-          // Provider<JsonToDartController>.value(
-          //   value: controller,
-          // )
+          ValueListenableProvider<TextEditingController>.value(
+            value: controller.textEditingControllerValue,
+          ),
+          ValueListenableProvider<ExtendedObject>.value(
+            value: controller.extendedObjectValue,
+          )
         ],
         child: MaterialApp(
-          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          //debugShowMaterialGrid: false,
+          
+          title: 'Json To Dart',
           theme: ThemeData(
             primarySwatch: Colors.blue,
             // See https://github.com/flutter/flutter/wiki/Desktop-shells#fonts
             fontFamily: 'Roboto',
           ),
           home: MyHomePage(title: 'Json To Dart'),
+          
         ),
       ),
     );
@@ -66,8 +78,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController tc = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,18 +87,40 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Row(
         children: <Widget>[
           Expanded(
-            child: Column(
-              children: <Widget>[
-                Setting(),
-                Expanded(
-                  child: JsonTextField(),
-                )
-              ],
+            flex: ConfigHelper().config.column1Width,
+            child: Container(
+              margin: EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  Setting(),
+                  Expanded(
+                    child: JsonTextField(),
+                  )
+                ],
+              ),
+            ),
+          ),
+          GestureDetector(
+            child: Container(
+              width: 16.0,
+              color: Color(0x01000000),
+              alignment: Alignment.center,
+              height: double.infinity,
+              child: Text("||"),
             ),
           ),
           Expanded(
+            flex: ConfigHelper().config.column2Width,
             child: Container(
-              color: Colors.red,
+              margin: EdgeInsets.all(10.0),
+              child: Column(
+                children: <Widget>[
+                  JsonTreeHeader(),
+                  Expanded(
+                    child: JsonTree(),
+                  )
+                ],
+              ),
             ),
           )
         ],

@@ -13,7 +13,7 @@ String underScoreName(String name) {
   result.write(name.substring(0, 1).toLowerCase());
   for (int i = 1; i < name.length; i++) {
     var temp = name[i];
-    if ((temp == temp.toUpperCase())) {
+    if (!isNullOrWhiteSpace(temp) && temp!="_" && int.tryParse(temp)==null && (temp == temp.toUpperCase()) ) {
       result.write("_");
     }
     result.write(temp.toLowerCase());
@@ -43,8 +43,10 @@ String camelName(String name) {
     if (result.length == 0) {
       result.write(camel.toLowerCase());
     } else {
-      result.write(camel.substring(0, 1).toUpperCase());
-      result.write(camel.substring(1).toLowerCase());
+      if (!isNullOrWhiteSpace(name)) {
+        result.write(camel.substring(0, 1).toUpperCase());
+        result.write(camel.substring(1).toLowerCase());
+      }
     }
   }
 
