@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/src/utils/config_helper.dart';
 import 'package:json_to_dart/src/utils/enums.dart';
+import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
 class Setting extends StatefulWidget {
@@ -59,6 +60,12 @@ class _SettingState extends State<Setting> {
                 child: Text("生成Dart"),
                 onPressed: () {
                   controller.generateDart();
+                }),
+            FlatButton(
+                child: Text("保存配置"),
+                onPressed: () {
+                  ConfigHelper().save();
+                  showToast("保存配置成功");
                 }),
           ],
         ),
@@ -245,10 +252,10 @@ class _SettingState extends State<Setting> {
                       )),
                 ],
               ),
-              Text(
+             Align(child:  Text(
                 "文件头部信息",
                 textAlign: TextAlign.left,
-              ),
+              ),alignment: Alignment.centerLeft,),
               Container(
                 margin: EdgeInsets.only(top: 10.0),
                 decoration: BoxDecoration(

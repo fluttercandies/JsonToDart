@@ -5,7 +5,6 @@ import 'package:json_to_dart/src/utils/config_helper.dart';
 import 'package:json_to_dart/src/utils/enums.dart';
 import 'package:json_to_dart/src/utils/provider/src/provider.dart';
 
-
 class Setting extends StatefulWidget {
   @override
   _SettingState createState() => _SettingState();
@@ -246,9 +245,12 @@ class _SettingState extends State<Setting> {
                       )),
                 ],
               ),
-              Text(
-                "文件头部信息",
-                textAlign: TextAlign.left,
+              Align(
+                child: Text(
+                  "文件头部信息",
+                  textAlign: TextAlign.left,
+                ),
+                alignment: Alignment.centerLeft,
               ),
               Container(
                 margin: EdgeInsets.only(top: 10.0),

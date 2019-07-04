@@ -27,6 +27,9 @@ class JsonToDartController {
   }
 
   void formatJson() {
+     if (isNullOrWhiteSpace(text)) {
+      return;
+    }
     try {
       var jsonObject = json.decode(text);
       var extendedObject = ExtendedObject(

@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:json_to_dart/src/models/extended_object.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/src/pages/json_text_field.dart';
@@ -30,7 +29,11 @@ import 'package:provider/provider.dart';
 void main() {
   // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  ConfigHelper().initialize();
 
+  SystemChannels.lifecycle.setMessageHandler((msg) {
+    print('SystemChannels> $msg');
+  });
   runApp(new MyApp());
 }
 
@@ -54,7 +57,7 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           //debugShowMaterialGrid: false,
-          
+
           title: 'Json To Dart',
           theme: ThemeData(
             primarySwatch: Colors.blue,
@@ -62,7 +65,6 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Roboto',
           ),
           home: MyHomePage(title: 'Json To Dart'),
-          
         ),
       ),
     );
@@ -78,7 +80,27 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print(state);
+    if (state == AppLifecycleState.suspending) {
+      ConfigHelper().save();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
