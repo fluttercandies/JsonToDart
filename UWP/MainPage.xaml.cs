@@ -66,7 +66,7 @@ namespace FlutterCandiesJsonToDart
             Column1.Width = new GridLength(ConfigHelper.Instance.Config.Column1Width, GridUnitType.Star);
             Column2.Width = new GridLength(ConfigHelper.Instance.Config.Column2Width, GridUnitType.Star);
 #if !WINDOWS_UWP
-            this.Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0));
+            //this.Background = new SolidColorBrush(Color.FromArgb(1, 0, 0, 0));
             this.MouseMove += GridSplitter_ManipulationDelta;
 #if SILVERLIGHT
             this.MouseLeftButtonUp += GridSplitter_PointerReleased;

@@ -230,7 +230,7 @@ namespace FlutterCandiesJsonToDart.Models
                     if (item is ExtendedJObject)
                     {
                         className = (item as ExtendedJObject).ClassName;
-                        setString = String.Format(DartHelper.SetObjectProperty, lowName, item.Key, className);
+                        setString = String.Format(DartHelper.SetObjectProperty, item.Name, item.Key, className);
                         typeString = className;
                     }
                     else if (item.JType == JTokenType.Array)
@@ -243,12 +243,12 @@ namespace FlutterCandiesJsonToDart.Models
 
                         fromJsonSb1.AppendLine(item.GetArraySetPropertyString(lowName, typeString, className: className));
 
-                        setString = $" {(isGetSet ? lowName : item.Name)}:{lowName},";
+                        setString = $" {item.Name}:{lowName},";
 
                     }
                     else
                     {
-                        setString = DartHelper.SetProperty(lowName, item, ClassName);
+                        setString = DartHelper.SetProperty(item.Name, item, ClassName);
                         typeString = DartHelper.GetDartTypeString(item.Type);
                     }
 
