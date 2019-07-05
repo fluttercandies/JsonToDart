@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter_web/material.dart';
 import 'package:json_to_dart/src/models/extended_object.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
@@ -10,9 +12,9 @@ import 'package:json_to_dart/src/utils/oktoast/oktoast.dart';
 
 import 'src/utils/provider/provider.dart';
 
-void main(){
-   ConfigHelper().initialize();
-   runApp(MyApp());
+void main() {
+  ConfigHelper().initialize();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -60,12 +62,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  GlobalKey key1 = GlobalKey();
+  GlobalKey key2 = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: <Widget>[
           Expanded(
+            key: key1,
             flex: ConfigHelper().config.column1Width,
             child: Container(
               margin: EdgeInsets.all(10.0),
@@ -79,7 +84,11 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
-          GestureDetector(
+          Listener(
+            onPointerDown: onPointerDown,
+            onPointerUp: onPointerUp,
+            onPointerMove: onPointerMove,
+            behavior: HitTestBehavior.translucent,
             child: Container(
               width: 16.0,
               color: Color(0x01000000),
@@ -89,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Expanded(
+            key: key2,
             flex: ConfigHelper().config.column2Width,
             child: Container(
               margin: EdgeInsets.all(10.0),
@@ -105,5 +115,35 @@ class _MyHomePageState extends State<MyHomePage> {
         ],
       ),
     );
+  }
+
+  bool pointerPressed = false;
+  void updateGridSplitter(double x) {
+    var width1 = max(key1.currentContext.size.width + x, 50.0);
+    var width2 = max(key1.currentContext.size.width - x, 50.0);
+    ConfigHelper().config.column1Width =
+        (double.parse((width1 / (width1 + width2)).toStringAsFixed(5)) * 10000)
+            .toInt();
+    ConfigHelper().config.column2Width =
+        (double.parse((width2 / (width1 + width2)).toStringAsFixed(5)) * 10000)
+            .toInt();
+  }
+
+  Offset point;
+  void onPointerDown(PointerDownEvent event) {
+    pointerPressed = true;
+    point = event.position;
+  }
+
+  void onPointerUp(PointerUpEvent event) {
+    pointerPressed = false;
+  }
+
+  void onPointerMove(PointerMoveEvent event) {
+    if (pointerPressed) {
+      setState(() {
+        updateGridSplitter(event.position.dx - point.dx);
+      });
+    }
   }
 }
