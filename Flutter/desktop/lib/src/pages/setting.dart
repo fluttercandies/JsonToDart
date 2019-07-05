@@ -56,17 +56,18 @@ class _SettingState extends State<Setting> {
                 controller.selectAll();
               },
             ),
-            FlatButton(
-                child: Text("生成Dart"),
-                onPressed: () {
-                  controller.generateDart();
-                }),
-            FlatButton(
+              FlatButton(
                 child: Text("保存配置"),
                 onPressed: () {
                   ConfigHelper().save();
                   showToast("保存配置成功");
                 }),
+            FlatButton(
+                child: Text("生成Dart"),
+                onPressed: () {
+                  controller.generateDart();
+                }),
+          
           ],
         ),
         if (showMoreSetting)
