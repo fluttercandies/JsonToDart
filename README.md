@@ -9,6 +9,7 @@
 - [flutter](https://github.com/flutter/flutter)
 - [go-lutter](https://github.com/go-flutter-desktop/go-flutter)
 - [flutter-desktop](https://github.com/google/flutter-desktop-embedding)
+- [flutter-web](https://github.com/flutter/flutter_web)
 
 有任何问题可以提Issue 或者 加入QQ群181398081询问
 
@@ -35,14 +36,14 @@
 
 # 下载
 
-| 平台    | 语言 | 完成度                                                                                                               | 代码/安装包地址                                                                                                              |
-| ------- | ---- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
-| Windows | C#   | Windows10,UWP构建，Windows上面体验最佳                                                                               | [UWP.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                             |
-| Windows | C#   | Windows7,WPF构建                                                                                                     | [WPF.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                             |
-| Windows | Dart | Flutter构建,使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译，只有Debug版本。                | [FlutterWindows.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                  |
-| Mac     | Dart | Flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译(官方方式不清楚产出) | [FlutterMac.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
-| Web     | C#   | [Silverlight](https://baike.so.com/doc/5402730-5640416.html)构建, 需要安装Silverlight插件，有浏览器限制              | [网页地址](https://fluttercandies.github.io/JsonToDart),[带字体文件网页地址](https://fluttercandies.github.io/JsonToDartWeb) |
-| Web     | Dart | Flutter Web构建, 只支持本地运行，打包部署网页报错                                                                    | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/web)                                             |
+| 平台    | 语言 | 完成度                                                                                                  | 代码/安装包地址                                                                                                              |
+| ------- | ---- | ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| Windows | C#   | Windows10,UWP构建，Windows上面体验最佳                                                                  | [UWP.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                             |
+| Windows | C#   | Windows7,WPF构建                                                                                        | [WPF.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                             |
+| Windows | Dart | Flutter构建,使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译，只有Debug版本。    | [FlutterWindows.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                  |
+| Mac     | Dart | Flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译(官方方式不清楚产出)  | [FlutterMac.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
+| Web     | C#   | [Silverlight](https://baike.so.com/doc/5402730-5640416.html)构建, 需要安装Silverlight插件，有浏览器限制 | [网页地址](https://fluttercandies.github.io/JsonToDart),[带字体文件网页地址](https://fluttercandies.github.io/JsonToDartWeb) |
+| Web     | Dart | [flutter-web](https://github.com/flutter/flutter_web)构建, 只支持本地运行，打包部署网页报错             | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/web)                                             |
 
 
 # 安装
