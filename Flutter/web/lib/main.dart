@@ -120,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool pointerPressed = false;
   void updateGridSplitter(double x) {
     var width1 = max(key1.currentContext.size.width + x, 50.0);
-    var width2 = max(key1.currentContext.size.width - x, 50.0);
+    var width2 = max(key2.currentContext.size.width - x, 50.0);
     ConfigHelper().config.column1Width =
         (double.parse((width1 / (width1 + width2)).toStringAsFixed(5)) * 10000)
             .toInt();
@@ -129,10 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
             .toInt();
   }
 
-  Offset point;
   void onPointerDown(PointerDownEvent event) {
     pointerPressed = true;
-    point = event.position;
   }
 
   void onPointerUp(PointerUpEvent event) {
@@ -142,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void onPointerMove(PointerMoveEvent event) {
     if (pointerPressed) {
       setState(() {
-        updateGridSplitter(event.position.dx - point.dx);
+        updateGridSplitter(event.delta.dx);
       });
     }
   }
