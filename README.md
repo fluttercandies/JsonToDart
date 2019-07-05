@@ -2,7 +2,7 @@
 
 [功能最全面的Json转换Dart的工具](https://juejin.im/post/5d1463245188255d0d2f5c81)，支持Windows，Mac，Web以及Linux。
 
-使用到的技术：
+相关技术：
 - [uwp](https://baike.so.com/doc/23718184-24274055.html)
 - [wpf](https://baike.so.com/doc/2917373-3078588.html)
 - [silverlight](https://baike.so.com/doc/5402730-5640416.html)
@@ -41,7 +41,7 @@
 | Windows | C#   | Windows7,WPF构建                                                                                                     | [WPF.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                             |
 | Windows | Dart | Flutter构建,使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译，只有Debug版本。                | [FlutterWindows.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                  |
 | Mac     | Dart | Flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译(官方方式不清楚产出) | [FlutterMac.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
-| Web     | C#   | [Silverlight](https://baike.so.com/doc/5402730-5640416.html)构建, 需要安装Silverlight插件以及浏览器限制              | [网页地址](https://fluttercandies.github.io/JsonToDart),[带字体文件网页地址](https://fluttercandies.github.io/JsonToDartWeb) |
+| Web     | C#   | [Silverlight](https://baike.so.com/doc/5402730-5640416.html)构建, 需要安装Silverlight插件，有浏览器限制              | [网页地址](https://fluttercandies.github.io/JsonToDart),[带字体文件网页地址](https://fluttercandies.github.io/JsonToDartWeb) |
 | Web     | Dart | Flutter Web构建, 只支持本地运行，打包部署网页报错                                                                    | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/web)                                             |
 
 
