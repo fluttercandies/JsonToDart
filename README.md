@@ -1,10 +1,16 @@
 ![](https://github.com/fluttercandies/JsonToDart/blob/master/UWP/Assets/Wide310x150Logo.scale-400.png)
 
-[功能最全面的Json转换Dart的工具](https://juejin.im/post/5d1463245188255d0d2f5c81)，使用[UWP](https://baike.so.com/doc/23718184-24274055.html),[WPF](https://baike.so.com/doc/2917373-3078588.html)和[Silverlight](https://baike.so.com/doc/5402730-5640416.html)开发，支持桌面和Web。
+[功能最全面的Json转换Dart的工具](https://juejin.im/post/5d1463245188255d0d2f5c81)，支持Windows，Mac，Web以及Linux。
 
-有任何问题可以提Issue 或者 
+使用到的技术：
+- [uwp](https://baike.so.com/doc/23718184-24274055.html)
+- [wpf](https://baike.so.com/doc/2917373-3078588.html)
+- [silverlight](https://baike.so.com/doc/5402730-5640416.html)
+- [flutter](https://github.com/flutter/flutter)
+- [go-lutter](https://github.com/go-flutter-desktop/go-flutter)
+- [flutter-desktop](https://github.com/google/flutter-desktop-embedding)
 
-加入QQ群181398081询问
+有任何问题可以提Issue 或者 加入QQ群181398081询问
 
 - [下载](#%E4%B8%8B%E8%BD%BD)
 - [安装](#%E5%AE%89%E8%A3%85)
@@ -33,8 +39,8 @@
 | ------- | ---- | -------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
 | Windows | C#   | Windows10,UWP构建，Windows上面体验最佳                                                                               | [UWP.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                             |
 | Windows | C#   | Windows7,WPF构建                                                                                                     | [WPF.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                             |
-| Windows | Dart | Flutter构建,使用[官方方式](https://github.com/google/flutter-desktop-embedding )编译，只有Debug版本。                | [FlutterWindows.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                  |
-| Mac     | Dart | Flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译，因为官方的方式，不清楚产物是什么 | [FlutterMac.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
+| Windows | Dart | Flutter构建,使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译，只有Debug版本。                | [FlutterWindows.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                  |
+| Mac     | Dart | Flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译(官方方式不清楚产出) | [FlutterMac.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
 | Web     | C#   | [Silverlight](https://baike.so.com/doc/5402730-5640416.html)构建, 需要安装Silverlight插件以及浏览器限制              | [网页地址](https://fluttercandies.github.io/JsonToDart),[带字体文件网页地址](https://fluttercandies.github.io/JsonToDartWeb) |
 | Web     | Dart | Flutter Web构建, 只支持本地运行，打包部署网页报错                                                                    | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/web)                                             |
 
