@@ -129,14 +129,14 @@ class _MyHomePageState extends State<MyHomePage>
           Listener(
             onPointerDown: onPointerDown,
             onPointerUp: onPointerUp,
-            child: GestureDetector(
-              child: Container(
-                width: 16.0,
-                color: Color(0x01000000),
-                alignment: Alignment.center,
-                height: double.infinity,
-                child: Text("||"),
-              ),
+            onPointerMove: onPointerMove,
+            behavior: HitTestBehavior.translucent,
+            child: Container(
+              width: 16.0,
+              color: Color(0x01000000),
+              alignment: Alignment.center,
+              height: double.infinity,
+              child: Text("||"),
             ),
           ),
           Expanded(
@@ -163,7 +163,29 @@ class _MyHomePageState extends State<MyHomePage>
   void updateGridSplitter(double x) {
     var width1 = max(key1.currentContext.size.width + x, 50.0);
     var width2 = max(key1.currentContext.size.width - x, 50.0);
-    ConfigHelper().config.column1Width = (double.parse((width1 / (width1 + width2)).toStringAsFixed(3))*1000).toInt();
-    ConfigHelper().config.column2Width = (double.parse((width2 / (width1 + width2)).toStringAsFixed(3))*1000).toInt();
+    ConfigHelper().config.column1Width =
+        (double.parse((width1 / (width1 + width2)).toStringAsFixed(5)) * 10000)
+            .toInt();
+    ConfigHelper().config.column2Width =
+        (double.parse((width2 / (width1 + width2)).toStringAsFixed(5)) * 10000)
+            .toInt();
+  }
+
+  Offset point;
+  void onPointerDown(PointerDownEvent event) {
+    pointerPressed = true;
+    point = event.localPosition;
+  }
+
+  void onPointerUp(PointerUpEvent event) {
+    pointerPressed = false;
+  }
+
+  void onPointerMove(PointerMoveEvent event) {
+    if (pointerPressed) {
+     setState(() {
+       updateGridSplitter(event.localPosition.dx - point.dx); 
+     });
+    }
   }
 }
