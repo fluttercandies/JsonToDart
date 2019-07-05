@@ -163,15 +163,7 @@ class _MyHomePageState extends State<MyHomePage>
   void updateGridSplitter(double x) {
     var width1 = max(key1.currentContext.size.width + x, 50.0);
     var width2 = max(key1.currentContext.size.width - x, 50.0);
-    ConfigHelper().config.column1Width =
-        (double.parse((width1 / (width1 + width2)).toStringAsFixed(3)) * 1000)
-            .toInt();
-    ConfigHelper().config.column2Width =
-        (double.parse((width2 / (width1 + width2)).toStringAsFixed(3)) * 1000)
-            .toInt();
+    ConfigHelper().config.column1Width = (double.parse((width1 / (width1 + width2)).toStringAsFixed(3))*1000).toInt();
+    ConfigHelper().config.column2Width = (double.parse((width2 / (width1 + width2)).toStringAsFixed(3))*1000).toInt();
   }
-
-  void onPointerDown(PointerDownEvent event) {}
-
-  void onPointerUp(PointerUpEvent event) {}
 }
