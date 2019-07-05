@@ -44,7 +44,7 @@
 | Mac     | Dart | Flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译(官方方式不清楚产出)  | [FlutterMac.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
 | Web     | C#   | [Silverlight](https://baike.so.com/doc/5402730-5640416.html)构建, 需要安装Silverlight插件，有浏览器限制 | [网页地址](https://fluttercandies.github.io/JsonToDart),[带字体文件网页地址](https://fluttercandies.github.io/JsonToDartWeb) |
 | Web     | Dart | [flutter-web](https://github.com/flutter/flutter_web)构建, 只支持本地运行，打包部署网页报错             | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/web)                                             |
-
+| Linux   | Dart | Flutter构建,使用官方方式编译，(没有环境测试，假装可以用)                                                | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/desktop)                                         |
 
 # 安装
 ## UWP(Windows10)
