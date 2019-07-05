@@ -32,7 +32,7 @@ Windows10 用户
 
 考虑到应用商店经常大姨妈，就没有上传到商店了，大家到下面地址下载安装
 
-[1.0](https://github.com/fluttercandies/JsonToDart/blob/master/Release/UWP/JosnToDart_1.0.zip)
+[下载地址](https://github.com/fluttercandies/JsonToDart/tree/master/Release/windows/c%23/windows10)
 
 下载好安装包，解压。
 
@@ -48,7 +48,7 @@ Windows10 用户
 
 Windows7/Windows8 用户
 
-[1.0](https://github.com/fluttercandies/JsonToDart/blob/master/Release/WPF/JosnToDart_1.0.zip)
+[下载地址](https://github.com/fluttercandies/JsonToDart/tree/master/Release/windows/c%23/windows7)
 
 下载解压，点击setup.exe安装
 
