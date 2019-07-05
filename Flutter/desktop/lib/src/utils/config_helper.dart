@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:json_to_dart/src/models/config.dart';
 
 class ConfigHelper {
+  static const String key="JsonToDartConfig.txt";
   static final ConfigHelper _singleton = new ConfigHelper._internal();
 
   factory ConfigHelper() {
@@ -21,7 +22,7 @@ class ConfigHelper {
     var currentDirectory = Directory.current;
 
     File file = File(
-        "${currentDirectory.uri.toFilePath(windows: Platform.isWindows)}JsonToDartConfig.txt");
+        "${currentDirectory.uri.toFilePath(windows: Platform.isWindows)}$key");
     if (!file.existsSync()) {
       file.createSync();
       file.writeAsStringSync(json.encode(config));
@@ -36,7 +37,7 @@ class ConfigHelper {
   void save() {
     var currentDirectory = Directory.current;
     File file = File(
-        "${currentDirectory.uri.toFilePath(windows: Platform.isWindows)}JsonToDartConfig.txt");
+        "${currentDirectory.uri.toFilePath(windows: Platform.isWindows)}$key");
     if (file.existsSync()) {
       file.writeAsStringSync(json.encode(config));
     }

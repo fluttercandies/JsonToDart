@@ -15,7 +15,6 @@
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:json_to_dart/src/models/extended_object.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/src/pages/json_text_field.dart';
@@ -31,9 +30,9 @@ void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
   ConfigHelper().initialize();
 
-  SystemChannels.lifecycle.setMessageHandler((msg) {
-    print('SystemChannels> $msg');
-  });
+  // SystemChannels.lifecycle.setMessageHandler((msg) {
+  //   print('SystemChannels> $msg');
+  // });
   runApp(new MyApp());
 }
 
@@ -80,33 +79,32 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
+class _MyHomePageState extends State<MyHomePage> 
+//with WidgetsBindingObserver 
+{
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addObserver(this);
+  // }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance.removeObserver(this);
+  //   super.dispose();
+  // }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    print(state);
-    if (state == AppLifecycleState.suspending) {
-      ConfigHelper().save();
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState state) {
+  //   print(state);
+  //   if (state == AppLifecycleState.suspending) {
+  //     ConfigHelper().save();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Row(
         children: <Widget>[
           Expanded(

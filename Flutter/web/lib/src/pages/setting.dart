@@ -1,9 +1,9 @@
 import 'package:flutter_web/material.dart';
-import 'package:flutter_web/services.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/src/utils/config_helper.dart';
 import 'package:json_to_dart/src/utils/enums.dart';
 import 'package:json_to_dart/src/utils/provider/src/provider.dart';
+import 'package:json_to_dart/src/utils/oktoast/oktoast.dart';
 
 class Setting extends StatefulWidget {
   @override
@@ -55,6 +55,12 @@ class _SettingState extends State<Setting> {
             //     controller.selectAll();
             //   },
             // ),
+             FlatButton(
+                child: Text("保存配置"),
+                onPressed: () {
+                  ConfigHelper().save();
+                  showToast("保存配置成功");
+                }),
             FlatButton(
                 child: Text("生成Dart"),
                 onPressed: () {

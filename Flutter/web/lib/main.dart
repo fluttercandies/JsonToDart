@@ -10,7 +10,10 @@ import 'package:json_to_dart/src/utils/oktoast/oktoast.dart';
 
 import 'src/utils/provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main(){
+   ConfigHelper().initialize();
+   runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -44,7 +47,6 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }
 
@@ -61,9 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: Row(
         children: <Widget>[
           Expanded(
