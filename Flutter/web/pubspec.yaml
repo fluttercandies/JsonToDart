@@ -9,6 +9,8 @@ dependencies:
   flutter_web: any
   flutter_web_ui: any
   intl: ^0.15.8
+  json_to_dart_library:
+    path: ../json_to_dart_library
 
 dev_dependencies:
   build_runner: ^1.4.0

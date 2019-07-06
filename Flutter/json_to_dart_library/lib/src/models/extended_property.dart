@@ -1,9 +1,9 @@
-import 'package:json_to_dart/src/utils/config_helper.dart';
-import 'package:json_to_dart/src/utils/enums.dart';
-import 'package:json_to_dart/src/utils/camel_under_score_converter.dart';
-import 'package:json_to_dart/src/utils/dart_helper.dart';
-import 'package:json_to_dart/src/utils/my_string_buffer.dart';
-import 'package:json_to_dart/src/utils/string_helper.dart';
+import 'package:json_to_dart_library/src/utils/enums.dart';
+import 'package:json_to_dart_library/src/utils/camel_under_score_converter.dart';
+import 'package:json_to_dart_library/src/utils/dart_helper.dart';
+import 'package:json_to_dart_library/src/utils/my_string_buffer.dart';
+import 'package:json_to_dart_library/src/utils/string_helper.dart';
+import 'config.dart';
 
 class ExtendedProperty {
   final String uid;
@@ -21,11 +21,11 @@ class ExtendedProperty {
         uid = uid + "_" + keyValuePair.key,
         value = keyValuePair.value,
         name = keyValuePair.key,
-        propertyAccessorType = ConfigHelper().config.propertyAccessorType,
+        propertyAccessorType = appConfig.propertyAccessorType,
         type = DartHelper.converDartType(keyValuePair.value.runtimeType);
 
   void updateNameByNamingConventionsType() {
-    switch (ConfigHelper().config.propertyNamingConventionsType) {
+    switch (appConfig.propertyNamingConventionsType) {
       case PropertyNamingConventionsType.none:
         this.name = name ?? key;
         break;
@@ -45,12 +45,12 @@ class ExtendedProperty {
   }
 
   void updatePropertyAccessorType() {
-    propertyAccessorType = ConfigHelper().config.propertyAccessorType;
+    propertyAccessorType = appConfig.propertyAccessorType;
   }
 
   String getTypeString({String className}) {
     var temp = value;
-    String result = "";
+    String result;
 
     while (temp is List) {
       if (result == null) {
@@ -83,7 +83,7 @@ class ExtendedProperty {
     sb.writeLine(
         "    $typeString $setName = jsonRes['$key'] is List ? []: null; ");
     sb.writeLine("    if($setName!=null) {");
-    bool enableTryCatch = ConfigHelper().config.enableArrayProtection;
+    bool enableTryCatch = appConfig.enableArrayProtection;
     int count = 0;
     String result;
     while (temp is List) {

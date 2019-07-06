@@ -1,18 +1,19 @@
 import 'dart:async';
 
-import 'package:json_to_dart/src/utils/camel_under_score_converter.dart';
-import 'package:json_to_dart/src/utils/config_helper.dart';
-import 'package:json_to_dart/src/utils/dart_helper.dart';
-import 'package:json_to_dart/src/utils/enums.dart';
-import 'package:json_to_dart/src/utils/my_string_buffer.dart';
-import 'package:json_to_dart/src/utils/string_helper.dart';
+import 'package:json_to_dart_library/src/utils/camel_under_score_converter.dart';
+import 'package:json_to_dart_library/src/utils/dart_helper.dart';
+import 'package:json_to_dart_library/src/utils/enums.dart';
+import 'package:json_to_dart_library/src/utils/my_string_buffer.dart';
+import 'package:json_to_dart_library/src/utils/string_helper.dart';
 
 import 'extended_property.dart';
+import 'config.dart';
 
 class ExtendedObject extends ExtendedProperty {
-  Map _jObject;
-  Map _mergeObject;
-  Map get jObject => _mergeObject != null ? _mergeObject : _jObject;
+  Map<String, dynamic> _jObject;
+  Map<String, dynamic> _mergeObject;
+  Map<String, dynamic> get jObject =>
+      _mergeObject != null ? _mergeObject : _jObject;
 
   String _className;
 
@@ -43,7 +44,7 @@ class ExtendedObject extends ExtendedProperty {
     if (source != null) {
       properties = source.properties;
       objectKeys = source.objectKeys;
-      this._jObject = source.keyValuePair.value as Map;
+      this._jObject = source.keyValuePair.value as Map<String, dynamic>;
       this.className = source.className;
     } else {
       properties = List<ExtendedProperty>();
@@ -89,7 +90,7 @@ class ExtendedObject extends ExtendedProperty {
       }
       var array = item.value as List;
       if (array.isNotEmpty) {
-        var count = ConfigHelper().config.traverseArrayCount;
+        var count = appConfig.traverseArrayCount;
         if (count == 99) {
           count = array.length;
         }
@@ -117,6 +118,7 @@ class ExtendedObject extends ExtendedProperty {
       for (var item in _jObject.entries) {
         if (!_mergeObject.containsKey(item.key)) {
           needInitialize = true;
+          _mergeObject[item.key] = item.value;
         }
       }
 
@@ -128,6 +130,7 @@ class ExtendedObject extends ExtendedProperty {
         for (var item in other.entries) {
           if (!_mergeObject.containsKey(item.key)) {
             needInitialize = true;
+            _mergeObject[item.key] = item.value;
           }
         }
 
@@ -169,8 +172,8 @@ class ExtendedObject extends ExtendedProperty {
   }
 
   void orderPropeties() {
-    if (jObject.entries.isNotEmpty) {
-      var sortingType = ConfigHelper().config.propertyNameSortingType;
+    if (jObject.entries.length > 0) {
+      var sortingType = appConfig.propertyNameSortingType;
       if (sortingType != PropertyNameSortingType.none) {
         if (sortingType == PropertyNameSortingType.ascending) {
           properties.sort((left, right) => left.name.compareTo(right.name));
@@ -195,7 +198,7 @@ class ExtendedObject extends ExtendedProperty {
 
     sb.writeLine(stringFormat(DartHelper.classHeader, [this.className]));
 
-    if (properties.isNotEmpty) {
+    if (properties.length > 0) {
       MyStringBuffer factorySb = MyStringBuffer();
       MyStringBuffer factorySb1 = MyStringBuffer();
       MyStringBuffer propertySb = MyStringBuffer();
@@ -226,7 +229,7 @@ class ExtendedObject extends ExtendedProperty {
           setString = stringFormat(
               DartHelper.setObjectProperty, [item.name, item.key, className]);
           typeString = className;
-        } else if (item.value.runtimeType == List) {
+        } else if (item.value is List) {
           if (objectKeys.containsKey(item.key)) {
             className = objectKeys[item.key].className;
           }
@@ -238,7 +241,7 @@ class ExtendedObject extends ExtendedProperty {
 
           setString = " ${item.name}:$lowName,";
         } else {
-          setString = DartHelper.setProperty(item.name, item, className);
+          setString = DartHelper.setProperty(item.name, item, this.className);
           typeString = DartHelper.getDartTypeString(item.type);
         }
 

@@ -16,6 +16,8 @@ dependencies:
   provider: ^3.0.0+1
   oktoast: ^2.1.9
   intl: ^0.15.8
+  json_to_dart_library:
+    path: ../json_to_dart_library
 
 dev_dependencies:
   flutter_test:

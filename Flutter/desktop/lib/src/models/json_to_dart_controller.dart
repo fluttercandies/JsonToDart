@@ -2,11 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:json_to_dart/src/models/extended_object.dart';
-import 'package:json_to_dart/src/utils/camel_under_score_converter.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 import 'package:json_to_dart/src/utils/config_helper.dart';
-import 'package:json_to_dart/src/utils/dart_helper.dart';
-import 'package:json_to_dart/src/utils/my_string_buffer.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:intl/intl.dart';
 
@@ -39,8 +36,11 @@ class JsonToDartController {
       extendedObjectValue.value = extendedObject;
       textEditingControllerValue.value = TextEditingController()
         ..text = JsonEncoder.withIndent("  ").convert(jsonObject);
-    } catch (e) {
-      showToast("json格式错误");
+    } catch (e, stack) {
+      print("$e");
+      print("$stack");
+       showToast("格式错误,错误信息已复制到剪切板",duration: Duration(seconds: 5));
+         Clipboard.setData(ClipboardData(text: "$e\n$stack"));
     }
   }
 
@@ -111,6 +111,8 @@ class JsonToDartController {
       } catch (e, stack) {
         print("$e");
         print("$stack");
+         showToast("生成Dart错误,错误信息已复制到剪切板",duration: Duration(seconds: 5));
+         Clipboard.setData(ClipboardData(text: "$e\n$stack"));
       }
     }
   }

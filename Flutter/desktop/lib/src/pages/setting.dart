@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
-import 'package:json_to_dart/src/utils/config_helper.dart';
-import 'package:json_to_dart/src/utils/enums.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
+import 'package:json_to_dart/src/utils/config_helper.dart';
 
 class Setting extends StatefulWidget {
   @override

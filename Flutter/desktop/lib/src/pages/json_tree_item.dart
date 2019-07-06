@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/src/models/extended_object.dart';
-import 'package:json_to_dart/src/models/extended_property.dart';
-import 'package:json_to_dart/src/utils/camel_under_score_converter.dart';
-import 'package:json_to_dart/src/utils/enums.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 
 class JsonTreeItem extends StatefulWidget {
   final ExtendedObject object;

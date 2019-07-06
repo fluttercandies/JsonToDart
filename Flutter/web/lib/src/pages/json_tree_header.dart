@@ -1,7 +1,7 @@
 import 'package:flutter_web/material.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 import 'package:json_to_dart/src/utils/config_helper.dart';
-import 'package:json_to_dart/src/utils/enums.dart';
 import 'package:json_to_dart/src/utils/provider/src/provider.dart';
 
 

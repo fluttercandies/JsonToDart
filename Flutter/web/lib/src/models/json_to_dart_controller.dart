@@ -2,13 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter_web/material.dart';
 import 'package:flutter_web/services.dart';
-import 'package:json_to_dart/src/models/extended_object.dart';
-import 'package:json_to_dart/src/utils/camel_under_score_converter.dart';
-import 'package:json_to_dart/src/utils/config_helper.dart';
-import 'package:json_to_dart/src/utils/dart_helper.dart';
-import 'package:json_to_dart/src/utils/my_string_buffer.dart';
-import 'package:intl/intl.dart';
 import 'package:json_to_dart/src/utils/oktoast/oktoast.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
+import 'package:json_to_dart/src/utils/config_helper.dart';
+import 'package:intl/intl.dart';
 
 class JsonToDartController {
   TextEditingControllerValue _textEditingControllerValue =
@@ -27,7 +24,7 @@ class JsonToDartController {
   }
 
   void formatJson() {
-     if (isNullOrWhiteSpace(text)) {
+    if (isNullOrWhiteSpace(text)) {
       return;
     }
     try {
@@ -39,8 +36,11 @@ class JsonToDartController {
       extendedObjectValue.value = extendedObject;
       textEditingControllerValue.value = TextEditingController()
         ..text = JsonEncoder.withIndent("  ").convert(jsonObject);
-    } catch (e) {
-      showToast("json格式错误");
+    } catch (e, stack) {
+      print("$e");
+      print("$stack");
+       showToast("格式化错误,错误信息已复制到剪切板",duration: Duration(seconds: 5));
+         Clipboard.setData(ClipboardData(text: "$e\n$stack"));
     }
   }
 
@@ -53,7 +53,7 @@ class JsonToDartController {
       }
 
       try {
-        MyStringBuffer sb = new MyStringBuffer();
+        MyStringBuffer sb = MyStringBuffer();
         if (!isNullOrWhiteSpace(ConfigHelper().config.fileHeaderInfo)) {
           var info = ConfigHelper().config.fileHeaderInfo;
           //[Date MM-dd HH:mm]
@@ -111,6 +111,8 @@ class JsonToDartController {
       } catch (e, stack) {
         print("$e");
         print("$stack");
+         showToast("生成Dart错误,错误信息已复制到剪切板",duration: Duration(seconds: 5));
+         Clipboard.setData(ClipboardData(text: "$e\n$stack"));
       }
     }
   }

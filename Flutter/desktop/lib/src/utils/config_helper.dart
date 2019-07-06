@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:json_to_dart/src/models/config.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 
 class ConfigHelper {
   static const String key="JsonToDartConfig.txt";
@@ -12,11 +11,12 @@ class ConfigHelper {
   }
 
   ConfigHelper._internal() {
-    _config = Config();
+   
   }
 
-  Config _config;
-  Config get config => _config;
+
+  Config get config => appConfig;
+
 
   void initialize() {
     var currentDirectory = Directory.current;
@@ -29,7 +29,7 @@ class ConfigHelper {
     } else {
       String content = file.readAsStringSync();
       if (content != null && content != "") {
-        _config = Config.fromJson(json.decode(content));
+        appConfig = Config.fromJson(json.decode(content));
       }
     }
   }

@@ -15,12 +15,12 @@
 import 'package:flutter/foundation.dart'
     show debugDefaultTargetPlatformOverride;
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/src/models/extended_object.dart';
 import 'package:json_to_dart/src/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/src/pages/json_text_field.dart';
 import 'package:json_to_dart/src/pages/json_tree.dart';
 import 'package:json_to_dart/src/pages/json_tree_header.dart';
 import 'package:json_to_dart/src/pages/setting.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 import 'package:json_to_dart/src/utils/config_helper.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';

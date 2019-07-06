@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/src/models/extended_object.dart';
-import 'package:json_to_dart/src/models/extended_property.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 import 'package:json_to_dart/src/pages/json_tree_item.dart';
 import 'package:provider/provider.dart';
 

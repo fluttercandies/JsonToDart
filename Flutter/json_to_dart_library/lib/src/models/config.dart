@@ -1,5 +1,7 @@
-import 'package:json_to_dart/src/utils/enums.dart';
+import 'package:json_to_dart_library/src/utils/enums.dart';
 import 'dart:convert' show json;
+
+Config appConfig = Config();
 
 class Config {
   /// <summary>

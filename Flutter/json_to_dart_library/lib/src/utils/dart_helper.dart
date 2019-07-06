@@ -1,5 +1,5 @@
-import 'package:json_to_dart/src/models/extended_property.dart';
-import 'config_helper.dart';
+import 'package:json_to_dart_library/src/models/extended_property.dart';
+import 'package:json_to_dart_library/src/models/config.dart';
 import 'enums.dart';
 
 class DartHelper {
@@ -26,7 +26,7 @@ class DartHelper {
 
   static String setProperty(
       String setName, ExtendedProperty item, String className) {
-    if (ConfigHelper().config.enableDataProtection) {
+    if (appConfig.enableDataProtection) {
       return "    $setName : convertValueByType(jsonRes['${item.key}'],${item.value.runtimeType.toString()},stack:\"$className-${item.key}\"),";
     } else {
       return "    $setName : jsonRes['${item.key}'],";
@@ -120,7 +120,7 @@ class DartHelper {
       { try {f?.call();} 
       catch (e, stack)
        { 
-        debugPrint(\$e); \n  debugPrint(\$stack);
+        debugPrint("\$e"); \n  debugPrint("\$stack");
         }
         }""";
 
