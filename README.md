@@ -92,9 +92,7 @@ Mac [Firefox](https://mac.filehorse.com/download-firefox/7957/download/)这个�
 
 ## Flutter(Mac)
 
-点击json_to_dart启动
-
-![](https://github.com/fluttercandies/JsonToDart/blob/master/Image/Mac启动.png)
+go-flutter生成的产物是exec，可以双击打开,后由[低调大佬](https://github.com/CaiJingLong)测试打包[DMG](https://studygolang.com/articles/14480)，安装即可，注意在安全性与隐私中同意安装。
 
 ## Flutter(Windows_x64)
 
