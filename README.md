@@ -42,12 +42,12 @@ Flutter Candies qq群181398081
 | ------- | ---- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | windows | C#   | uwp构建，运行环境windows10，x86/x64                                                                     | [windows-uwp.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
 | windows | C#   | wpf构建，运行环境windows10/windows8/widnows7，x86/x64                                                   | [windows-wpf.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
-| windows | dart | flutter构建,使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译,x64 ,debug版本      | [windows-x64-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                              |
-| windows | dart | flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译,x64 ,debug版本       | [windows-x64-go-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                           |
+| windows | dart | flutter构建, 使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译,x64 ,debug版本      | [windows-x64-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                              |
+| windows | dart | flutter构建, 使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译,x64 ,debug版本       | [windows-x64-go-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                           |
 | mac     | dart | flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译(官方方式,未找到产物) | [mac-go-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                   |
 | web     | C#   | [silverlight](https://baike.so.com/doc/5402730-5640416.html)构建, 需要安装silverlight插件，有浏览器限制 | [网页地址](https://fluttercandies.github.io/JsonToDart)和[带字体文件网页地址](https://fluttercandies.github.io/JsonToDartWeb) |
 | web     | dart | [flutter-web](https://github.com/flutter/flutter_web)构建, 只支持本地运行，打包部署网页报错             | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/web)                                              |
-| linux   | dart | flutter构建,使用官方方式编译，(没有环境测试，假装可以用)                                                | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/desktop)                                          |
+| linux   | dart | flutter构建, 使用官方方式编译，(没有环境测试，假装可以用)                                                | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/desktop)                                          |
 
 # 安装
 ## UWP(Windows10)
@@ -92,7 +92,8 @@ Mac [Firefox](https://mac.filehorse.com/download-firefox/7957/download/)这个�
 
 ## Flutter(Mac)
 
-go-flutter生成的产物是exec，可以双击打开,后由[低调大佬](https://github.com/CaiJingLong)测试打包[DMG](https://studygolang.com/articles/14480)，安装即可，注意在安全性与隐私中同意安装。
+go-flutter生成的产物是二进制程序，运行为exec，可以双击打开,
+后由[低调大佬](https://github.com/CaiJingLong)测试打包[DMG](https://studygolang.com/articles/14480)，安装即可，注意在安全性与隐私中同意安装，具体如何打包可以查看[Go Flutter Desktop (二) go 二进制程序打包为 mac app(dmg)](https://www.kikt.top/posts/flutter/desktop/go-desktop-engine/flutter-go-desktop-2/)
 
 ## Flutter(Windows_x64)
 
