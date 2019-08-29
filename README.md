@@ -15,26 +15,26 @@
 
 Flutter Candies qq群181398081
 
-- [下载](#%E4%B8%8B%E8%BD%BD)
-- [安装](#%E5%AE%89%E8%A3%85)
-  - [UWP(Windows10)](#UWPWindows10)
-  - [WPF(Windows7/Windows8)](#WPFWindows7Windows8)
-  - [Silverlight(Web)](#SilverlightWeb)
-  - [Flutter(Mac)](#FlutterMac)
-  - [Flutter(Windows_x64)](#FlutterWindowsx64)
-- [使用](#%E4%BD%BF%E7%94%A8)
-  - [格式化](#%E6%A0%BC%E5%BC%8F%E5%8C%96)
-  - [更多设置](#%E6%9B%B4%E5%A4%9A%E8%AE%BE%E7%BD%AE)
-    - [数据类型全方位保护](#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%85%A8%E6%96%B9%E4%BD%8D%E4%BF%9D%E6%8A%A4)
-    - [数组全方位保护](#%E6%95%B0%E7%BB%84%E5%85%A8%E6%96%B9%E4%BD%8D%E4%BF%9D%E6%8A%A4)
-    - [遍历数组次数](#%E9%81%8D%E5%8E%86%E6%95%B0%E7%BB%84%E6%AC%A1%E6%95%B0)
-    - [属性命名](#%E5%B1%9E%E6%80%A7%E5%91%BD%E5%90%8D)
-    - [属性排序](#%E5%B1%9E%E6%80%A7%E6%8E%92%E5%BA%8F)
-    - [添加保护方法](#%E6%B7%BB%E5%8A%A0%E4%BF%9D%E6%8A%A4%E6%96%B9%E6%B3%95)
-    - [文件头部信息](#%E6%96%87%E4%BB%B6%E5%A4%B4%E9%83%A8%E4%BF%A1%E6%81%AF)
-    - [属性访问器类型](#%E5%B1%9E%E6%80%A7%E8%AE%BF%E9%97%AE%E5%99%A8%E7%B1%BB%E5%9E%8B)
-  - [修改json类信息](#%E4%BF%AE%E6%94%B9json%E7%B1%BB%E4%BF%A1%E6%81%AF)
-  - [生成Dart](#%E7%94%9F%E6%88%90Dart)
+- [下载](#%e4%b8%8b%e8%bd%bd)
+- [安装](#%e5%ae%89%e8%a3%85)
+  - [UWP(Windows10)](#uwpwindows10)
+  - [WPF(Windows7/Windows8)](#wpfwindows7windows8)
+  - [Silverlight(Web)](#silverlightweb)
+  - [Flutter(Mac)](#fluttermac)
+  - [Flutter(Windows_x64)](#flutterwindowsx64)
+- [使用](#%e4%bd%bf%e7%94%a8)
+  - [格式化](#%e6%a0%bc%e5%bc%8f%e5%8c%96)
+  - [更多设置](#%e6%9b%b4%e5%a4%9a%e8%ae%be%e7%bd%ae)
+    - [数据类型全方位保护](#%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8b%e5%85%a8%e6%96%b9%e4%bd%8d%e4%bf%9d%e6%8a%a4)
+    - [数组全方位保护](#%e6%95%b0%e7%bb%84%e5%85%a8%e6%96%b9%e4%bd%8d%e4%bf%9d%e6%8a%a4)
+    - [遍历数组次数](#%e9%81%8d%e5%8e%86%e6%95%b0%e7%bb%84%e6%ac%a1%e6%95%b0)
+    - [属性命名](#%e5%b1%9e%e6%80%a7%e5%91%bd%e5%90%8d)
+    - [属性排序](#%e5%b1%9e%e6%80%a7%e6%8e%92%e5%ba%8f)
+    - [添加保护方法](#%e6%b7%bb%e5%8a%a0%e4%bf%9d%e6%8a%a4%e6%96%b9%e6%b3%95)
+    - [文件头部信息](#%e6%96%87%e4%bb%b6%e5%a4%b4%e9%83%a8%e4%bf%a1%e6%81%af)
+    - [属性访问器类型](#%e5%b1%9e%e6%80%a7%e8%ae%bf%e9%97%ae%e5%99%a8%e7%b1%bb%e5%9e%8b)
+  - [修改json类信息](#%e4%bf%ae%e6%94%b9json%e7%b1%bb%e4%bf%a1%e6%81%af)
+  - [生成Dart](#%e7%94%9f%e6%88%90dart)
 
 # 下载
 
@@ -42,12 +42,12 @@ Flutter Candies qq群181398081
 | ------- | ---- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | windows | C#   | uwp构建，运行环境windows10，x86/x64                                                                     | [windows-uwp.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
 | windows | C#   | wpf构建，运行环境windows10/windows8/widnows7，x86/x64                                                   | [windows-wpf.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
-| windows | dart | flutter构建, 使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译,x64 ,debug版本      | [windows-x64-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                              |
-| windows | dart | flutter构建, 使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译,x64 ,debug版本       | [windows-x64-go-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                           |
+| windows | dart | flutter构建, 使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译,x64 ,debug版本     | [windows-x64-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                              |
+| windows | dart | flutter构建, 使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译,x64 ,debug版本      | [windows-x64-go-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                           |
 | mac     | dart | flutter构建,使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译(官方方式,未找到产物) | [mac-go-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                   |
 | web     | C#   | [silverlight](https://baike.so.com/doc/5402730-5640416.html)构建, 需要安装silverlight插件，有浏览器限制 | [网页地址](https://fluttercandies.github.io/JsonToDart)和[带字体文件网页地址](https://fluttercandies.github.io/JsonToDartWeb) |
-| web     | dart | [flutter-web](https://github.com/flutter/flutter_web)构建, 只支持本地运行，打包部署网页报错             | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/web)                                              |
-| linux   | dart | flutter构建, 使用官方方式编译，(没有环境测试，假装可以用)                                                | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/desktop)                                          |
+| web     | dart | [flutter-web](https://github.com/flutter/flutter_web)构建                                               | [网页地址]( https://fluttercandies.github.io/JsonToDartFlutterWeb/)                                                           |
+| linux   | dart | flutter构建, 使用官方方式编译，(没有环境测试，假装可以用)                                               | [代码地址](https://github.com/fluttercandies/JsonToDart/tree/master/Flutter/desktop)                                          |
 
 # 安装
 ## UWP(Windows10)
