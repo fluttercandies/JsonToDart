@@ -1,0 +1,1 @@
+{"addMethod":true,"column1Width":2,"column2Width":3,"enableArrayProtection":false,"enableDataProtection":false,"fileHeaderInfo":"","propertyAccessorType":0,"propertyNameSortingType":0,"propertyNamingConventionsType":0,"traverseArrayCount":1}
