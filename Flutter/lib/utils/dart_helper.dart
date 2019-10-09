@@ -9,9 +9,9 @@ class DartHelper {
   static const classFooter = "}";
 
   static const String fromJsonHeader =
-      "  factory {0}.fromJson(jsonRes)=>jsonRes == null? null:{0}(";
+      "  factory {0}.fromJson(Map<String, dynamic> jsonRes)=>jsonRes == null? null:{0}(";
   static const String fromJsonHeader1 =
-      "  factory {0}.fromJson(jsonRes){ if(jsonRes == null) return null;\n";
+      "  factory {0}.fromJson(Map<String, dynamic> jsonRes){ if(jsonRes == null) return null;\n";
   static const String fromJsonFooter = ");";
   static const String fromJsonFooter1 = "return {0}({1});}";
   static const String toJsonHeader = "  Map<String, dynamic> toJson() => {";

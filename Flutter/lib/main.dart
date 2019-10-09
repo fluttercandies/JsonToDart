@@ -22,13 +22,16 @@ import 'package:json_to_dart/utils/config_helper.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'dart:math';
-import 'main_web.dart' if (dart.library.io) "main_io.dart";
 import 'models/extended_object.dart';
+import 'package:flutter/foundation.dart';
 
 void main() {
-  platformOverride();
-  //debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
-  // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
+  //set for desktop
+  if (!kIsWeb) {
+    // See https://github.com/flutter/flutter/wiki/Desktop-shells#target-platform-override
+    debugDefaultTargetPlatformOverride = TargetPlatform.fuchsia;
+  }
+
   ConfigHelper().initialize();
 
   // SystemChannels.lifecycle.setMessageHandler((msg) {
@@ -84,8 +87,6 @@ class _MyHomePageState extends State<MyHomePage>
 
 //with WidgetsBindingObserver
 {
-  GlobalKey key1 = GlobalKey();
-  GlobalKey key2 = GlobalKey();
   // @override
   // void initState() {
   //   super.initState();
@@ -112,7 +113,6 @@ class _MyHomePageState extends State<MyHomePage>
       body: Row(
         children: <Widget>[
           Expanded(
-            key: key1,
             flex: ConfigHelper().config.column1Width,
             child: Container(
               margin: EdgeInsets.all(10.0),
@@ -140,7 +140,6 @@ class _MyHomePageState extends State<MyHomePage>
             ),
           ),
           Expanded(
-            key: key2,
             flex: ConfigHelper().config.column2Width,
             child: Container(
               margin: EdgeInsets.all(10.0),
@@ -161,16 +160,20 @@ class _MyHomePageState extends State<MyHomePage>
 
   bool pointerPressed = false;
   void updateGridSplitter(double x) {
-    var width1 = max(key1.currentContext.size.width + x, 50.0);
-    var width2 = max(key2.currentContext.size.width - x, 50.0);
+    var width = (MediaQuery.of(context).size.width) /
+        (ConfigHelper().config.column1Width +
+            ConfigHelper().config.column2Width);
+    var width1 = max(width * ConfigHelper().config.column1Width + x, 50.0);
+    var width2 = max(width * ConfigHelper().config.column2Width - x, 50.0);
+
     ConfigHelper().config.column1Width =
         (double.parse((width1 / (width1 + width2)).toStringAsFixed(5)) * 10000)
             .toInt();
     ConfigHelper().config.column2Width =
         (double.parse((width2 / (width1 + width2)).toStringAsFixed(5)) * 10000)
             .toInt();
-    print(
-        "${ConfigHelper().config.column1Width}---------${ConfigHelper().config.column2Width}");
+    // print(
+    //     "${ConfigHelper().config.column1Width}---------${ConfigHelper().config.column2Width}");
   }
 
   void onPointerDown(PointerDownEvent event) {
