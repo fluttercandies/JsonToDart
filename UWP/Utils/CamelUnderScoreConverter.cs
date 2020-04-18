@@ -60,7 +60,7 @@ namespace FlutterCandiesJsonToDart.Utils
             {
                 return "";
             }
-            if (!name.Contains("_"))
+            if (!name.Contains('_'))
             {
                 result.Append(name.Substring(0, 1).ToLower());
                 result.Append(name.Substring(1));
@@ -98,7 +98,7 @@ namespace FlutterCandiesJsonToDart.Utils
             {
                 return "";
             }
-            if (!name.Contains("_"))
+            if (!name.Contains('_'))
             {
                 result.Append(name.Substring(0, 1).ToUpper());
                 result.Append(name.Substring(1));

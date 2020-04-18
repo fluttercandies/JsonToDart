@@ -6,14 +6,15 @@ namespace FlutterCandiesJsonToDart.Utils
 {
     public class DartHelper
     {
+        public const String ReplaceSymbol = "#";
         public const String ClassHeader = "class {0} {{";
         public const String ClassFooter = "}";
 
-        public const String FromJsonHeader = "  factory {0}.fromJson(jsonRes)=>jsonRes == null? null:{0}(";
-        public const String FromJsonHeader1 = "  factory {0}.fromJson(jsonRes){{ if(jsonRes == null) return null;\n";
+        public const String FromJsonHeader = "  factory {0}.fromJson(Map<dynamic, dynamic> jsonRes)=>jsonRes == null? null:{0}(";
+        public const String FromJsonHeader1 = "  factory {0}.fromJson(Map<dynamic, dynamic> jsonRes){{ if(jsonRes == null){{return null;}}\n";
         public const String FromJsonFooter = ");";
         public const String FromJsonFooter1 = "return {0}({1});}}";
-        public const String ToJsonHeader = "  Map<String, dynamic> toJson() => {";
+        public const String ToJsonHeader = "  Map<String, dynamic> toJson() => <String, dynamic>{";
         public const String ToJsonFooter = "};";
         public const String ToJsonSetString = "        '{0}': {1},";
         public const String JsonImport = "import 'dart:convert' show json;";
@@ -31,12 +32,12 @@ namespace FlutterCandiesJsonToDart.Utils
             }
             else
             {
-                return $"    {setName} : jsonRes['{item.Key}'],";
+                return $"    {setName} : asT<{GetDartTypeString(item.Type)}>(jsonRes['{item.Key}']),";
             }
         }
 
 
-        public const String SetObjectProperty = "    {0} : {2}.fromJson(jsonRes['{1}']),";
+        public const String SetObjectProperty = "    {0} : {2}.fromJson(asT<Map<dynamic, dynamic>>(jsonRes['{1}'])),";
         public static String PropertyS(PropertyAccessorType type)
         {
             switch (type)
@@ -206,7 +207,20 @@ var valueS = value.toString();
    " + " debugPrint(\"$e\"); \n  debugPrint(\"$stack\");" + @"
     }
 }";
+
+
+        public const String AsTMethod = @"
+
+T asT<T>(dynamic value, [T defaultValue]) {
+  if (value is T) {
+    return value;
+  }
+
+  return defaultValue;
+}     
+ ";
     }
+
 
 
 }

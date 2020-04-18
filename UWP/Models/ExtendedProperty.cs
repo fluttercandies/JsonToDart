@@ -98,12 +98,26 @@ namespace FlutterCandiesJsonToDart.Models
             return result ?? (className ?? DartHelper.GetDartTypeString(Type));
         }
 
-        public String GetArraySetPropertyString(String setName, String typeString, String className = null)
+        public virtual String GetBaseTypeString(String className = null)
+        {
+            if (className != null)
+                return className;
+            var temp = Value;
+    
+            while (temp is JArray)
+            {
+                temp = temp.First;
+            }
+            return DartHelper.GetDartTypeString(DartHelper.ConverDartType(temp?.Type ?? JTokenType.Object));
+        }
+
+        public String GetArraySetPropertyString(String setName, String typeString,String baseType=null, String className = null)
         {
 
             var temp = Value;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine($"    {typeString} {setName} = jsonRes['{Key}'] is List ? []: null; ");
+           
+            sb.AppendLine($"  final {typeString} {setName} = jsonRes['{Key}'] is List ? {typeString.Substring("List".Length)}[]: null; ");
             sb.AppendLine($"    if({setName}!=null) {{");
             bool enableTryCatch = ConfigHelper.Instance.Config.EnableArrayProtection;
             int count = 0;
@@ -111,30 +125,38 @@ namespace FlutterCandiesJsonToDart.Models
             while (temp is JArray)
             {
                 temp = temp.First;
+                //删掉List<
+                typeString = typeString.Substring("List<".Length);
+                //删掉>
+                typeString = typeString.Substring(0, typeString.Length - 1);
+
+               
                 ///下层为数组
                 if (temp != null && temp is JArray)
                 {
-                    //删掉List<
-                    typeString = typeString.Substring("List<".Length);
-                    //删掉>
-                    typeString = typeString.Substring(0, typeString.Length - 1);
+                   // String type = className != null ? "List<dynamic>" : typeString.Replace(baseType, "dynamic");
                     if (count == 0)
-                        result = $" for (var item{count} in jsonRes['{Key}']) {{ if (item{count} != null) {{ {typeString} items{count + 1} = []; {{}} {setName}.add(items{count + 1}); }}";
+                        result = $" for (final dynamic item{count} in asT<List<dynamic>>(jsonRes['{Key}'])) {{ if (item{count} != null) {{ final {typeString} items{count + 1} = {typeString.Substring("List".Length)}[]; {DartHelper.ReplaceSymbol} {setName}.add(items{count + 1}); }}}}";
                     else
-                    {
-                        result = result.Replace("{}", $" for (var item{count} in item{count - 1} is List ? item{count - 1} :[]) {{ if (item{count} != null) {{ {typeString} items{count + 1} = []; {{}} items{count}.add(items{count + 1}); }}");
+                    {   
+                        result = result.Replace(DartHelper.ReplaceSymbol, $" for (final dynamic item{count} in asT<List<dynamic>>(item{count - 1})) {{ if (item{count} != null) {{ final {typeString} items{count + 1} ={typeString.Substring("List".Length)} []; {DartHelper.ReplaceSymbol} items{count}.add(items{count + 1}); }}}}");
                     }
                 }
                 ///下层不为数组
                 else
                 {
+                    String type = "dynamic";
                     var item = ("item" + (count == 0 ? "" : count.ToString()));
                     var addString = "";
                     if (className != null)
                     {
-                        item = $"{className}.fromJson({item})";
+                        item = $"{className}.fromJson(asT<Map<dynamic,dynamic>>({item}))";
                     }
-
+                    else
+                    {
+                        item = $"asT<{baseType}>({item})";
+                    }
+            
                     if (count == 0)
                     {
                         addString = $"{setName}.add({item}); ";
@@ -142,8 +164,8 @@ namespace FlutterCandiesJsonToDart.Models
                         {
                             addString = $"tryCatch(() {{ {addString} }}); ";
                         }
-
-                        result = $" for (var item in jsonRes['{Key}']) {{ if (item != null) {{ {addString} }}";
+                     
+                        result = $" for (final {type} item in jsonRes['{Key}']) {{ if (item != null) {{ {addString} }} }}";
                     }
                     else
                     {
@@ -154,8 +176,8 @@ namespace FlutterCandiesJsonToDart.Models
                             addString = $"tryCatch(() {{ {addString} }}); ";
                         }
 
-
-                        result = result.Replace("{}", $" for (var item{count} in item{count - 1} is List ? item{count - 1} :[]) {{ if (item{count} != null) {addString}}}");
+                     
+                        result = result.Replace(DartHelper.ReplaceSymbol, $" for (final dynamic item{count} in asT<List<dynamic>>(item{count - 1}) ) {{ if (item{count} != null) {{ {addString} }} }}");
                     }
                 }
 
@@ -163,7 +185,7 @@ namespace FlutterCandiesJsonToDart.Models
             }
 
             sb.AppendLine(result);
-            sb.AppendLine("    }");
+           // sb.AppendLine("    }");
             sb.AppendLine("    }\n");
 
 

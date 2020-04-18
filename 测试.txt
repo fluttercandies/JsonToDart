@@ -1,124 +1,129 @@
 {
-  "glossary": {
-    "GlossDiv": {
-      "GlossList": {
-        "GlossEntry": {
-          "Abbrev": "ISO 8879:1986",
-          "Acronym": "SGML",
-          "GlossDef": {
-            "GlossSeeAlso": [
-              "GML",
-              "XML"
-            ],
-			 "GlossSeeAlso111": [
-            
-            ],
-            "para": "A meta-markup language, used to create markup languages such as DocBook.",
-            "test": [
-              [
-                {
-                  "class1": 1
+    "status": "1",
+    "data": {
+        "code": "1",
+        "timestamp": "1587169611.67",
+        "version": "2.0-3.0.0104.1523",
+        "result": "true",
+        "message": "Successful.",
+        "dataItem": [
+            {
+                "report_time": "2020-04-18 08:05:00",
+                "live": {
+                    "weather_name": "阴",
+                    "list": [
+                        1,
+                        2,
+                        3,
+                        4
+                    ],
+                    "list1": [
+                        [
+                            1,
+                            2
+                        ],
+                        [
+                            1,
+                            2
+                        ],
+                        [
+                            1,
+                            2
+                        ],
+                        [
+                            1,
+                            2
+                        ]
+                    ],
+                    "list2": [
+                        {
+                            "index": 1
+                        }
+                    ],
+                    "list4": [
+                        [
+                            {
+                                "index": 1
+                            }
+                        ]
+                    ],
+                    "list3": [
+                        [
+                            [
+                                {
+                                    "index": 1
+                                }
+                            ]
+                        ]
+                    ],
+                    "list5": [
+                        [
+                            [
+                                [
+                                    2.0
+                                ]
+                            ]
+                        ]
+                    ],
+                    "weather_code": "02",
+                    "temperature": "13"
                 },
-                {
-                  "class2": 2
-                }
-              ],
-              [
-                {
-                  "class1": 1
-                },
-                {
-                  "class2": 2
-                }
-              ]
-            ]
-          },
-          "GlossSee": "markup",
-          "GlossTerm": "Standard Generalized Markup Language",
-          "ID": "SGML",
-          "SortAs": "SGML"
-        }
-      },
-      "title": "S"
-    },
-    "title": "example glossary"
-  }
-}
-
-
-{
-    "GlossSeeAlso": [
-        "GML",
-        "XML"
-    ],
-   "test": 1,
-   "tes1":{"tes2":2}
-}
-
-
-{
-  "list": [
-    [
-      {
-        "p1": [
-          {"test1":1},
-          {"test2":2},
+                "forecast_date": "2020-04-18",
+                "weekday": 5,
+                "forecastData": [
+                    {
+                        "wind_direction_code": "4",
+                        "wind_power_code": "1",
+                        "max_temp": "23",
+                        "weather_code": "01",
+                        "min_temp": "8",
+                        "weather_name": "多云",
+                        "wind_power_desc": "3-4",
+                        "daynight": 0,
+                        "wind_direction_desc": "南风"
+                    },
+                    {
+                        "wind_direction_code": "4",
+                        "wind_power_code": "1",
+                        "max_temp": "23",
+                        "weather_code": "01",
+                        "min_temp": "8",
+                        "weather_name": "多云",
+                        "wind_power_desc": "3-4",
+                        "daynight": 1,
+                        "wind_direction_desc": "南风"
+                    }
+                ]
+            },
+            {
+                "report_time": "2020-04-18 08:05:00",
+                "forecast_date": "2020-04-19",
+                "weekday": 6,
+                "forecast_data": [
+                    {
+                        "wind_direction_code": "4",
+                        "wind_power_code": "2",
+                        "max_temp": "24",
+                        "weather_code": "02",
+                        "min_temp": "10",
+                        "weather_name": "阴",
+                        "wind_power_desc": "4-5",
+                        "daynight": 0,
+                        "wind_direction_desc": "南风"
+                    },
+                    {
+                        "wind_direction_code": "4",
+                        "wind_power_code": "2",
+                        "max_temp": "24",
+                        "weather_code": "02",
+                        "min_temp": "10",
+                        "weather_name": "阴",
+                        "wind_power_desc": "4-5",
+                        "daynight": 1,
+                        "wind_direction_desc": "南风"
+                    }
+                ]
+            }
         ]
-      },
-      {
-        "p2": [
-           {"test3":3},
-          {"test4":4},
-        ]
-      }
-    ],
-    [
-      {
-        "p3": [
-           {"test5":5},
-          {"test6":6},
-        ]
-      },
-      {
-        "p4": [
-           {"test7":7},
-          {"test8":8},
-        ]
-      }
-    ]
-  ]
-}
-
-
-{
-    "GlossSeeAlso":
-       [1,2,3,4,5],
-    
-}
-
-{
-   "testList":[ {
-        "p1": [
-          {"test1":1},
-          {"test2":2},
-        ]
-      },
-      {
-        "p2": [
-           {"test3":3},
-          {"test4":4},
-        ]
-      }]
-}
-
-
-{
-   "testList":[ 
-     {
-        "p1":1
-      },
-      {
-        "p2": 2
-      }]
-
+    }
 }

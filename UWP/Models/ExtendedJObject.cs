@@ -241,7 +241,7 @@ namespace FlutterCandiesJsonToDart.Models
                         }
                         typeString = item.GetTypeString(className: className);
 
-                        fromJsonSb1.AppendLine(item.GetArraySetPropertyString(lowName, typeString, className: className));
+                        fromJsonSb1.AppendLine(item.GetArraySetPropertyString(lowName, typeString, className: className,baseType:item.GetBaseTypeString(className:className)));
 
                         setString = $" {item.Name}:{lowName},";
 
@@ -302,12 +302,13 @@ namespace FlutterCandiesJsonToDart.Models
 
                 toJsonSb.AppendLine(DartHelper.ToJsonFooter);
 
-
-                sb.AppendLine(propertySb.ToString());
-
                 sb.AppendLine(factorySb.ToString());
 
                 sb.AppendLine(fromJson);
+
+                sb.AppendLine("");
+
+                sb.AppendLine(propertySb.ToString());
 
                 sb.AppendLine(toJsonSb.ToString());
 

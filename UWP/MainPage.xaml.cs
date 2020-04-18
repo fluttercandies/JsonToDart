@@ -476,10 +476,15 @@ namespace FlutterCandiesJsonToDart
                         }
                     }
 
+                    sb.AppendLine(DartHelper.AsTMethod);
+                    sb.AppendLine("");
+
 
                     sb.AppendLine(extendedJObject.ToString());
 
                     var result = sb.ToString();
+
+                
                     tb.Text = result;
 
 #if WINDOWS_UWP
