@@ -7,6 +7,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
+using System.Net.Http;
+using System.Net.Http.Headers;
+
 
 #if WINDOWS_UWP
 using Windows.UI;
@@ -399,7 +403,7 @@ namespace FlutterCandiesJsonToDart
             tb.Text = FormatJson(tb.Text);
         }
 
-        private void GenerateButton_Click(object sender, RoutedEventArgs e)
+        private async void GenerateButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -483,8 +487,23 @@ namespace FlutterCandiesJsonToDart
                     sb.AppendLine(extendedJObject.ToString());
 
                     var result = sb.ToString();
+#if WINDOWS_UWP || WPF 
 
-                
+                    var dic = new Dictionary<String, String>();
+                    dic.Add("source", result);
+                    string str = JsonConvert.SerializeObject(dic);
+                    HttpContent content = new StringContent(str, Encoding.UTF8, "application/json");
+                    HttpClient client = new HttpClient();
+                    HttpResponseMessage response = await client.PostAsync(new Uri("https://dart-services.appspot.com/api/dartservices/v2/format"), content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var resultOject = JObject.Parse(await response.Content.ReadAsStringAsync());
+                        result = resultOject["newString"].ToString();
+                    }
+
+#endif
+
                     tb.Text = result;
 
 #if WINDOWS_UWP
@@ -500,6 +519,8 @@ namespace FlutterCandiesJsonToDart
                     notification.ExpirationTime = DateTime.Now.AddSeconds(2);
                     ToastNotificationManager.CreateToastNotifier().Show(notification);
 #else
+
+
                     Clipboard.SetText(result);
                     MyMessageBox.Show("Dart生成成功\n已复制到剪切板");
 #endif
