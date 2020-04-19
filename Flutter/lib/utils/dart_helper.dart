@@ -1,5 +1,5 @@
 
-import 'package:json_to_dart/models/config.dart';
+
 import 'package:json_to_dart/models/extended_property.dart';
 
 import 'enums.dart';
@@ -11,10 +11,10 @@ class DartHelper {
   static const String fromJsonHeader =
       "  factory {0}.fromJson(Map<String, dynamic> jsonRes)=>jsonRes == null? null:{0}(";
   static const String fromJsonHeader1 =
-      "  factory {0}.fromJson(Map<String, dynamic> jsonRes){ if(jsonRes == null) return null;\n";
+      "  factory {0}.fromJson(Map<String, dynamic> jsonRes){ if(jsonRes == null) {return null;}\n";
   static const String fromJsonFooter = ");";
   static const String fromJsonFooter1 = "return {0}({1});}";
-  static const String toJsonHeader = "  Map<String, dynamic> toJson() => {";
+  static const String toJsonHeader = "  Map<String, dynamic> toJson() => <String, dynamic>{";
   static const String toJsonFooter = "};";
   static const String toJsonSetString = "        '{0}': {1},";
   static const String jsonImport = "import 'dart:convert' show json;";
@@ -28,15 +28,18 @@ class DartHelper {
 
   static String setProperty(
       String setName, ExtendedProperty item, String className) {
-    if (appConfig.enableDataProtection) {
-      return "    $setName : convertValueByType(jsonRes['${item.key}'],${item.value.runtimeType.toString()},stack:\"$className-${item.key}\"),";
-    } else {
-      return "    $setName : jsonRes['${item.key}'],";
-    }
+
+
+     return   '    $setName : ${getUseAsT(getDartTypeString(item.type), "jsonRes['${item.key}']")},';
+    // if (appConfig.enableDataProtection) {
+    //   return "    $setName : convertValueByType(jsonRes['${item.key}'],${item.value.runtimeType.toString()},stack:\"$className-${item.key}\"),";
+    // } else {
+    //   return "    $setName : jsonRes['${item.key}'],";
+    // }
   }
 
   static const String setObjectProperty =
-      "    {0} : {2}.fromJson(jsonRes['{1}']),";
+      "    {0} : {2}.fromJson(asT<Map<String, dynamic>>(jsonRes['{1}'])),";
   static String propertyS(PropertyAccessorType type) {
     switch (type) {
       case PropertyAccessorType.none:
@@ -122,7 +125,7 @@ class DartHelper {
       { try {f?.call();} 
       catch (e, stack)
        { 
-        debugPrint("\$e"); \n  debugPrint("\$stack");
+        debugPrint('\$e'); \n  debugPrint('\$stack');
         }
         }""";
 
@@ -163,4 +166,38 @@ class DartHelper {
   }
 }
 """;
+      static const String asTMethod = '''
+T asT<T>(dynamic value) {
+  if (value is T) {
+    return value;
+  }
+
+  return null;
+}     
+ ''';
+        static const String asTMethodWithDataProtection = '''
+T asT<T>(dynamic value) {
+  if (value is T) {
+    return value;
+  }
+ if (value != null) {
+    final String valueS = value.toString();
+    if (0 is T) {
+      return int.tryParse(valueS) as T;
+    } else if (0.0 is T) {
+      return double.tryParse(valueS) as T;
+    } else if ('' is T) {
+      return valueS as T;
+    } else if (false is T) {
+      if (valueS == '0' || valueS == '1') {
+        return (valueS == '1') as T;
+      }
+      return bool.fromEnvironment(value.toString()) as T;
+    }
+  }
+  return null;
+}     
+ ''';
+
+   static String getUseAsT(String par1,String par2) => "asT<$par1>($par2)";
 }

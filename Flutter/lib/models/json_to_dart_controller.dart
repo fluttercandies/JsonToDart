@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dart_style/dart_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
@@ -43,8 +44,8 @@ class JsonToDartController {
     } catch (e, stack) {
       print("$e");
       print("$stack");
-       showToast("格式错误,错误信息已复制到剪切板",duration: Duration(seconds: 5));
-         Clipboard.setData(ClipboardData(text: "$e\n$stack"));
+      showToast("格式错误,错误信息已复制到剪切板", duration: Duration(seconds: 5));
+      Clipboard.setData(ClipboardData(text: "$e\n$stack"));
     }
   }
 
@@ -88,25 +89,24 @@ class JsonToDartController {
         }
 
         sb.writeLine(DartHelper.jsonImport);
-        if (ConfigHelper().config.addMethod &&
-            (ConfigHelper().config.enableDataProtection ||
-                ConfigHelper().config.enableArrayProtection)) {
-          ///debugPrint
-          sb.writeLine(DartHelper.debugPrintImport);
-        }
 
         if (ConfigHelper().config.addMethod) {
-          if (ConfigHelper().config.enableDataProtection) {
-            sb.writeLine(DartHelper.convertMethod);
-          }
-
           if (ConfigHelper().config.enableArrayProtection) {
+            sb.writeLine(DartHelper.debugPrintImport);
             sb.writeLine(DartHelper.tryCatchMethod);
           }
+
+          sb.writeLine(ConfigHelper().config.enableDataProtection
+              ? DartHelper.asTMethodWithDataProtection
+              : DartHelper.asTMethod);
         }
 
         sb.writeLine(extendedObjectValue.value.toString());
         var result = sb.toString();
+
+        final DartFormatter formatter = DartFormatter();
+
+        result = formatter.format(result);
 
         textEditingControllerValue.value = TextEditingController()
           ..text = result;
@@ -115,8 +115,8 @@ class JsonToDartController {
       } catch (e, stack) {
         print("$e");
         print("$stack");
-         showToast("生成Dart错误,错误信息已复制到剪切板",duration: Duration(seconds: 5));
-         Clipboard.setData(ClipboardData(text: "$e\n$stack"));
+        showToast("生成Dart错误,错误信息已复制到剪切板", duration: Duration(seconds: 5));
+        Clipboard.setData(ClipboardData(text: "$e\n$stack"));
       }
     }
   }

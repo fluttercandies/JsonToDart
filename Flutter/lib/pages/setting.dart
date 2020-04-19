@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:json_to_dart/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/utils/config_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
-
 
 class Setting extends StatefulWidget {
   @override
@@ -17,7 +15,7 @@ class _SettingState extends State<Setting> {
 
   @override
   Widget build(BuildContext context) {
-    var controller = Provider.of<JsonToDartController>(context);
+    var controller = Provider.of<JsonToDartController>(context, listen: false);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
@@ -38,26 +36,6 @@ class _SettingState extends State<Setting> {
                   });
                 }),
             FlatButton(
-              child: Text("复制"),
-              onPressed: () {
-                Clipboard.setData(ClipboardData(text: controller.text));
-              },
-            ),
-            FlatButton(
-              child: Text("粘贴"),
-              onPressed: () {
-                Clipboard.getData("text/plain").then((value) {
-                  controller.text = value.text;
-                });
-              },
-            ),
-            FlatButton(
-              child: Text("全选"),
-              onPressed: () {
-                controller.selectAll();
-              },
-            ),
-              FlatButton(
                 child: Text("保存配置"),
                 onPressed: () {
                   ConfigHelper().save();
@@ -68,7 +46,6 @@ class _SettingState extends State<Setting> {
                 onPressed: () {
                   controller.generateDart();
                 }),
-          
           ],
         ),
         if (showMoreSetting)
@@ -147,7 +124,9 @@ class _SettingState extends State<Setting> {
                               setState(() {
                                 ConfigHelper().config.traverseArrayCount =
                                     value;
-                                controller.formatJson();
+                                if (controller.extendedObjectValue.value != null) {
+                                  controller.formatJson();
+                                }
                               });
                             },
                           ),
@@ -254,10 +233,13 @@ class _SettingState extends State<Setting> {
                       )),
                 ],
               ),
-             Align(child:  Text(
-                "文件头部信息",
-                textAlign: TextAlign.left,
-              ),alignment: Alignment.centerLeft,),
+              Align(
+                child: Text(
+                  "文件头部信息",
+                  textAlign: TextAlign.left,
+                ),
+                alignment: Alignment.centerLeft,
+              ),
               Container(
                 margin: EdgeInsets.only(top: 10.0),
                 decoration: BoxDecoration(

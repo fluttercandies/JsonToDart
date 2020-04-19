@@ -241,7 +241,6 @@ T asT<T>(dynamic value) {
   if (value is T) {
     return value;
   }
-  {0}
   return null;
 }     
  ";

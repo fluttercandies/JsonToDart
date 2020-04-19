@@ -145,7 +145,7 @@ namespace FlutterCandiesJsonToDart.Models
                 ///下层不为数组
                 else
                 {
-                    String type = "dynamic";
+                   
                     var item = ("item" + (count == 0 ? "" : count.ToString()));
                     var addString = "";
                     if (className != null)
@@ -165,7 +165,7 @@ namespace FlutterCandiesJsonToDart.Models
                             addString = $"tryCatch(() {{ {addString} }}); ";
                         }
                      
-                        result = $" for (final {type} item in jsonRes['{Key}']) {{ if (item != null) {{ {addString} }} }}";
+                        result = $" for (final dynamic item in jsonRes['{Key}']) {{ if (item != null) {{ {addString} }} }}";
                     }
                     else
                     {

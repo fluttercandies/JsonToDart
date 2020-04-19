@@ -76,12 +76,26 @@ class ExtendedProperty {
     return result ?? (className ?? DartHelper.getDartTypeString(type));
   }
 
+  String getBaseTypeString({String className}) {
+    if (className != null) return className;
+    var temp = value;
+    while (temp is List) {
+      if (temp is List && temp.isNotEmpty) {
+        temp = temp.first;
+      } else {
+        break;
+      }
+    }
+
+    return DartHelper.getDartTypeString(DartHelper.converDartType(temp?.runtimeType ?? Object));
+  }
+
   String getArraySetPropertyString(String setName, String typeString,
-      {String className}) {
+      {String className, String baseType}) {
     var temp = value;
     MyStringBuffer sb = new MyStringBuffer();
     sb.writeLine(
-        "    $typeString $setName = jsonRes['$key'] is List ? []: null; ");
+        " final  $typeString $setName = jsonRes['$key'] is List ? ${typeString.substring('List'.length)}[]: null; ");
     sb.writeLine("    if($setName!=null) {");
     bool enableTryCatch = appConfig.enableArrayProtection;
     int count = 0;
@@ -92,19 +106,19 @@ class ExtendedProperty {
       } else {
         temp = null;
       }
+      //删掉List<
+      typeString = typeString.substring("List<".length);
+      //删掉>
+      typeString = typeString.substring(0, typeString.length - 1);
 
       ///下层为数组
       if (temp != null && temp is List) {
-        //删掉List<
-        typeString = typeString.substring("List<".length);
-        //删掉>
-        typeString = typeString.substring(0, typeString.length - 1);
         if (count == 0) {
           result =
-              " for (var item$count in jsonRes['$key']) { if (item$count != null) { $typeString items${count + 1} = []; {} $setName.add(items${count + 1}); }";
+              " for (final dynamic item$count in asT<List<dynamic>>(jsonRes['$key'])) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} $setName.add(items${count + 1}); }}";
         } else {
           result = result.replaceAll("{}",
-              " for (var item$count in item${count - 1} is List ? item${count - 1} :[]) { if (item$count != null) { $typeString items${count + 1} = []; {} items$count.add(items${count + 1}); }");
+              " for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} items$count.add(items${count + 1}); }}");
         }
       }
 
@@ -113,7 +127,9 @@ class ExtendedProperty {
         var item = ("item" + (count == 0 ? "" : count.toString()));
         var addString = "";
         if (className != null) {
-          item = "$className.fromJson($item)";
+          item = "$className.fromJson(asT<Map<String,dynamic>>($item))";
+        } else {
+          item = DartHelper.getUseAsT(baseType, item);
         }
 
         if (count == 0) {
@@ -123,7 +139,7 @@ class ExtendedProperty {
           }
 
           result =
-              " for (var item in jsonRes['$key']) { if (item != null) { $addString }";
+              " for (final dynamic item in jsonRes['$key']) { if (item != null) { $addString }}";
         } else {
           addString = "items$count.add($item); ";
 
@@ -132,7 +148,7 @@ class ExtendedProperty {
           }
 
           result = result.replaceAll("{}",
-              " for (var item$count in item${count - 1} is List ? item${count - 1} :[]) { if (item$count != null) $addString}");
+              " for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})) { if (item$count != null) {$addString}}");
         }
       }
 
@@ -140,7 +156,6 @@ class ExtendedProperty {
     }
 
     sb.writeLine(result);
-    sb.writeLine("    }");
     sb.writeLine("    }\n");
 
     return sb.toString();

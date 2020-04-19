@@ -1,21 +1,9 @@
-:: Copyright 2018 Google LLC
-::
-:: Licensed under the Apache License, Version 2.0 (the "License");
-:: you may not use this file except in compliance with the License.
-:: You may obtain a copy of the License at
-::
-::      http://www.apache.org/licenses/LICENSE-2.0
-::
-:: Unless required by applicable law or agreed to in writing, software
-:: distributed under the License is distributed on an "AS IS" BASIS,
-:: WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-:: See the License for the specific language governing permissions and
-:: limitations under the License.
 @echo off
 
 set FLUTTER_CACHE_DIR=%~1
 set BUNDLE_DIR=%~2
-set EXE_NAME=%~3
+set PLUGIN_DIR=%~3
+set EXE_NAME=%~4
 
 set DATA_DIR=%BUNDLE_DIR%data
 
@@ -41,3 +29,9 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 :: Copy the Flutter DLL to the target location.
 call xcopy /y /d /q "%FLUTTER_CACHE_DIR%flutter_windows.dll" "%BUNDLE_DIR%"
 if %errorlevel% neq 0 exit /b %errorlevel%
+
+:: Copy any Plugin DLLs to the target location.
+if exist "%PLUGIN_DIR%" (
+  call xcopy /y /d /q "%PLUGIN_DIR%"*.dll "%BUNDLE_DIR%"
+  if %errorlevel% neq 0 exit /b %errorlevel%
+)

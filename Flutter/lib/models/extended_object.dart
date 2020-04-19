@@ -153,6 +153,11 @@ class ExtendedObject extends ExtendedProperty {
         item.updateNameByNamingConventionsType();
       }
     }
+    if (objectKeys != null) {
+      for (var item in objectKeys.entries) {
+        item.value.updateNameByNamingConventionsType();
+      }
+    }
   }
 
   @override
@@ -241,7 +246,8 @@ class ExtendedObject extends ExtendedProperty {
 
           fromJsonSb1.writeLine(item.getArraySetPropertyString(
               lowName, typeString,
-              className: className));
+              className: className,
+              baseType: item.getBaseTypeString(className: className)));
 
           setString = " ${item.name}:$lowName,";
         } else {
@@ -291,12 +297,9 @@ class ExtendedObject extends ExtendedProperty {
       //fromJsonSb.AppendLine(DartHelper.FromJsonFooter);
 
       toJsonSb.writeLine(DartHelper.toJsonFooter);
-
-      sb.writeLine(propertySb.toString());
-
       sb.writeLine(factorySb.toString());
-
       sb.writeLine(fromJson);
+      sb.writeLine(propertySb.toString());
 
       sb.writeLine(toJsonSb.toString());
 

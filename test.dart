@@ -1,34 +1,57 @@
 import 'dart:convert' show json;
+//import 'package:flutter/foundation.dart';
 
-T asT<T>(dynamic value, [T defaultValue]) {
+void tryCatch(Function f) {
+  try {
+    f?.call();
+  } catch (e, stack) {
+    // debugPrint('$e');
+    // debugPrint('$stack');
+  }
+}
+
+T asT<T>(dynamic value) {
   if (value is T) {
     return value;
   }
-
-  return defaultValue;
+  if (value != null) {
+    final String valueS = value.toString();
+    if (0 is T) {
+      return int.tryParse(valueS) as T;
+    } else if (0.0 is T) {
+      return double.tryParse(valueS) as T;
+    } else if ('' is T) {
+      return valueS as T;
+    } else if (false is T) {
+      if (valueS == '0' || valueS == '1') {
+        return (valueS == '1') as T;
+      }
+      return bool.fromEnvironment(value.toString()) as T;
+    }
+  }
+  return null;
 }
 
 class Root {
   Root({
-    this.status,
     this.data,
+    this.status,
   });
 
-  factory Root.fromJson(Map<dynamic, dynamic> jsonRes) => jsonRes == null
+  factory Root.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
       ? null
       : Root(
+          data: Data.fromJson(asT<Map<String, dynamic>>(jsonRes['data'])),
           status: asT<String>(jsonRes['status']),
-          data: Data.fromJson(asT<Map<dynamic, dynamic>>(jsonRes['data'])),
         );
 
-  String status;
-  Data data;
+  final Data data;
+  final String status;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'status': status,
         'data': data,
+        'status': status,
       };
-
   @override
   String toString() {
     return json.encode(this);
@@ -38,53 +61,54 @@ class Root {
 class Data {
   Data({
     this.code,
+    this.dataItem,
+    this.message,
+    this.result,
     this.timestamp,
     this.version,
-    this.result,
-    this.message,
-    this.dataItem,
   });
 
-  factory Data.fromJson(Map<dynamic, dynamic> jsonRes) {
+  factory Data.fromJson(Map<String, dynamic> jsonRes) {
     if (jsonRes == null) {
       return null;
     }
+
     final List<DataItem> dataItem =
         jsonRes['dataItem'] is List ? <DataItem>[] : null;
     if (dataItem != null) {
       for (final dynamic item in jsonRes['dataItem']) {
         if (item != null) {
-          dataItem.add(DataItem.fromJson(asT<Map<dynamic, dynamic>>(item)));
+          tryCatch(() {
+            dataItem.add(DataItem.fromJson(asT<Map<String, dynamic>>(item)));
+          });
         }
       }
     }
-
     return Data(
       code: asT<String>(jsonRes['code']),
+      dataItem: dataItem,
+      message: asT<String>(jsonRes['message']),
+      result: asT<String>(jsonRes['result']),
       timestamp: asT<String>(jsonRes['timestamp']),
       version: asT<String>(jsonRes['version']),
-      result: asT<String>(jsonRes['result']),
-      message: asT<String>(jsonRes['message']),
-      dataItem: dataItem,
     );
   }
 
-  String code;
-  String timestamp;
-  String version;
-  String result;
-  String message;
-  List<DataItem> dataItem;
+  final String code;
+  final List<DataItem> dataItem;
+  final String message;
+  final String result;
+  final String timestamp;
+  final String version;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'code': code,
+        'dataItem': dataItem,
+        'message': message,
+        'result': result,
         'timestamp': timestamp,
         'version': version,
-        'result': result,
-        'message': message,
-        'dataItem': dataItem,
       };
-
   @override
   String toString() {
     return json.encode(this);
@@ -93,51 +117,52 @@ class Data {
 
 class DataItem {
   DataItem({
-    this.reportTime,
-    this.live,
-    this.forecastDate,
-    this.weekday,
     this.forecastData,
+    this.forecastDate,
+    this.live,
+    this.reportTime,
+    this.weekday,
   });
 
-  factory DataItem.fromJson(Map<dynamic, dynamic> jsonRes) {
+  factory DataItem.fromJson(Map<String, dynamic> jsonRes) {
     if (jsonRes == null) {
       return null;
     }
+
     final List<ForecastData> forecastData =
         jsonRes['forecastData'] is List ? <ForecastData>[] : null;
     if (forecastData != null) {
       for (final dynamic item in jsonRes['forecastData']) {
         if (item != null) {
-          forecastData
-              .add(ForecastData.fromJson(asT<Map<dynamic, dynamic>>(item)));
+          tryCatch(() {
+            forecastData
+                .add(ForecastData.fromJson(asT<Map<String, dynamic>>(item)));
+          });
         }
       }
     }
-
     return DataItem(
-      reportTime: asT<String>(jsonRes['report_time']),
-      live: Live.fromJson(asT<Map<dynamic, dynamic>>(jsonRes['live'])),
-      forecastDate: asT<String>(jsonRes['forecast_date']),
-      weekday: asT<int>(jsonRes['weekday']),
       forecastData: forecastData,
+      forecastDate: asT<String>(jsonRes['forecast_date']),
+      live: Live.fromJson(asT<Map<String, dynamic>>(jsonRes['live'])),
+      reportTime: asT<String>(jsonRes['report_time']),
+      weekday: asT<int>(jsonRes['weekday']),
     );
   }
 
-  String reportTime;
-  Live live;
-  String forecastDate;
-  int weekday;
-  List<ForecastData> forecastData;
+  final List<ForecastData> forecastData;
+  final String forecastDate;
+  final Live live;
+  final String reportTime;
+  final int weekday;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'report_time': reportTime,
-        'live': live,
-        'forecast_date': forecastDate,
-        'weekday': weekday,
         'forecastData': forecastData,
+        'forecast_date': forecastDate,
+        'live': live,
+        'report_time': reportTime,
+        'weekday': weekday,
       };
-
   @override
   String toString() {
     return json.encode(this);
@@ -146,26 +171,29 @@ class DataItem {
 
 class Live {
   Live({
-    this.weatherName,
     this.list,
     this.list1,
     this.list2,
-    this.list4,
     this.list3,
+    this.list4,
     this.list5,
-    this.weatherCode,
     this.temperature,
+    this.weatherCode,
+    this.weatherName,
   });
 
-  factory Live.fromJson(Map<dynamic, dynamic> jsonRes) {
+  factory Live.fromJson(Map<String, dynamic> jsonRes) {
     if (jsonRes == null) {
       return null;
     }
+
     final List<int> list = jsonRes['list'] is List ? <int>[] : null;
     if (list != null) {
       for (final dynamic item in jsonRes['list']) {
         if (item != null) {
-          list.add(asT<int>(item));
+          tryCatch(() {
+            list.add(asT<int>(item));
+          });
         }
       }
     }
@@ -178,7 +206,9 @@ class Live {
           final List<int> items1 = <int>[];
           for (final dynamic item1 in asT<List<dynamic>>(item0)) {
             if (item1 != null) {
-              items1.add(asT<int>(item1));
+              tryCatch(() {
+                items1.add(asT<int>(item1));
+              });
             }
           }
           list1.add(items1);
@@ -190,23 +220,9 @@ class Live {
     if (list2 != null) {
       for (final dynamic item in jsonRes['list2']) {
         if (item != null) {
-          list2.add(List2.fromJson(asT<Map<dynamic, dynamic>>(item)));
-        }
-      }
-    }
-
-    final List<List<List4>> list4 =
-        jsonRes['list4'] is List ? <List<List4>>[] : null;
-    if (list4 != null) {
-      for (final dynamic item0 in asT<List<dynamic>>(jsonRes['list4'])) {
-        if (item0 != null) {
-          final List<List4> items1 = <List4>[];
-          for (final dynamic item1 in asT<List<dynamic>>(item0)) {
-            if (item1 != null) {
-              items1.add(List4.fromJson(asT<Map<dynamic, dynamic>>(item1)));
-            }
-          }
-          list4.add(items1);
+          tryCatch(() {
+            list2.add(List2.fromJson(asT<Map<String, dynamic>>(item)));
+          });
         }
       }
     }
@@ -222,13 +238,34 @@ class Live {
               final List<List3> items2 = <List3>[];
               for (final dynamic item2 in asT<List<dynamic>>(item1)) {
                 if (item2 != null) {
-                  items2.add(List3.fromJson(asT<Map<dynamic, dynamic>>(item2)));
+                  tryCatch(() {
+                    items2
+                        .add(List3.fromJson(asT<Map<String, dynamic>>(item2)));
+                  });
                 }
               }
               items1.add(items2);
             }
           }
           list3.add(items1);
+        }
+      }
+    }
+
+    final List<List<List4>> list4 =
+        jsonRes['list4'] is List ? <List<List4>>[] : null;
+    if (list4 != null) {
+      for (final dynamic item0 in asT<List<dynamic>>(jsonRes['list4'])) {
+        if (item0 != null) {
+          final List<List4> items1 = <List4>[];
+          for (final dynamic item1 in asT<List<dynamic>>(item0)) {
+            if (item1 != null) {
+              tryCatch(() {
+                items1.add(List4.fromJson(asT<Map<String, dynamic>>(item1)));
+              });
+            }
+          }
+          list4.add(items1);
         }
       }
     }
@@ -247,7 +284,9 @@ class Live {
                   final List<double> items3 = <double>[];
                   for (final dynamic item3 in asT<List<dynamic>>(item2)) {
                     if (item3 != null) {
-                      items3.add(asT<double>(item3));
+                      tryCatch(() {
+                        items3.add(asT<double>(item3));
+                      });
                     }
                   }
                   items2.add(items3);
@@ -260,42 +299,40 @@ class Live {
         }
       }
     }
-
     return Live(
-      weatherName: asT<String>(jsonRes['weather_name']),
       list: list,
       list1: list1,
       list2: list2,
-      list4: list4,
       list3: list3,
+      list4: list4,
       list5: list5,
-      weatherCode: asT<String>(jsonRes['weather_code']),
       temperature: asT<String>(jsonRes['temperature']),
+      weatherCode: asT<String>(jsonRes['weather_code']),
+      weatherName: asT<String>(jsonRes['weather_name']),
     );
   }
 
-  String weatherName;
-  List<int> list;
-  List<List<int>> list1;
-  List<List2> list2;
-  List<List<List4>> list4;
-  List<List<List<List3>>> list3;
-  List<List<List<List<double>>>> list5;
-  String weatherCode;
-  String temperature;
+  final List<int> list;
+  final List<List<int>> list1;
+  final List<List2> list2;
+  final List<List<List<List3>>> list3;
+  final List<List<List4>> list4;
+  final List<List<List<List<double>>>> list5;
+  final String temperature;
+  final String weatherCode;
+  final String weatherName;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'weather_name': weatherName,
         'list': list,
         'list1': list1,
         'list2': list2,
-        'list4': list4,
         'list3': list3,
+        'list4': list4,
         'list5': list5,
-        'weather_code': weatherCode,
         'temperature': temperature,
+        'weather_code': weatherCode,
+        'weather_name': weatherName,
       };
-
   @override
   String toString() {
     return json.encode(this);
@@ -307,18 +344,17 @@ class List2 {
     this.index,
   });
 
-  factory List2.fromJson(Map<dynamic, dynamic> jsonRes) => jsonRes == null
+  factory List2.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
       ? null
       : List2(
           index: asT<int>(jsonRes['index']),
         );
 
-  int index;
+  final int index;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'index': index,
       };
-
   @override
   String toString() {
     return json.encode(this);
@@ -330,18 +366,17 @@ class List4 {
     this.index,
   });
 
-  factory List4.fromJson(Map<dynamic, dynamic> jsonRes) => jsonRes == null
+  factory List4.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
       ? null
       : List4(
           index: asT<int>(jsonRes['index']),
         );
 
-  int index;
+  final int index;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'index': index,
       };
-
   @override
   String toString() {
     return json.encode(this);
@@ -353,18 +388,17 @@ class List3 {
     this.index,
   });
 
-  factory List3.fromJson(Map<dynamic, dynamic> jsonRes) => jsonRes == null
+  factory List3.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
       ? null
       : List3(
           index: asT<int>(jsonRes['index']),
         );
 
-  int index;
+  final int index;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
         'index': index,
       };
-
   @override
   String toString() {
     return json.encode(this);
@@ -373,54 +407,52 @@ class List3 {
 
 class ForecastData {
   ForecastData({
-    this.windDirectionCode,
-    this.windPowerCode,
-    this.maxTemp,
-    this.weatherCode,
-    this.minTemp,
-    this.weatherName,
-    this.windPowerDesc,
     this.daynight,
+    this.maxTemp,
+    this.minTemp,
+    this.weatherCode,
+    this.weatherName,
+    this.windDirectionCode,
     this.windDirectionDesc,
+    this.windPowerCode,
+    this.windPowerDesc,
   });
 
-  factory ForecastData.fromJson(Map<dynamic, dynamic> jsonRes) =>
-      jsonRes == null
-          ? null
-          : ForecastData(
-              windDirectionCode: asT<String>(jsonRes['wind_direction_code']),
-              windPowerCode: asT<String>(jsonRes['wind_power_code']),
-              maxTemp: asT<String>(jsonRes['max_temp']),
-              weatherCode: asT<String>(jsonRes['weather_code']),
-              minTemp: asT<String>(jsonRes['min_temp']),
-              weatherName: asT<String>(jsonRes['weather_name']),
-              windPowerDesc: asT<String>(jsonRes['wind_power_desc']),
-              daynight: asT<int>(jsonRes['daynight']),
-              windDirectionDesc: asT<String>(jsonRes['wind_direction_desc']),
-            );
+  factory ForecastData.fromJson(Map<String, dynamic> jsonRes) => jsonRes == null
+      ? null
+      : ForecastData(
+          daynight: asT<int>(jsonRes['daynight']),
+          maxTemp: asT<String>(jsonRes['max_temp']),
+          minTemp: asT<String>(jsonRes['min_temp']),
+          weatherCode: asT<String>(jsonRes['weather_code']),
+          weatherName: asT<String>(jsonRes['weather_name']),
+          windDirectionCode: asT<String>(jsonRes['wind_direction_code']),
+          windDirectionDesc: asT<String>(jsonRes['wind_direction_desc']),
+          windPowerCode: asT<String>(jsonRes['wind_power_code']),
+          windPowerDesc: asT<String>(jsonRes['wind_power_desc']),
+        );
 
-  String windDirectionCode;
-  String windPowerCode;
-  String maxTemp;
-  String weatherCode;
-  String minTemp;
-  String weatherName;
-  String windPowerDesc;
-  int daynight;
-  String windDirectionDesc;
+  final int daynight;
+  final String maxTemp;
+  final String minTemp;
+  final String weatherCode;
+  final String weatherName;
+  final String windDirectionCode;
+  final String windDirectionDesc;
+  final String windPowerCode;
+  final String windPowerDesc;
 
   Map<String, dynamic> toJson() => <String, dynamic>{
-        'wind_direction_code': windDirectionCode,
-        'wind_power_code': windPowerCode,
-        'max_temp': maxTemp,
-        'weather_code': weatherCode,
-        'min_temp': minTemp,
-        'weather_name': weatherName,
-        'wind_power_desc': windPowerDesc,
         'daynight': daynight,
+        'max_temp': maxTemp,
+        'min_temp': minTemp,
+        'weather_code': weatherCode,
+        'weather_name': weatherName,
+        'wind_direction_code': windDirectionCode,
         'wind_direction_desc': windDirectionDesc,
+        'wind_power_code': windPowerCode,
+        'wind_power_desc': windPowerDesc,
       };
-
   @override
   String toString() {
     return json.encode(this);

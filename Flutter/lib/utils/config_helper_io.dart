@@ -4,7 +4,7 @@ import 'dart:io';
 import 'package:json_to_dart/models/config.dart';
 
 class ConfigHelper {
-  static const String key="JsonToDartConfig.txt";
+  static const String key="JsonToDartConfig";
   static final ConfigHelper _singleton = new ConfigHelper._internal();
 
   factory ConfigHelper() {

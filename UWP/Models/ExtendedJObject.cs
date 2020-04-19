@@ -394,7 +394,13 @@ namespace FlutterCandiesJsonToDart.Models
                     item.UpdateNameByNamingConventionsType();
                 }
             }
-
+            if (ObjectKeys != null)
+            {
+                foreach (var item in ObjectKeys)
+                {
+                    item.Value.UpdateNameByNamingConventionsType();
+                }
+            }
         }
 
         public override void UpdatePropertyAccessorType()
