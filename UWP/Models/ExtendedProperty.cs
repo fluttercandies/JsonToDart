@@ -154,7 +154,7 @@ namespace FlutterCandiesJsonToDart.Models
                     }
                     else
                     {
-                        item = $"asT<{baseType}>({item})";
+                        item= String.Format(DartHelper.UseAsT, baseType,item);
                     }
             
                     if (count == 0)

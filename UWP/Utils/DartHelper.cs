@@ -31,14 +31,14 @@ namespace FlutterCandiesJsonToDart.Utils
 
         public static String SetProperty(String setName, ExtendedProperty item, String className)
         {
-            if (ConfigHelper.Instance.Config.EnableDataProtection)
-            {
-                return $"    {setName} : convertValueByType(jsonRes['{item.Key}'],{GetDartTypeString(item.Type)},stack:\"{className}-{item.Key}\"),";
-            }
-            else
-            {
-                return $"    {setName} : asT<{GetDartTypeString(item.Type)}>(jsonRes['{item.Key}']),";
-            }
+            //if (ConfigHelper.Instance.Config.EnableDataProtection)
+            //{
+            //    return $"    {setName} : convertValueByType(jsonRes['{item.Key}'],{GetDartTypeString(item.Type)},stack:\"{className}-{item.Key}\"),";
+            //}
+            //else
+            //return $"    {setName} : asT<{GetDartTypeString(item.Type)}>(jsonRes['{item.Key}']),";
+
+            return $"{ setName } : { String.Format(UseAsT, GetDartTypeString(item.Type), $"jsonRes['{item.Key}']")},";
         }
 
 
@@ -99,6 +99,28 @@ namespace FlutterCandiesJsonToDart.Utils
             }
 
         }
+
+        //public static String GetDefaultValue(DartType dartType)
+        //{
+        //    switch (dartType)
+        //    {
+        //        case DartType.String:
+        //            return "''";
+        //        case DartType.Int:
+        //            return "0";
+
+        //        case DartType.Object:
+        //            return "null";
+
+        //        case DartType.Bool:
+        //            return "false";
+
+        //        case DartType.Double:
+        //            return "0.0";
+        //        default:
+        //            return "null";
+        //    }
+        //}
 
         public const String FactoryStringHeader = "    {0}({{";
         public const String FactoryStringFooter = "    });\n";
@@ -171,7 +193,7 @@ namespace FlutterCandiesJsonToDart.Utils
 
         public const String ConvertMethod = @"dynamic convertValueByType(value, Type type, {String stack: """"}) {
   if (value == null) {"
-    + "debugPrint(\"$stack : value is null\");" +
+    + "debugPrint('$stack : value is null');" +
         @"
     if (type == String) {
       return """";
@@ -189,7 +211,7 @@ namespace FlutterCandiesJsonToDart.Utils
     return value;
   }
 var valueS = value.toString();
-" + "debugPrint(\"$stack : ${value.runtimeType} is not $type type\");" + @"
+" + "debugPrint('$stack : ${value.runtimeType} is not $type type');" + @"
   if (type == String) {
     return valueS;
   } else if (type == int) {
@@ -209,21 +231,45 @@ var valueS = value.toString();
   try {
     f?.call();
   } catch (e, stack) {
-   " + " debugPrint(\"$e\"); \n  debugPrint(\"$stack\");" + @"
+   " + " debugPrint('$e'); \n  debugPrint('$stack');" + @"
     }
 }";
 
 
         public const String AsTMethod = @"
-
-T asT<T>(dynamic value, [T defaultValue]) {
+T asT<T>(dynamic value) {
   if (value is T) {
     return value;
   }
-
-  return defaultValue;
+  {0}
+  return null;
 }     
  ";
+        public const String AsTMethodWithDataProtection = @"
+T asT<T>(dynamic value) {
+  if (value is T) {
+    return value;
+  }
+ if (value != null) {
+    final String valueS = value.toString();
+    if (0 is T) {
+      return int.tryParse(valueS) as T;
+    } else if (0.0 is T) {
+      return double.tryParse(valueS) as T;
+    } else if ('' is T) {
+      return valueS as T;
+    } else if (false is T) {
+      if (valueS == '0' || valueS == '1') {
+        return (valueS == '1') as T;
+      }
+      return bool.fromEnvironment(value.toString()) as T;
+    }
+  }
+  return null;
+}     
+ ";
+
+        public const String UseAsT = "asT<{0}>({1})";
 
         public static async Task<String> FormatCode(String value)
         {

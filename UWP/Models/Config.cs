@@ -25,6 +25,7 @@ namespace FlutterCandiesJsonToDart.Models
             }
         }
 
+
         private bool enableDataProtection;
         /// <summary>
         /// 数据类型保护

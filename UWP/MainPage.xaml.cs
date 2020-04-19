@@ -458,30 +458,20 @@ namespace FlutterCandiesJsonToDart
                     }
 
                     sb.AppendLine(DartHelper.JsonImport);
-                    if (ConfigHelper.Instance.Config.AddMethod && (ConfigHelper.Instance.Config.EnableDataProtection || ConfigHelper.Instance.Config.EnableArrayProtection))
+   
+                    if(ConfigHelper.Instance.Config.AddMethod)
                     {
-                        ///debugPrint
-                        sb.AppendLine(DartHelper.DebugPrintImport);
-                    }
-                    sb.AppendLine("");
-
-                    if (ConfigHelper.Instance.Config.AddMethod)
-                    {
-                        if (ConfigHelper.Instance.Config.EnableDataProtection)
+                        if(ConfigHelper.Instance.Config.EnableArrayProtection)
                         {
-                            sb.AppendLine(DartHelper.ConvertMethod);
+                            sb.AppendLine(DartHelper.DebugPrintImport);
                             sb.AppendLine("");
-                        }
-
-                        if (ConfigHelper.Instance.Config.EnableArrayProtection)
-                        {
                             sb.AppendLine(DartHelper.TryCatchMethod);
                             sb.AppendLine("");
                         }
+                        sb.AppendLine(ConfigHelper.Instance.Config.EnableDataProtection ? DartHelper.AsTMethodWithDataProtection : DartHelper.AsTMethod);
+                        sb.AppendLine("");
                     }
-
-                    sb.AppendLine(DartHelper.AsTMethod);
-                    sb.AppendLine("");
+                 
 
 
                     sb.AppendLine(extendedJObject.ToString());

@@ -99,7 +99,7 @@
                 "report_time": "2020-04-18 08:05:00",
                 "forecast_date": "2020-04-19",
                 "weekday": 6,
-                "forecast_data": [
+                "forecastData": [
                     {
                         "wind_direction_code": "4",
                         "wind_power_code": "2",
