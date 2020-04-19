@@ -150,7 +150,7 @@ namespace FlutterCandiesJsonToDart.Models
                     var addString = "";
                     if (className != null)
                     {
-                        item = $"{className}.fromJson(asT<Map<dynamic,dynamic>>({item}))";
+                        item = $"{className}.fromJson(asT<Map<String,dynamic>>({item}))";
                     }
                     else
                     {

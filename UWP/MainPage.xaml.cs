@@ -487,20 +487,10 @@ namespace FlutterCandiesJsonToDart
                     sb.AppendLine(extendedJObject.ToString());
 
                     var result = sb.ToString();
-#if WINDOWS_UWP || WPF 
+#if WINDOWS_UWP || WPF
 
-                    var dic = new Dictionary<String, String>();
-                    dic.Add("source", result);
-                    string str = JsonConvert.SerializeObject(dic);
-                    HttpContent content = new StringContent(str, Encoding.UTF8, "application/json");
-                    HttpClient client = new HttpClient();
-                    HttpResponseMessage response = await client.PostAsync(new Uri("https://dart-services.appspot.com/api/dartservices/v2/format"), content);
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var resultOject = JObject.Parse(await response.Content.ReadAsStringAsync());
-                        result = resultOject["newString"].ToString();
-                    }
+                    result =await DartHelper.FormatCode(result);
 
 #endif
 

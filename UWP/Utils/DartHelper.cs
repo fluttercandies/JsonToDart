@@ -1,6 +1,11 @@
 ﻿using FlutterCandiesJsonToDart.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace FlutterCandiesJsonToDart.Utils
 {
@@ -10,8 +15,8 @@ namespace FlutterCandiesJsonToDart.Utils
         public const String ClassHeader = "class {0} {{";
         public const String ClassFooter = "}";
 
-        public const String FromJsonHeader = "  factory {0}.fromJson(Map<dynamic, dynamic> jsonRes)=>jsonRes == null? null:{0}(";
-        public const String FromJsonHeader1 = "  factory {0}.fromJson(Map<dynamic, dynamic> jsonRes){{ if(jsonRes == null){{return null;}}\n";
+        public const String FromJsonHeader = "  factory {0}.fromJson(Map<String, dynamic> jsonRes)=>jsonRes == null? null:{0}(";
+        public const String FromJsonHeader1 = "  factory {0}.fromJson(Map<String, dynamic> jsonRes){{ if(jsonRes == null){{return null;}}\n";
         public const String FromJsonFooter = ");";
         public const String FromJsonFooter1 = "return {0}({1});}}";
         public const String ToJsonHeader = "  Map<String, dynamic> toJson() => <String, dynamic>{";
@@ -37,7 +42,7 @@ namespace FlutterCandiesJsonToDart.Utils
         }
 
 
-        public const String SetObjectProperty = "    {0} : {2}.fromJson(asT<Map<dynamic, dynamic>>(jsonRes['{1}'])),";
+        public const String SetObjectProperty = "    {0} : {2}.fromJson(asT<Map<String, dynamic>>(jsonRes['{1}'])),";
         public static String PropertyS(PropertyAccessorType type)
         {
             switch (type)
@@ -219,6 +224,48 @@ T asT<T>(dynamic value, [T defaultValue]) {
   return defaultValue;
 }     
  ";
+
+        public static async Task<String> FormatCode(String value)
+        {
+#if WINDOWS_UWP || WPF
+            var dic = new Dictionary<String, String>();
+            dic.Add("source", value);
+            string str = JsonConvert.SerializeObject(dic);
+            HttpContent content = new StringContent(str, Encoding.UTF8, "application/json");
+            HttpClient client = new HttpClient();
+            try
+            {
+                HttpResponseMessage response = await client.PostAsync(new Uri("https://dart-services.dartpad.cn/api/dartservices/v2/format"), content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var resultOject = JObject.Parse(await response.Content.ReadAsStringAsync());
+                    return resultOject["newString"].ToString();
+                }
+
+            }
+            catch (Exception)
+            {
+                try
+                {
+                    HttpResponseMessage response = await client.PostAsync(new Uri("https://dart-services.appspot.com/api/dartservices/v2/format"), content);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var resultOject = JObject.Parse(await response.Content.ReadAsStringAsync());
+                        return resultOject["newString"].ToString();
+                    }
+                }
+                catch (Exception)
+                {
+
+          
+                }
+            }
+
+            return value;
+        }
+#endif
     }
 
 
