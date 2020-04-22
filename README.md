@@ -38,9 +38,17 @@ Flutter Candies qq群181398081
 
 # 下载
 
+Github下载速度太慢，为了方便大家下载，特意在gitee也创建了下载地址。
+
+[UWP 微软商店](https://www.microsoft.com/store/apps/9NBRW9451QSR)
+[WPF for Windows](https://gitee.com/zmtzawqlp/JsonToDart/attach_files/379990/download)
+[UWP for Windows10](https://gitee.com/zmtzawqlp/JsonToDart/attach_files/379991/download)
+[Flutter for Macos](https://gitee.com/zmtzawqlp/JsonToDart/attach_files/379989/download)
+[Flutter for Web](https://zmtzawqlp.gitee.io/jsontodartflutterweb)
+
 | 平台    | 语言 | 描述                                                                                                    | 代码/安装包地址                                                                                                               |
 | ------- | ---- | ------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| windows | C#   | uwp构建，运行环境windows10，x86/x64                                                                     | [windows-uwp.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
+| windows | C#   | uwp构建，运行环境windows10，x86/x64                                                                     | [微软商店](https://www.microsoft.com/store/apps/9NBRW9451QSR) 以及 [windows-uwp.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                     |
 | windows | C#   | wpf构建，运行环境windows10/windows8/widnows7，x86/x64                                                   | [windows-wpf.zip](https://github.com/fluttercandies/JsonToDart/releases)                                                      |
 | windows | dart | flutter构建, 使用[官方方式](https://github.com/google/flutter-desktop-embedding)编译,x64 ,debug版本     | [windows-x64-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                              |
 | windows | dart | flutter构建, 使用[go-flutter](https://github.com/go-flutter-desktop/go-flutter)编译,x64 ,debug版本      | [windows-x64-go-flutter.zip](https://github.com/fluttercandies/JsonToDart/releases)                                           |
@@ -52,9 +60,11 @@ Flutter Candies qq群181398081
 # 安装
 ## UWP(Windows10)
 
-Windows10 用户
+[微软商店](https://www.microsoft.com/store/apps/9NBRW9451QSR)
 
-考虑到应用商店经常大姨妈，就没有上传到商店了。
+商店大姨妈的时候，可以直接下载安装包
+
+Windows10 用户
 
 下载好安装包，解压。
 
