@@ -4,7 +4,17 @@
     <AppxPackageIsForStore>False</AppxPackageIsForStore>
     <AppxShowAllApps>False</AppxShowAllApps>
     <AppxBuildConfigurationSelection>x86|x64</AppxBuildConfigurationSelection>
-    <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
+    <PackageOptionalProjectsInIdeBuilds>True</PackageOptionalProjectsInIdeBuilds>
+    <Source>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</Source>
+    <SmallTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</SmallTileSource>
+    <MediumTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</MediumTileSource>
+    <WideTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</WideTileSource>
+    <LargeTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</LargeTileSource>
+    <AppIconSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</AppIconSource>
+    <SplashScreenSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</SplashScreenSource>
+    <BadgeLogoSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</BadgeLogoSource>
+    <PackageLogoSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</PackageLogoSource>
+    <UapAppxPackageBuildMode>SideloadOnly</UapAppxPackageBuildMode>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
