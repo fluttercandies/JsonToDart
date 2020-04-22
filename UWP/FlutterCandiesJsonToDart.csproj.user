@@ -14,7 +14,7 @@
     <SplashScreenSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</SplashScreenSource>
     <BadgeLogoSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</BadgeLogoSource>
     <PackageLogoSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</PackageLogoSource>
-    <UapAppxPackageBuildMode>SideloadOnly</UapAppxPackageBuildMode>
+    <UapAppxPackageBuildMode>StoreOnly</UapAppxPackageBuildMode>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
     <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
