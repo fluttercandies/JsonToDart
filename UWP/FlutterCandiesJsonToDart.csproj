@@ -127,6 +127,7 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <None Include="FlutterCandiesJsonToDart_TemporaryKey.pfx" />
+    <None Include="Privacy Policy.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\BadgeLogo.scale-100.png" />

@@ -4,7 +4,7 @@
     <AppxPackageIsForStore>False</AppxPackageIsForStore>
     <AppxShowAllApps>False</AppxShowAllApps>
     <AppxBuildConfigurationSelection>x86|x64</AppxBuildConfigurationSelection>
-    <PackageOptionalProjectsInIdeBuilds>True</PackageOptionalProjectsInIdeBuilds>
+    <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
     <Source>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</Source>
     <SmallTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</SmallTileSource>
     <MediumTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</MediumTileSource>
