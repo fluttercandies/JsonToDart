@@ -479,9 +479,10 @@ namespace FlutterCandiesJsonToDart
                     var result = sb.ToString();
 #if WINDOWS_UWP || WPF
 
-
-                    result =await DartHelper.FormatCode(result);
-
+                    if (ConfigHelper.Instance.Config.EnableDartFormat)
+                    {
+                        result = await DartHelper.FormatCode(result);
+                    }
 #endif
 
                     tb.Text = result;

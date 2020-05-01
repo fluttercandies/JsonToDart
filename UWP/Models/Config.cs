@@ -10,6 +10,20 @@ namespace FlutterCandiesJsonToDart.Models
 {
     public class Config : BindableBase
     {
+        private bool enableDartFormat = false;
+        /// <summary>
+        /// Dart代码格式化采用网络请求方式，觉得慢的可以关闭
+        /// </summary>
+        public bool EnableDartFormat
+        {
+            get { return enableDartFormat; }
+            set
+            {
+                enableDartFormat = value;
+                OnPropertyChanged(nameof(EnableDartFormat));
+            }
+        }
+
         private bool addMethod = true;
         /// <summary>
         /// 是否添加数据类型保护和数组保护的方法
@@ -39,6 +53,7 @@ namespace FlutterCandiesJsonToDart.Models
                 OnPropertyChanged(nameof(EnableDataProtection));
             }
         }
+
 
         private bool enableArrayProtection;
         /// <summary>

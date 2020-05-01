@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="5785FlutterCandies.JsonToDart" Publisher="CN=F80FEA43-6801-4A7B-82BF-B5BED587DAFB" Version="1.0.2.0" />
+  <Identity Name="5785FlutterCandies.JsonToDart" Publisher="CN=F80FEA43-6801-4A7B-82BF-B5BED587DAFB" Version="1.0.3.0" />
   <mp:PhoneIdentity PhoneProductId="7a58c06e-eafe-43c8-bf18-14e2db5e2325" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>JsonToDart</DisplayName>

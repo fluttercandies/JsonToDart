@@ -84,11 +84,19 @@
                         <TextBlock  Margin="10.0,0.0,0.0,0.0" Text="属性排序" VerticalAlignment="Center"/>
                     </StackPanel>
 
-                    <CheckBox HorizontalAlignment="Right" IsChecked="{Binding AddMethod,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <CheckBox HorizontalAlignment="Center" IsChecked="{Binding AddMethod,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
                         添加保护方法
                         <ToolTipService.ToolTip>
                             <ToolTip>
                                 是否添加数据类型保护和数组保护的方法,d第一添加之后，可以把方法提出去，就不再需要了
+                            </ToolTip>
+                        </ToolTipService.ToolTip>
+                    </CheckBox>
+                    <CheckBox HorizontalAlignment="Right" IsChecked="{Binding EnableDartFormat,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        Dart代码格式化
+                        <ToolTipService.ToolTip>
+                            <ToolTip>
+                                Dart代码格式化采用网络请求方式，觉得慢的可以关闭
                             </ToolTip>
                         </ToolTipService.ToolTip>
                     </CheckBox>

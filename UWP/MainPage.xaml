@@ -105,6 +105,15 @@
                             </ToolTip>
                         </ToolTipService.ToolTip>
                     </CheckBox>
+                    <GridViewItem>
+                        <CheckBox x:Name="EnableDartFormatCheckBox" IsChecked="{Binding EnableDartFormat,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">Dart代码格式化
+                            <ToolTipService.ToolTip>
+                                <ToolTip>
+                                    Dart代码格式化采用网络请求方式，觉得慢的可以关闭
+                                </ToolTip>
+                            </ToolTipService.ToolTip>
+                        </CheckBox>
+                    </GridViewItem>
                 </GridView>
 
                 <TextBox Header="文件头部信息" PlaceholderText="可以在这里添加copyright，导入dart代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式"  Text="{Binding FileHeaderInfo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  ScrollViewer.VerticalScrollMode="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollMode="Disabled" AcceptsReturn="True" MinHeight="150"
