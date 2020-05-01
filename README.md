@@ -42,11 +42,11 @@ Github下载速度太慢，为了方便大家下载，特意在gitee也创建了
 
 [UWP 微软商店](https://www.microsoft.com/store/apps/9NBRW9451QSR)
 
-[WPF for Windows](https://gitee.com/zmtzawqlp/JsonToDart/attach_files/379990/download)
+[WPF for Windows](https://gitee.com/zmtzawqlp/JsonToDart/releases)
 
-[UWP for Windows10](https://gitee.com/zmtzawqlp/JsonToDart/attach_files/379991/download)
+[UWP for Windows10](https://gitee.com/zmtzawqlp/JsonToDart/releases)
 
-[Flutter for Macos](https://gitee.com/zmtzawqlp/JsonToDart/attach_files/379989/download)
+[Flutter for Macos](https://gitee.com/zmtzawqlp/JsonToDart/releases)
 
 [Flutter for Web](https://zmtzawqlp.gitee.io/jsontodartflutterweb)
 
