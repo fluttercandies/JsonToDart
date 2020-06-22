@@ -15,7 +15,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.6.0 <3.0.0"
-  flutter: '>=1.10.2-pre.54'
+  flutter: ">=1.10.2-pre.54"
 
 dependencies:
   flutter:
@@ -26,26 +26,25 @@ dependencies:
   provider: ^3.0.0+1
   oktoast: ^2.1.9
   intl: ^0.15.8
-  js: ^0.6.1+1  
+  js: ^0.6.1+1
   dart_style: any
+  tapped: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-  
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
   assets:
-     - assets/
+    - assets/
   # fonts:
   #   - family: Roboto
   #     fonts:
@@ -65,13 +64,10 @@ flutter:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
-
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
