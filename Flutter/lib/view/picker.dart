@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/text.dart';
 
-// class PickerItem<T>{
-//   final String title;
-//   final T value
-// }
 class StPicker extends StatelessWidget {
   final DropdownButton child;
   final String title;
@@ -15,6 +11,7 @@ class StPicker extends StatelessWidget {
     this.child,
     this.title,
   }) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     return Container(

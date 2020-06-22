@@ -37,7 +37,6 @@ void main() {
   runApp(new MyApp());
 }
 
-// TODO: 修复UI
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -74,7 +73,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// TODO: 修复UI
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
 
@@ -191,9 +189,7 @@ class DragIcon extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            width: 4,
-          ),
+          Container(width: 4),
           Container(
             height: 14,
             width: 2,

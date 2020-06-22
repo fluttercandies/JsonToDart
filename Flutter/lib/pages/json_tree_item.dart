@@ -7,7 +7,6 @@ import 'package:json_to_dart/style/text.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/enums.dart';
 
-// TODO: 修复UI
 class JsonTreeItem extends StatefulWidget {
   final ExtendedObject object;
   final ExtendedProperty property;
@@ -131,7 +130,6 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
               ),
             ),
           ),
-          // TODO: 这里太丑
           child: Row(
             children: [
               Container(
