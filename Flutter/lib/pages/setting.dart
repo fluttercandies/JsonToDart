@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:json_to_dart/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/utils/config_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
+import 'package:json_to_dart/view/button.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
@@ -17,38 +18,50 @@ class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
     var controller = Provider.of<JsonToDartController>(context, listen: false);
+    var settingRow = Wrap(
+      direction: Axis.horizontal,
+      children: <Widget>[
+        TapButton(
+          title: "格式化",
+          icon: Icons.format_align_left,
+          onPressed: () {
+            controller.formatJson();
+          },
+        ),
+        TapButton(
+          title: "更多设置",
+          icon: Icons.more_horiz,
+          onPressed: () {
+            setState(() {
+              showMoreSetting = !showMoreSetting;
+            });
+          },
+        ),
+        TapButton(
+          title: "保存配置",
+          icon: Icons.save,
+          onPressed: () {
+            ConfigHelper().save();
+            showToast("保存配置成功");
+          },
+        ),
+        TapButton(
+          title: "生成Dart",
+          icon: Icons.flag,
+          onPressed: () {
+            controller.generateDart();
+          },
+        ),
+      ],
+    );
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 6),
+      child: settingRow,
+    );
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Wrap(
-          direction: Axis.horizontal,
-          children: <Widget>[
-            FlatButton(
-              child: Text("格式化"),
-              onPressed: () {
-                controller.formatJson();
-              },
-            ),
-            FlatButton(
-                child: Text("更多设置"),
-                onPressed: () {
-                  setState(() {
-                    showMoreSetting = !showMoreSetting;
-                  });
-                }),
-            FlatButton(
-                child: Text("保存配置"),
-                onPressed: () {
-                  ConfigHelper().save();
-                  showToast("保存配置成功");
-                }),
-            FlatButton(
-                child: Text("生成Dart"),
-                onPressed: () {
-                  controller.generateDart();
-                }),
-          ],
-        ),
+        settingRow,
         if (showMoreSetting)
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -125,7 +138,8 @@ class _SettingState extends State<Setting> {
                               setState(() {
                                 ConfigHelper().config.traverseArrayCount =
                                     value;
-                                if (controller.extendedObjectValue.value != null) {
+                                if (controller.extendedObjectValue.value !=
+                                    null) {
                                   controller.formatJson();
                                 }
                               });

@@ -18,6 +18,7 @@ import 'package:json_to_dart/pages/json_text_field.dart';
 import 'package:json_to_dart/pages/json_tree.dart';
 import 'package:json_to_dart/pages/json_tree_header.dart';
 import 'package:json_to_dart/pages/setting.dart';
+import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/utils/config_helper.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -33,12 +34,9 @@ void main() {
   }
 
   ConfigHelper().initialize();
-
-  // SystemChannels.lifecycle.setMessageHandler((msg) {
-  //   print('SystemChannels> $msg');
-  // });
   runApp(new MyApp());
 }
+
 // TODO: 修复UI
 class MyApp extends StatelessWidget {
   @override
@@ -73,6 +71,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 // TODO: 修复UI
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -83,33 +82,11 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage>
-
-//with WidgetsBindingObserver
-{
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addObserver(this);
-  // }
-
-  // @override
-  // void dispose() {
-  //   WidgetsBinding.instance.removeObserver(this);
-  //   super.dispose();
-  // }
-
-  // @override
-  // void didChangeAppLifecycleState(AppLifecycleState state) {
-  //   print(state);
-  //   if (state == AppLifecycleState.suspending) {
-  //     ConfigHelper().save();
-  //   }
-  // }
-
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorPlate.white,
       body: Row(
         children: <Widget>[
           Expanded(
@@ -118,10 +95,10 @@ class _MyHomePageState extends State<MyHomePage>
               margin: EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  Setting(),
                   Expanded(
                     child: JsonTextField(),
-                  )
+                  ),
+                  Setting(),
                 ],
               ),
             ),
