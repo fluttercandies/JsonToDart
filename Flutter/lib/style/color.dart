@@ -10,6 +10,7 @@ class ColorPlate {
   // 层次灰色
   static const Color darkGray = const Color(0xff4A4A4A);
   static const Color gray = const Color(0xff9B9B9B);
+  static const Color borderGray = const Color(0xffCDCDCD);
   static const Color lightGray = const Color(0xfff5f5f4);
   //
   // 专属色

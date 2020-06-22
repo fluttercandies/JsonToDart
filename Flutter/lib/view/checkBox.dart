@@ -4,49 +4,46 @@ import 'package:json_to_dart/style/size.dart';
 import 'package:json_to_dart/style/text.dart';
 import 'package:tapped/tapped.dart';
 
-class TapButton extends StatelessWidget {
-  final IconData icon;
+class StCheckBox extends StatelessWidget {
   final String title;
-  final Function onPressed;
+  final bool value;
+  final Function(bool) onChanged;
 
-  const TapButton({
+  const StCheckBox({
     Key key,
-    this.icon,
     this.title,
-    this.onPressed,
+    this.value: false,
+    this.onChanged,
   }) : super(key: key);
+
+  Color get color => value ? ColorPlate.blue : ColorPlate.gray;
 
   @override
   Widget build(BuildContext context) {
     return Tapped(
-      onTap: onPressed,
+      onTap: () => onChanged?.call(!value),
       child: Container(
-        margin: EdgeInsets.all(6),
+        margin: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+        padding: EdgeInsets.all(12),
         decoration: ShapeDecoration(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4),
           ),
-          color: ColorPlate.blue,
-        ),
-        padding: EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 8,
+          color: ColorPlate.lightGray,
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(
-              icon ?? Icons.help_outline,
-              color: ColorPlate.white,
+              value ? Icons.check_box : Icons.check_box_outline_blank,
+              color: color,
               size: SysSize.normal + 2,
             ),
             Container(width: 4),
-            Container(
-              // color: ColorPlate.red,
-              child: StText.normal(
-                title ?? '--',
-                style: TextStyle(color: ColorPlate.white),
+            StText.normal(
+              title ?? '--',
+              style: TextStyle(
+                color: color,
               ),
             ),
           ],

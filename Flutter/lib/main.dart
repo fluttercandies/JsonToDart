@@ -43,6 +43,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     JsonToDartController controller = JsonToDartController();
     return OKToast(
+      radius: 4,
+      backgroundColor: ColorPlate.black.withOpacity(0.6),
       child: MultiProvider(
         providers: [
           Provider.value(
@@ -108,13 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onPointerUp: onPointerUp,
             onPointerMove: onPointerMove,
             behavior: HitTestBehavior.translucent,
-            child: Container(
-              width: 16.0,
-              color: Color(0x01000000),
-              alignment: Alignment.center,
-              height: double.infinity,
-              child: Text("||"),
-            ),
+            child: DragIcon(),
           ),
           Expanded(
             flex: ConfigHelper().config.column2Width,
@@ -167,5 +163,49 @@ class _MyHomePageState extends State<MyHomePage> {
         updateGridSplitter(event.delta.dx);
       });
     }
+  }
+}
+
+// 提示你这里可以滑
+class DragIcon extends StatelessWidget {
+  const DragIcon({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 16.0,
+      alignment: Alignment.center,
+      height: double.infinity,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 14,
+            width: 2,
+            decoration: ShapeDecoration(
+              color: ColorPlate.gray.withOpacity(0.5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(1),
+              ),
+            ),
+          ),
+          Container(
+            width: 4,
+          ),
+          Container(
+            height: 14,
+            width: 2,
+            decoration: ShapeDecoration(
+              color: ColorPlate.gray.withOpacity(0.5),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(1),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

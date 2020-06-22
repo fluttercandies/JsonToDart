@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:json_to_dart/models/extended_object.dart';
 import 'package:json_to_dart/models/extended_property.dart';
+import 'package:json_to_dart/style/color.dart';
+import 'package:json_to_dart/style/size.dart';
+import 'package:json_to_dart/style/text.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/enums.dart';
+
 // TODO: 修复UI
 class JsonTreeItem extends StatefulWidget {
   final ExtendedObject object;
@@ -25,22 +29,26 @@ class JsonTreeItem extends StatefulWidget {
 class _JsonTreeItemState extends State<JsonTreeItem> {
   @override
   Widget build(BuildContext context) {
+    Color _borderColor = ColorPlate.borderGray;
     var finalDepth = widget.object.depth + widget.depth + 1;
 
     var object = widget.object;
     var property = widget.property;
 
-    double w = 20.0;
+    double w = 10.0;
 
     List<Widget> rowItems = List<Widget>();
+
+    var key = widget.isArrayOject
+        ? DartType.object.toString().replaceAll("DartType.", "")
+        : widget.property.key;
 
     rowItems.add(Expanded(
       flex: 3,
       child: Container(
+        padding: EdgeInsets.only(left: 8),
         margin: EdgeInsets.only(left: finalDepth * w),
-        child: Text(widget.isArrayOject
-            ? DartType.object.toString().replaceAll("DartType.", "")
-            : widget.property.key),
+        child: StText.normal(' ' * finalDepth + key),
       ),
     ));
 
@@ -66,8 +74,13 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
               height: double.infinity,
               padding: EdgeInsets.only(left: 8.0),
               decoration: BoxDecoration(
-                  border: Border(
-                      left: BorderSide(color: Colors.black, width: 1.0))),
+                border: Border(
+                  left: BorderSide(
+                    color: _borderColor,
+                    width: 1.0,
+                  ),
+                ),
+              ),
               child: Row(
                 children: <Widget>[
                   Text(start),
@@ -89,8 +102,13 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
               height: double.infinity,
               padding: EdgeInsets.only(left: 8.0),
               decoration: BoxDecoration(
-                  border: Border(
-                      left: BorderSide(color: Colors.black, width: 1.0))),
+                border: Border(
+                  left: BorderSide(
+                    color: _borderColor,
+                    width: 1.0,
+                  ),
+                ),
+              ),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -106,25 +124,46 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
           height: double.infinity,
           padding: EdgeInsets.only(left: 8.0),
           decoration: BoxDecoration(
-              color: isNullOrWhiteSpace((property as ExtendedObject).className)
-                  ? Colors.red
-                  : Colors.yellow,
-              border:
-                  Border(left: BorderSide(color: Colors.black, width: 1.0))),
-          child: TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
+            border: Border(
+              left: BorderSide(
+                color: _borderColor,
+                width: 1.0,
+              ),
             ),
-            controller: TextEditingController()
-              ..text = (property as ExtendedObject).className,
-            onChanged: (value) {
-              var oldValue = (property as ExtendedObject).className;
-              (property as ExtendedObject).className = value;
-              if (value != oldValue &&
-                  (isNullOrWhiteSpace(value) || isNullOrWhiteSpace(oldValue))) {
-                setState(() {});
-              }
-            },
+          ),
+          // TODO: 这里太丑
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(right: 4),
+                child: Icon(
+                  Icons.label,
+                  size: SysSize.normal,
+                  color:
+                      isNullOrWhiteSpace((property as ExtendedObject).className)
+                          ? Colors.red
+                          : Colors.blue,
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                  ),
+                  controller: TextEditingController()
+                    ..text = (property as ExtendedObject).className,
+                  onChanged: (value) {
+                    var oldValue = (property as ExtendedObject).className;
+                    (property as ExtendedObject).className = value;
+                    if (value != oldValue &&
+                        (isNullOrWhiteSpace(value) ||
+                            isNullOrWhiteSpace(oldValue))) {
+                      setState(() {});
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ));
@@ -134,8 +173,10 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
         child: Container(
           padding: EdgeInsets.only(left: 8.0),
           decoration: BoxDecoration(
-              border:
-                  Border(left: BorderSide(color: Colors.black, width: 1.0))),
+            border: Border(
+              left: BorderSide(color: _borderColor, width: 1.0),
+            ),
+          ),
           child: DropdownButton(
               onChanged: (value) {
                 setState(() {
@@ -161,9 +202,14 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
             height: double.infinity,
             padding: EdgeInsets.only(left: 8.0),
             decoration: BoxDecoration(
-                color: isNullOrWhiteSpace(property.name) ? Colors.red : null,
-                border:
-                    Border(left: BorderSide(color: Colors.black, width: 1.0))),
+              color: isNullOrWhiteSpace(property.name) ? Colors.red : null,
+              border: Border(
+                left: BorderSide(
+                  color: _borderColor,
+                  width: 1.0,
+                ),
+              ),
+            ),
             child: TextField(
               controller: TextEditingController()..text = property.name,
               decoration: InputDecoration(
@@ -184,7 +230,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
       rowItems.add(Expanded(
           flex: 1,
           child: Container(
-            color: Colors.grey,
+            color: _borderColor,
           )));
     }
 
@@ -194,8 +240,10 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
         child: Container(
           padding: EdgeInsets.only(left: 8.0),
           decoration: BoxDecoration(
-              border:
-                  Border(left: BorderSide(color: Colors.black, width: 1.0))),
+            border: Border(
+              left: BorderSide(color: _borderColor, width: 1.0),
+            ),
+          ),
           child: DropdownButton(
               onChanged: (value) {
                 setState(() {
@@ -215,13 +263,21 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
         ),
       ));
     } else {
-      rowItems.add(Expanded(flex: 1, child: Container(color: Colors.grey)));
+      rowItems.add(
+        Expanded(
+          flex: 1,
+          child: Container(color: _borderColor),
+        ),
+      );
     }
 
     return Container(
       height: 50.0,
       decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: Colors.black, width: 1.0))),
+        border: Border(
+          bottom: BorderSide(color: _borderColor, width: 1.0),
+        ),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         children: rowItems,

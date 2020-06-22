@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:json_to_dart/models/extended_object.dart';
 import 'package:json_to_dart/models/extended_property.dart';
+import 'package:json_to_dart/style/color.dart';
 import 'package:provider/provider.dart';
 
 import 'json_tree_item.dart';
 
-// TODO: 修复UI
 class JsonTree extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
-          color: Colors.black,
+          color: ColorPlate.borderGray,
           width: 1.0,
         ),
+        borderRadius: BorderRadius.circular(4),
       ),
       child: SingleChildScrollView(
           child: Consumer<ExtendedObject>(builder: (context, object, _) {

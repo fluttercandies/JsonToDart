@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_to_dart/models/json_to_dart_controller.dart';
+import 'package:json_to_dart/style/color.dart';
+import 'package:json_to_dart/style/text.dart';
 import 'package:json_to_dart/utils/config_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:provider/provider.dart';
@@ -18,18 +20,40 @@ class _JsonTreeHeaderState extends State<JsonTreeHeader> {
       children: <Widget>[
         Expanded(
           child: Padding(
-              padding: EdgeInsets.only(left: 8.0), child: Text("JsonKey")),
+            padding: EdgeInsets.only(left: 8.0),
+            child: StText.normal(
+              "JsonKey",
+              style: TextStyle(
+                color: ColorPlate.gray,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
           flex: 3,
         ),
         Expanded(
-          child:
-              Padding(padding: EdgeInsets.only(left: 8.0), child: Text("类型")),
+          child: Padding(
+            padding: EdgeInsets.only(left: 8.0),
+            child: StText.normal(
+              "类型",
+              style: TextStyle(
+                color: ColorPlate.gray,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
           flex: 1,
         ),
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(left: 8.0),
-            child: Text("参数名字"),
+            child: StText.normal(
+              "参数名",
+              style: TextStyle(
+                color: ColorPlate.gray,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
           ),
           flex: 1,
         ),
