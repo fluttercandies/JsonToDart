@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <AppxPackageIsForStore>False</AppxPackageIsForStore>
+    <AppxShowAllApps>False</AppxShowAllApps>
+    <AppxBuildConfigurationSelection>x86|x64</AppxBuildConfigurationSelection>
+    <PackageOptionalProjectsInIdeBuilds>True</PackageOptionalProjectsInIdeBuilds>
+    <Source>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</Source>
+    <SmallTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</SmallTileSource>
+    <MediumTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</MediumTileSource>
+    <WideTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</WideTileSource>
+    <LargeTileSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</LargeTileSource>
+    <AppIconSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</AppIconSource>
+    <SplashScreenSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</SplashScreenSource>
+    <BadgeLogoSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</BadgeLogoSource>
+    <PackageLogoSource>E:\Flutter\FlutterCandies\JsonToDartGitee\Image\JsonToDart.png</PackageLogoSource>
+    <UapAppxPackageBuildMode>StoreOnly</UapAppxPackageBuildMode>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|ARM'">
+    <DeviceId>30F105C9-681E-420b-A277-7C086EAD8A4E</DeviceId>
+    <UseEmulator>true</UseEmulator>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DoNotLaunchApp>true</DoNotLaunchApp>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,173 @@
+import 'package:json_to_dart/utils/enums.dart';
+import 'package:json_to_dart/utils/camel_under_score_converter.dart';
+import 'package:json_to_dart/utils/dart_helper.dart';
+import 'package:json_to_dart/utils/my_string_buffer.dart';
+import 'package:json_to_dart/utils/string_helper.dart';
+import 'config.dart';
+
+class ExtendedProperty {
+  ExtendedProperty({
+    required String uid,
+    required this.depth,
+    required this.keyValuePair,
+  })   : key = keyValuePair.key,
+        uid = uid + '_' + keyValuePair.key,
+        value = keyValuePair.value,
+        name = keyValuePair.key,
+        propertyAccessorType = ConfigSetting().propertyAccessorType,
+        type = DartHelper.converDartType(keyValuePair.value.runtimeType),
+        nullable = ConfigSetting().nullable;
+  final String uid;
+  final int depth;
+  final String key;
+  final dynamic value;
+  final MapEntry<String, dynamic> keyValuePair;
+  late String name;
+  late PropertyAccessorType propertyAccessorType;
+  late bool nullable;
+
+  late DartType type;
+  void updateNameByNamingConventionsType() {
+    switch (ConfigSetting().propertyNamingConventionsType) {
+      case PropertyNamingConventionsType.none:
+        name = key;
+        break;
+      case PropertyNamingConventionsType.camelCase:
+        name = camelName(key);
+        break;
+      case PropertyNamingConventionsType.pascal:
+        name = upcaseCamelName(key);
+        break;
+      case PropertyNamingConventionsType.hungarianNotation:
+        name = underScoreName(key);
+        break;
+      default:
+        name = key;
+        break;
+    }
+  }
+
+  void updatePropertyAccessorType() {
+    propertyAccessorType = ConfigSetting().propertyAccessorType;
+  }
+
+  void updateNullable(bool nullable) {
+    this.nullable = nullable;
+  }
+
+  String getTypeString({String? className}) {
+    dynamic temp = value;
+    String? result;
+
+    while (temp is List) {
+      if (result == null) {
+        result = 'List<{0}>';
+      } else {
+        result = stringFormat('List<{0}>', <String>[result]);
+      }
+      if (temp is List && temp.isNotEmpty) {
+        temp = temp.first;
+      } else {
+        break;
+      }
+    }
+
+    if (result != null) {
+      result = stringFormat(result, <String>[
+        className ??
+            DartHelper.getDartTypeString(
+                DartHelper.converDartType(temp?.runtimeType ?? Object))
+      ]);
+    }
+
+    return result ?? (className ?? DartHelper.getDartTypeString(type));
+  }
+
+  String getBaseTypeString({String? className}) {
+    if (className != null) {
+      return className;
+    }
+    dynamic temp = value;
+    while (temp is List) {
+      if (temp is List && temp.isNotEmpty) {
+        temp = temp.first;
+      } else {
+        break;
+      }
+    }
+
+    return DartHelper.getDartTypeString(
+        DartHelper.converDartType(temp?.runtimeType ?? Object));
+  }
+
+  String getArraySetPropertyString(String setName, String typeString,
+      {String? className, String? baseType}) {
+    dynamic temp = value;
+    final MyStringBuffer sb = MyStringBuffer();
+    sb.writeLine(
+        " final  $typeString $setName = jsonRes['$key'] is List ? ${typeString.substring('List'.length)}[]: null; ");
+    sb.writeLine('    if($setName!=null) {');
+    final bool enableTryCatch = ConfigSetting().enableArrayProtection;
+    int count = 0;
+    String? result;
+    while (temp is List) {
+      if (temp is List && temp.isNotEmpty) {
+        temp = temp.first;
+      } else {
+        temp = null;
+      }
+      // delete List<
+      typeString = typeString.substring('List<'.length);
+      // delete >
+      typeString = typeString.substring(0, typeString.length - 1);
+
+      // next is array
+      if (temp != null && temp is List) {
+        if (count == 0) {
+          result =
+              " for (final dynamic item$count in asT<List<dynamic>>(jsonRes['$key'])) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} $setName.add(items${count + 1}); }}";
+        } else {
+          result = result!.replaceAll('{}',
+              " for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} items$count.add(items${count + 1}); }}");
+        }
+      }
+
+      // next is not array
+      else {
+        String item = 'item' + (count == 0 ? '' : count.toString());
+        String addString = '';
+        if (className != null) {
+          item = '$className.fromJson(asT<Map<String,dynamic>>($item))';
+        } else {
+          item = DartHelper.getUseAsT(baseType, item);
+        }
+
+        if (count == 0) {
+          addString = '$setName.add($item); ';
+          if (enableTryCatch) {
+            addString = 'tryCatch(() { $addString }); ';
+          }
+
+          result =
+              " for (final dynamic item in jsonRes['$key']) { if (item != null) { $addString }}";
+        } else {
+          addString = 'items$count.add($item); ';
+
+          if (enableTryCatch) {
+            addString = 'tryCatch(() { $addString }); ';
+          }
+
+          result = result!.replaceAll('{}',
+              ' for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})) { if (item$count != null) {$addString}}');
+        }
+      }
+
+      count++;
+    }
+
+    sb.writeLine(result);
+    sb.writeLine('    }\n');
+
+    return sb.toString();
+  }
+}

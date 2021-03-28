@@ -1,0 +1,40 @@
+{
+    "formatButtonLabel": "格式化",
+    "generateButtonLabel": "生成",
+    "settingButtonLabel": "设置",
+    "classNameAssert": "{name} 的 Class 名字为空或者空白。",
+    "@classNameAssert": {
+      "placeholders": {
+        "name": {}
+      }
+    },
+    "propertyNameAssert": "{name}: 属性名字为空或者空白。",
+    "@propertyNameAssert": {
+      "placeholders": {
+        "name": {}
+      }
+    },
+    "formatErrorInfo": "格式化出错. 错误信息已复制到剪切板。",
+    "timeFormatError": "时间格式不正确。",
+    "generateSucceed": "Dart 代码生成成功，已复制到剪切板。",
+    "generateFailed": "Dart 代码生成失败，错误信息已复制到剪切板。",
+    "inputHelp": "请输入Json字符串，按格式化按钮。",
+    "type": "类型",
+    "name": "名字",
+    "dataProtection": "数据保护",
+    "arrayProtection": "数组保护",
+    "traverseArrayCount": "数组循环次数",
+    "nameRule": "名字规则",
+    "original": "默认",
+    "camelCase": "小驼峰",
+    "pascal": "大驼峰",
+    "hungarianNotation": "匈牙利命名法",
+    "propertyOrder": "属性排序",
+    "ascending": "升序",
+    "descending": "降序",
+    "addMethod": "添加保护方法",
+    "fileHeader": "文件头信息",
+    "fileHeaderHelp": "可以在这里添加 Copyright，导入 Dart 代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式.",
+    "nullsafety": "空安全",
+    "nullable": "可空"
+}

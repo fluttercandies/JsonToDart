@@ -1,0 +1,40 @@
+{
+    "formatButtonLabel": "Format",
+    "generateButtonLabel": "Generate",
+    "settingButtonLabel": "Setting",
+    "classNameAssert": "{name}'s class name is null or empty.",
+    "@classNameAssert": {
+      "placeholders": {
+        "name": {}
+      }
+    },
+    "propertyNameAssert": "{name}: property name is null or empty",
+    "@propertyNameAssert": {
+      "placeholders": {
+        "name": {}
+      }
+    },
+    "formatErrorInfo": "There is something wrong to format. The error has copied into Clipboard.",
+    "timeFormatError": "The format of time is not right.",
+    "generateSucceed": "The dart code is generated successfully. It has copied into Clipboard.",
+    "generateFailed": "The dart code is generated failed. The error has copied into Clipboard.",
+    "inputHelp": "Please input your json string, and click Format button.",
+    "type": "Type",
+    "name": "Name",
+    "dataProtection": "Data Protection",
+    "arrayProtection": "Array Protection",
+    "traverseArrayCount": "Traverse Array Count",
+    "nameRule": "Name Rule",
+    "original": "Original",
+    "camelCase": "CamelCase",
+    "pascal": "Pascal",
+    "hungarianNotation": "Hungarian Notation",
+    "propertyOrder": "Property Order",
+    "ascending": "Ascending",
+    "descending": "Descending",
+    "addMethod": "Add Protection Method",
+    "fileHeader": "File Header",
+    "fileHeaderHelp": "You can add copyright,dart code, creator into here. support [Date yyyy MM-dd] format to generate time.",
+    "nullsafety": "Null Safety",
+    "nullable": "Nullable"
+}

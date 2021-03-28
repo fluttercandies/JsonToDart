@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<toast launch="app-defined-string">
+  <visual>
+    <binding template="ToastGeneric">
+      <text>Dart生成成功</text>
+      <text>已复制到剪切板</text>
+      <image placement="appLogoOverride" src="Assets/Square44x44Logo.scale-200.png" />
+    </binding>
+  </visual>
+</toast>

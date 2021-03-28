@@ -1,0 +1,25 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/UWP/obj
+/UWP/bin/x86/Debug
+/UWP/.vs/FlutterCandiesJsonToDart/v15
+/WPF/packages/Newtonsoft.Json.12.0.2
+/WPF/obj/Debug
+/WPF/bin/Debug
+/WPF/.vs/FlutterCandiesJsonToDart/v15
+/UWP/bin/x86/Release
+/WPF/publish
+/WPF/obj/Release
+/WPF/bin/Release
+/UWP/AppPackages/FlutterCandiesJsonToDart_1.0.1.0_Test
+/UWP/bin/x64/Release
+/UWP/BundleArtifacts
+/Silverlight/.vs/FlutterCandiesJsonToDart/v15
+/Silverlight/Bin/Release
+/Silverlight/obj/Release
+/Silverlight/packages/Newtonsoft.Json.12.0.2
+/Silverlight/obj/Debug
+/Silverlight/Bin/Debug
+/.vs/JsonToDart/v15/.suo

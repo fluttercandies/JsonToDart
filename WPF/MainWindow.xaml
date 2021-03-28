@@ -1,0 +1,168 @@
+﻿<Window x:Class="FlutterCandiesJsonToDart.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FlutterCandiesJsonToDart"
+        mc:Ignorable="d"
+        Title="Json To Dart" Height="450" Width="800" xmlns:ct="clr-namespace:FlutterCandiesJsonToDart.Utils"
+    >
+    <Window.Resources>
+        <ct:PropertyNameSortingTypeConverter x:Key="PropertyNameSortingTypeConverter"/>
+        <ct:PropertyNamingConventionsTypeConverter x:Key="PropertyNamingConventionsTypeConverter"/>
+    </Window.Resources>
+
+    <Grid Margin="10.0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="Column1" />
+            <ColumnDefinition Width="16"/>
+            <ColumnDefinition x:Name="Column2" />
+        </Grid.ColumnDefinitions>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button x:Name="formatButton" Content="格式化" Click="FormatButton_Click" HorizontalAlignment="Left"></Button>
+            <Button x:Name="settingButton" Content="更多设置" Click="SettingButton_Click" HorizontalAlignment="Center"></Button>
+            <Button x:Name="generateButton" Content="生成Dart" Click="GenerateButton_Click" HorizontalAlignment="Right"></Button>
+            <StackPanel x:Name="settingSp" Grid.Row="1" Visibility="Collapsed">
+                <Grid Margin="0,10,0,0">
+                    <CheckBox x:Name="enableDataProtectionCheckBox" IsChecked="{Binding EnableDataProtection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        数据类型全方位保护
+                        <ToolTipService.ToolTip>
+                            <ToolTip>
+                                防止服务器返回不对应的数据类型
+                            </ToolTip>
+                        </ToolTipService.ToolTip>
+                    </CheckBox>
+                    <CheckBox HorizontalAlignment="Right" x:Name="EnableArrayProtectionCheckBox" IsChecked="{Binding EnableArrayProtection,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">数组全方位保护
+                        <ToolTipService.ToolTip>
+                            <ToolTip>
+                                循环数组的时候，防止出错一个，全部挂掉
+                            </ToolTip>
+                        </ToolTipService.ToolTip>
+                    </CheckBox>
+                </Grid>
+
+                <Grid Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <ToolTipService.ToolTip>
+                            <ToolTip>
+                                数组循环次数，通过遍历数组来merge属性，防止漏掉属性（有时候同一个类有不同的属性）
+                            </ToolTip>
+                        </ToolTipService.ToolTip>
+                        <ComboBox x:Name="TraverseArrayCountComboBox" SelectionChanged="TraverseArrayCountComboBox_SelectionChanged" MinWidth="60" Width="60" SelectedItem="{Binding TraverseArrayCount,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+
+                        </ComboBox>
+                        <TextBlock Margin="10.0,0.0,0.0,0.0" Text="遍历数组次数" TextWrapping="Wrap" VerticalAlignment="Center"/>
+
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                        <ComboBox x:Name="PropertyNamingConventionsTypeComboBox" SelectionChanged="PropertyNamingConventionsTypeComboBox_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectedIndex="{Binding PropertyNamingConventionsType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource PropertyNamingConventionsTypeConverter}}">
+                            <ComboBoxItem>保持原样</ComboBoxItem>
+                            <ComboBoxItem>驼峰式命名小驼峰</ComboBoxItem>
+                            <ComboBoxItem>帕斯卡命名大驼峰</ComboBoxItem>
+                            <ComboBoxItem>匈牙利命名下划线</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock  Margin="10.0,0.0,0.0,0.0" Text="属性命名" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal">
+
+                        <ComboBox x:Name="PropertyNameSortingTypeComboBox" SelectionChanged="PropertyNameSortingTypeComboBox_SelectionChanged" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectedIndex="{Binding PropertyNameSortingType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,Converter={StaticResource PropertyNameSortingTypeConverter}}">
+                            <ComboBoxItem>保持原样</ComboBoxItem>
+                            <ComboBoxItem>升序排列</ComboBoxItem>
+                            <ComboBoxItem>降序排序</ComboBoxItem>
+                        </ComboBox>
+                        <TextBlock  Margin="10.0,0.0,0.0,0.0" Text="属性排序" VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <CheckBox HorizontalAlignment="Center" IsChecked="{Binding AddMethod,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        添加保护方法
+                        <ToolTipService.ToolTip>
+                            <ToolTip>
+                                是否添加数据类型保护和数组保护的方法,d第一添加之后，可以把方法提出去，就不再需要了
+                            </ToolTip>
+                        </ToolTipService.ToolTip>
+                    </CheckBox>
+                    <CheckBox HorizontalAlignment="Right" IsChecked="{Binding EnableDartFormat,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                        Dart代码格式化
+                        <ToolTipService.ToolTip>
+                            <ToolTip>
+                                Dart代码格式化采用网络请求方式，觉得慢的可以关闭
+                            </ToolTip>
+                        </ToolTipService.ToolTip>
+                    </CheckBox>
+                </Grid>
+
+
+                <TextBlock Margin="0,10,0,0" Text="文件头部信息:可以在这里添加copyright，导入dart代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式" TextWrapping="Wrap"/>
+                <TextBox Margin="0,10,0,0"  BorderBrush="Black" Text="{Binding FileHeaderInfo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"  ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True" MinHeight="150"
+                 HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" TextWrapping="Wrap"/>
+            </StackPanel>
+
+            <TextBlock Grid.Row="2" Margin="0,10,0,0" Text="输入你的Json，然后点击格式化按钮"/>
+            <TextBox x:Name="tb" Grid.Row="3" Margin="0,10,0,0" BorderBrush="Black" ScrollViewer.VerticalScrollBarVisibility="Auto"  AcceptsReturn="True" MinHeight="0"
+                 HorizontalContentAlignment="Stretch"  VerticalContentAlignment="Stretch" TextWrapping="Wrap"
+                 />
+        </Grid>
+
+
+        <Grid x:Name="GridSplitter" Grid.Column="1" Background="#01000000" Width="16"  MouseDown="GridSplitter_PointerPressed"  MouseEnter="GridSplitter_PointerEntered" MouseLeave="GridSplitter_PointerExited">
+            <TextBlock HorizontalAlignment="Center" IsHitTestVisible="False" VerticalAlignment="Center"  
+                               Text="&#xE784;" Foreground="Black" FontFamily="Segoe MDL2 Assets">
+            </TextBlock>
+        </Grid>
+        <Grid  Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="40"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0" HorizontalAlignment="Stretch" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="JsonKey" VerticalAlignment="Center"/>
+                <TextBlock Text="类型" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <TextBlock Text="参数名字" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <ComboBox x:Name="propertyAccessorComboBox" SelectionChanged="PropertyAccessorComboBox_SelectionChanged" SelectedItem="{Binding PropertyAccessorType,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Grid.Column="3" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <ToolTipService.ToolTip>
+                        <ToolTip>
+                            属性访问器的类型，没有，Get，GetSet
+                        </ToolTip>
+                    </ToolTipService.ToolTip>
+                </ComboBox>
+            </Grid>
+            <Border BorderThickness="1" Margin="0,10,0,0" BorderBrush="Black"   Grid.Row="1">
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" >
+
+                    <StackPanel x:Name="sp" Orientation="Vertical">
+
+                    </StackPanel>
+
+                </ScrollViewer>
+            </Border>
+
+        </Grid>
+
+        <Grid x:Name="progressRing" Grid.ColumnSpan="3"  Visibility="Collapsed" Background="#99000000" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <ProgressBar />
+                <TextBlock Text="正在处理..."/>
+            </StackPanel>
+        </Grid>
+
+    </Grid>
+
+</Window>
