@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dart_style/dart_style.dart';
+import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,9 +29,14 @@ class JsonToDartController extends ChangeNotifier {
     if (isNullOrWhiteSpace(text)) {
       return;
     }
+    String inputText = text;
     try {
+      if (kIsWeb) {
+        // fix https://github.com/dart-lang/sdk/issues/34105
+        inputText = text.replaceAll('.0', '.1');
+      }
       final Map<String, dynamic> jsonObject =
-          jsonDecode(text) as Map<String, dynamic>;
+          jsonDecode(inputText) as Map<String, dynamic>;
       final DartObject extendedObject = DartObject(
           depth: 0,
           keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
