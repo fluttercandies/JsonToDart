@@ -11,13 +11,13 @@ import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 
-import 'extended_object.dart';
+import 'dart_object.dart';
 
 class JsonToDartController extends ChangeNotifier {
   final TextEditingController _textEditingController = TextEditingController();
   TextEditingController get textEditingController => _textEditingController;
 
-  ExtendedObject? dartObject;
+  DartObject? dartObject;
 
   String get text => _textEditingController.text;
   set text(String value) {
@@ -31,7 +31,7 @@ class JsonToDartController extends ChangeNotifier {
     try {
       final Map<String, dynamic> jsonObject =
           jsonDecode(text) as Map<String, dynamic>;
-      final ExtendedObject extendedObject = ExtendedObject(
+      final DartObject extendedObject = DartObject(
           depth: 0,
           keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
           uid: 'Root');
@@ -49,15 +49,15 @@ class JsonToDartController extends ChangeNotifier {
   }
 
   void generateDart() {
+    printedObjects.clear();
     if (dartObject != null) {
       final String? msg = dartObject?.hasEmptyProperties();
       if (!isNullOrWhiteSpace(msg)) {
         showToast(msg!);
         return;
       }
-
+      final MyStringBuffer sb = MyStringBuffer();
       try {
-        final MyStringBuffer sb = MyStringBuffer();
         if (!isNullOrWhiteSpace(ConfigSetting().fileHeaderInfo)) {
           String info = ConfigSetting().fileHeaderInfo;
           //[Date MM-dd HH:mm]
@@ -91,16 +91,22 @@ class JsonToDartController extends ChangeNotifier {
 
         if (ConfigSetting().addMethod) {
           if (ConfigSetting().enableArrayProtection) {
-            sb.writeLine(DartHelper.debugPrintImport);
-            sb.writeLine(DartHelper.tryCatchMethod);
+            sb.writeLine('import \'dart:developer\';');
+            sb.writeLine(ConfigSetting().nullsafety
+                ? DartHelper.tryCatchMethodNullSafety
+                : DartHelper.tryCatchMethod);
           }
 
           sb.writeLine(ConfigSetting().enableDataProtection
-              ? DartHelper.asTMethodWithDataProtection
-              : DartHelper.asTMethod);
+              ? ConfigSetting().nullsafety
+                  ? DartHelper.asTMethodWithDataProtectionNullSafety
+                  : DartHelper.asTMethodWithDataProtection
+              : ConfigSetting().nullsafety
+                  ? DartHelper.asTMethodNullSafety
+                  : DartHelper.asTMethod);
         }
 
-        sb.writeLine(dartObject?.toString());
+        sb.writeLine(dartObject!.toString());
         String result = sb.toString();
 
         final DartFormatter formatter = DartFormatter();
@@ -113,6 +119,7 @@ class JsonToDartController extends ChangeNotifier {
       } catch (e, stack) {
         print('$e');
         print('$stack');
+        _textEditingController.text = sb.toString();
         showToast(AppLocalizations.instance.generateFailed,
             duration: const Duration(seconds: 5));
         Clipboard.setData(ClipboardData(text: '$e\n$stack'));
@@ -153,8 +160,8 @@ class JsonToDartController extends ChangeNotifier {
   }
 }
 
-class ExtendedObjectValue extends ValueNotifier<ExtendedObject?> {
-  ExtendedObjectValue(ExtendedObject? value) : super(value);
+class ExtendedObjectValue extends ValueNotifier<DartObject?> {
+  ExtendedObjectValue(DartObject? value) : super(value);
 }
 
 class TextEditingControllerValue extends ValueNotifier<TextEditingController> {

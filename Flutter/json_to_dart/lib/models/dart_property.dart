@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
@@ -5,8 +6,9 @@ import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
 import 'config.dart';
 
-class ExtendedProperty {
-  ExtendedProperty({
+// ignore: must_be_immutable
+class DartProperty extends Equatable {
+  DartProperty({
     required String uid,
     required this.depth,
     required this.keyValuePair,
@@ -76,11 +78,11 @@ class ExtendedProperty {
       result = stringFormat(result, <String>[
         className ??
             DartHelper.getDartTypeString(
-                DartHelper.converDartType(temp?.runtimeType ?? Object))
+                DartHelper.converDartType(temp?.runtimeType ?? Object), this)
       ]);
     }
 
-    return result ?? (className ?? DartHelper.getDartTypeString(type));
+    return result ?? (className ?? DartHelper.getDartTypeString(type, this));
   }
 
   String getBaseTypeString({String? className}) {
@@ -97,7 +99,7 @@ class ExtendedProperty {
     }
 
     return DartHelper.getDartTypeString(
-        DartHelper.converDartType(temp?.runtimeType ?? Object));
+        DartHelper.converDartType(temp?.runtimeType ?? Object), this);
   }
 
   String getArraySetPropertyString(String setName, String typeString,
@@ -105,9 +107,10 @@ class ExtendedProperty {
     dynamic temp = value;
     final MyStringBuffer sb = MyStringBuffer();
     sb.writeLine(
-        " final  $typeString $setName = jsonRes['$key'] is List ? ${typeString.substring('List'.length)}[]: null; ");
+        " final  ${ConfigSetting().nullsafety ? typeString + '?' : typeString} $setName = jsonRes['$key'] is List ? ${typeString.substring('List'.length).replaceAll('?', '')}[]: null; ");
     sb.writeLine('    if($setName!=null) {');
     final bool enableTryCatch = ConfigSetting().enableArrayProtection;
+    final String nonNullable = ConfigSetting().nullsafety ? '!' : '';
     int count = 0;
     String? result;
     while (temp is List) {
@@ -125,10 +128,10 @@ class ExtendedProperty {
       if (temp != null && temp is List) {
         if (count == 0) {
           result =
-              " for (final dynamic item$count in asT<List<dynamic>>(jsonRes['$key'])) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} $setName.add(items${count + 1}); }}";
+              " for (final dynamic item$count in asT<List<dynamic>>(jsonRes['$key'])$nonNullable) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} $setName.add(items${count + 1}); }}";
         } else {
           result = result!.replaceAll('{}',
-              " for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} items$count.add(items${count + 1}); }}");
+              " for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})$nonNullable) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} items$count.add(items${count + 1}); }}");
         }
       }
 
@@ -137,7 +140,8 @@ class ExtendedProperty {
         String item = 'item' + (count == 0 ? '' : count.toString());
         String addString = '';
         if (className != null) {
-          item = '$className.fromJson(asT<Map<String,dynamic>>($item))';
+          item =
+              '$className.fromJson(asT<Map<String,dynamic>>($item)$nonNullable)';
         } else {
           item = DartHelper.getUseAsT(baseType, item);
         }
@@ -149,7 +153,7 @@ class ExtendedProperty {
           }
 
           result =
-              " for (final dynamic item in jsonRes['$key']) { if (item != null) { $addString }}";
+              " for (final dynamic item in jsonRes['$key']$nonNullable) { if (item != null) { $addString }}";
         } else {
           addString = 'items$count.add($item); ';
 
@@ -158,7 +162,7 @@ class ExtendedProperty {
           }
 
           result = result!.replaceAll('{}',
-              ' for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})) { if (item$count != null) {$addString}}');
+              ' for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})$nonNullable) { if (item$count != null) {$addString}}');
         }
       }
 
@@ -170,4 +174,12 @@ class ExtendedProperty {
 
     return sb.toString();
   }
+
+  @override
+  List<Object?> get props => <Object?>[
+        name,
+        nullable,
+        propertyAccessorType,
+        type,
+      ];
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_to_dart/localizations/app_localizations.dart';
-import 'package:json_to_dart/models/extended_object.dart';
-import 'package:json_to_dart/models/extended_property.dart';
+import 'package:json_to_dart/models/dart_object.dart';
+import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/size.dart';
 import 'package:json_to_dart/style/text.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import '../models/config.dart';
-import '../models/extended_object.dart';
+import '../models/dart_object.dart';
 import '../utils/enums.dart';
 import '../widget/checkBox.dart';
 
@@ -29,8 +29,8 @@ class JsonTreeItem extends StatefulWidget {
       this.depth = 0,
       this.isArrayOject = false})
       : super(key: key);
-  final ExtendedObject object;
-  final ExtendedProperty property;
+  final DartObject object;
+  final DartProperty property;
   final bool isArray;
   final bool isObject;
   final int depth;
@@ -45,8 +45,8 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
     const Color borderColor = ColorPlate.borderGray;
     final int finalDepth = widget.object.depth + widget.depth + 1;
 
-    final ExtendedObject object = widget.object;
-    final ExtendedProperty property = widget.property;
+    final DartObject object = widget.object;
+    final DartProperty property = widget.property;
 
     const double w = 10.0;
 
@@ -67,7 +67,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
 
     if (widget.isArray) {
       if (object.objectKeys.containsKey(property.key)) {
-        final ExtendedObject oject = object.objectKeys[property.key]!;
+        final DartObject oject = object.objectKeys[property.key]!;
         String typeString = property.getTypeString(className: oject.className);
         List<String> ss;
         String start;
@@ -75,6 +75,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
         if (oject.className != '') {
           typeString = typeString.replaceAll('<${oject.className}>', '<>');
         }
+        typeString = typeString.replaceAll('?', '');
 
         ss = typeString.split('<>');
         start = ss[0] + '<';
@@ -125,7 +126,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  property.getTypeString(),
+                  property.getTypeString().replaceAll('?', ''),
                 ),
               ),
             )));
@@ -144,7 +145,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
               ),
             ),
           ),
-          child: ClassNameTextField(property as ExtendedObject),
+          child: ClassNameTextField(property as DartObject),
         ),
       ));
     } else {
@@ -239,7 +240,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
 
 class ClassNameTextField extends StatefulWidget {
   const ClassNameTextField(this.property);
-  final ExtendedObject property;
+  final DartObject property;
   @override
   _ClassNameTextFieldState createState() => _ClassNameTextFieldState();
 }
@@ -284,7 +285,7 @@ class _ClassNameTextFieldState extends State<ClassNameTextField> {
 class PropertyNameTextField extends StatefulWidget {
   const PropertyNameTextField(this.property);
 
-  final ExtendedProperty property;
+  final DartProperty property;
   @override
   _PropertyNameTextFieldState createState() => _PropertyNameTextFieldState();
 }
@@ -324,7 +325,7 @@ class _PropertyNameTextFieldState extends State<PropertyNameTextField> {
 
 class NullableCheckBox extends StatefulWidget {
   const NullableCheckBox(this.property);
-  final ExtendedProperty property;
+  final DartProperty property;
   @override
   _NullableCheckBoxState createState() => _NullableCheckBoxState();
 }
@@ -346,7 +347,7 @@ class _NullableCheckBoxState extends State<NullableCheckBox> {
 
 class PropertyAccessorTypeDropdownButton extends StatefulWidget {
   const PropertyAccessorTypeDropdownButton(this.property);
-  final ExtendedProperty property;
+  final DartProperty property;
   @override
   _PropertyAccessorTypeDropdownButtonState createState() =>
       _PropertyAccessorTypeDropdownButtonState();
@@ -367,6 +368,9 @@ class _PropertyAccessorTypeDropdownButtonState
         underline: Container(),
         value: widget.property.propertyAccessorType,
         items: PropertyAccessorType.values
+            .where((PropertyAccessorType element) =>
+                element == PropertyAccessorType.none ||
+                element == PropertyAccessorType.final_)
             .map<DropdownMenuItem<PropertyAccessorType>>(
                 (PropertyAccessorType f) =>
                     DropdownMenuItem<PropertyAccessorType>(
@@ -383,7 +387,7 @@ class _PropertyAccessorTypeDropdownButtonState
 
 class DartTypeDropdownButton extends StatefulWidget {
   const DartTypeDropdownButton(this.property);
-  final ExtendedProperty property;
+  final DartProperty property;
   @override
   _DartTypeDropdownButtonState createState() => _DartTypeDropdownButtonState();
 }

@@ -7,14 +7,18 @@ import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
 
-import 'extended_property.dart';
+import 'config.dart';
+import 'dart_property.dart';
 
-class ExtendedObject extends ExtendedProperty {
-  ExtendedObject({
+List<DartObject> printedObjects = <DartObject>[];
+
+// ignore: must_be_immutable
+class DartObject extends DartProperty {
+  DartObject({
     String? uid,
     MapEntry<String, dynamic>? keyValuePair,
     required int depth,
-    ExtendedObject? source,
+    DartObject? source,
   }) : super(
             uid: source?.uid ?? uid!,
             keyValuePair: source?.keyValuePair ?? keyValuePair!,
@@ -25,8 +29,8 @@ class ExtendedObject extends ExtendedProperty {
       _jObject = source.keyValuePair.value as Map<String, dynamic>?;
       className = source.className;
     } else {
-      properties = <ExtendedProperty>[];
-      objectKeys = <String, ExtendedObject>{};
+      properties = <DartProperty>[];
+      objectKeys = <String, DartObject>{};
       _jObject = this.keyValuePair.value as Map<String, dynamic>?;
 
       final String key = this.keyValuePair.key;
@@ -56,9 +60,9 @@ class ExtendedObject extends ExtendedProperty {
 
   StreamController<String> rebuildName = StreamController<String>.broadcast();
 
-  late List<ExtendedProperty> properties;
+  late List<DartProperty> properties;
 
-  late Map<String, ExtendedObject> objectKeys;
+  late Map<String, DartObject> objectKeys;
 
   void close() {
     rebuildName.close();
@@ -79,11 +83,11 @@ class ExtendedObject extends ExtendedProperty {
       {bool addProperty = true}) {
     if (item.value is Map && (item.value as Map<String, dynamic>).isNotEmpty) {
       if (objectKeys.containsKey(item.key)) {
-        final ExtendedObject temp = objectKeys[item.key]!;
+        final DartObject temp = objectKeys[item.key]!;
         temp.merge(item.value as Map<String, dynamic>);
         objectKeys[item.key] = temp;
       } else {
-        final ExtendedObject temp = ExtendedObject(
+        final DartObject temp = DartObject(
             uid: uid + '_' + item.key, keyValuePair: item, depth: depth + 1);
         if (addProperty) {
           properties.add(temp);
@@ -93,7 +97,7 @@ class ExtendedObject extends ExtendedProperty {
     } else if (item.value is List) {
       if (addProperty) {
         properties
-            .add(ExtendedProperty(uid: uid, keyValuePair: item, depth: depth));
+            .add(DartProperty(uid: uid, keyValuePair: item, depth: depth));
       }
       final List<dynamic> array = item.value as List<dynamic>;
       if (array.isNotEmpty) {
@@ -110,7 +114,7 @@ class ExtendedObject extends ExtendedProperty {
     } else {
       if (addProperty) {
         properties
-            .add(ExtendedProperty(uid: uid, keyValuePair: item, depth: depth));
+            .add(DartProperty(uid: uid, keyValuePair: item, depth: depth));
       }
     }
   }
@@ -148,11 +152,11 @@ class ExtendedObject extends ExtendedProperty {
   void updateNameByNamingConventionsType() {
     super.updateNameByNamingConventionsType();
 
-    for (final ExtendedProperty item in properties) {
+    for (final DartProperty item in properties) {
       item.updateNameByNamingConventionsType();
     }
 
-    for (final MapEntry<String, ExtendedObject> item in objectKeys.entries) {
+    for (final MapEntry<String, DartObject> item in objectKeys.entries) {
       item.value.updateNameByNamingConventionsType();
     }
   }
@@ -161,11 +165,11 @@ class ExtendedObject extends ExtendedProperty {
   void updatePropertyAccessorType() {
     super.updatePropertyAccessorType();
 
-    for (final ExtendedProperty item in properties) {
+    for (final DartProperty item in properties) {
       item.updatePropertyAccessorType();
     }
 
-    for (final MapEntry<String, ExtendedObject> item in objectKeys.entries) {
+    for (final MapEntry<String, DartObject> item in objectKeys.entries) {
       item.value.updatePropertyAccessorType();
     }
   }
@@ -173,11 +177,11 @@ class ExtendedObject extends ExtendedProperty {
   @override
   void updateNullable(bool nullable) {
     super.updateNullable(nullable);
-    for (final ExtendedProperty item in properties) {
+    for (final DartProperty item in properties) {
       item.updateNullable(nullable);
     }
 
-    for (final MapEntry<String, ExtendedObject> item in objectKeys.entries) {
+    for (final MapEntry<String, DartObject> item in objectKeys.entries) {
       item.value.updateNullable(nullable);
     }
   }
@@ -192,16 +196,16 @@ class ExtendedObject extends ExtendedProperty {
         ConfigSetting().propertyNameSortingType;
     if (sortingType != PropertyNameSortingType.none) {
       if (sortingType == PropertyNameSortingType.ascending) {
-        properties.sort((ExtendedProperty left, ExtendedProperty right) =>
+        properties.sort((DartProperty left, DartProperty right) =>
             left.name.compareTo(right.name));
       } else {
-        properties.sort((ExtendedProperty left, ExtendedProperty right) =>
+        properties.sort((DartProperty left, DartProperty right) =>
             right.name.compareTo(left.name));
       }
     }
 
     if (jObject != null) {
-      for (final MapEntry<String, ExtendedObject> item in objectKeys.entries) {
+      for (final MapEntry<String, DartObject> item in objectKeys.entries) {
         item.value.orderPropeties();
       }
     }
@@ -209,6 +213,11 @@ class ExtendedObject extends ExtendedProperty {
 
   @override
   String toString() {
+    if (printedObjects.contains(this)) {
+      return '';
+    }
+    printedObjects.add(this);
+
     orderPropeties();
 
     final MyStringBuffer sb = MyStringBuffer();
@@ -230,7 +239,7 @@ class ExtendedObject extends ExtendedProperty {
 
       toJsonSb.writeLine(DartHelper.toJsonHeader);
 
-      for (final ExtendedProperty item in properties) {
+      for (final DartProperty item in properties) {
         final String lowName =
             item.name.substring(0, 1).toLowerCase() + item.name.substring(1);
         final String name = item.name;
@@ -238,30 +247,59 @@ class ExtendedObject extends ExtendedProperty {
         String? typeString;
         final String setName = DartHelper.getSetPropertyString(item);
         String setString = '';
-        final String fss =
-            DartHelper.factorySetString(item.propertyAccessorType);
+        final String fss = DartHelper.factorySetString(
+          item.propertyAccessorType,
+          (!ConfigSetting().nullsafety) ||
+              (ConfigSetting().nullsafety && item.nullable),
+        );
         final bool isGetSet = fss.startsWith('{');
 
-        if (item is ExtendedObject) {
+        if (item is DartObject) {
           className = item.className;
-          setString = stringFormat(DartHelper.setObjectProperty,
-              <String>[item.name, item.key, className]);
+
+          setString = stringFormat(DartHelper.setObjectProperty, <String>[
+            item.name,
+            item.key,
+            className,
+            if (ConfigSetting().nullsafety && item.nullable)
+              'jsonRes[\'${item.key}\']==null?null:'
+            else
+              '',
+            if (ConfigSetting().nullsafety) '!' else ''
+          ]);
           typeString = className;
+          if (ConfigSetting().nullsafety && item.nullable) {
+            typeString += '?';
+          }
         } else if (item.value is List) {
           if (objectKeys.containsKey(item.key)) {
             className = objectKeys[item.key]!.className;
           }
           typeString = item.getTypeString(className: className);
+          typeString = typeString.replaceAll('?', '');
 
           fromJsonSb1.writeLine(item.getArraySetPropertyString(
-              lowName, typeString,
-              className: className,
-              baseType: item.getBaseTypeString(className: className)));
+            lowName,
+            typeString,
+            className: className,
+            baseType: item
+                .getBaseTypeString(className: className)
+                .replaceAll('?', ''),
+          ));
 
-          setString = ' ${item.name}:$lowName,';
+          setString = ' ${item.name}:$lowName';
+
+          if (ConfigSetting().nullsafety) {
+            if (item.nullable) {
+              typeString += '?';
+            } else {
+              setString += '!';
+            }
+          }
+          setString += ',';
         } else {
           setString = DartHelper.setProperty(item.name, item, this.className);
-          typeString = DartHelper.getDartTypeString(item.type);
+          typeString = DartHelper.getDartTypeString(item.type, item);
         }
 
         if (isGetSet) {
@@ -293,16 +331,22 @@ class ExtendedObject extends ExtendedProperty {
 
       String fromJson = '';
       if (fromJsonSb1.length != 0) {
-        fromJson =
-            stringFormat(DartHelper.fromJsonHeader1, <String>[className]) +
-                fromJsonSb1.toString() +
-                stringFormat(DartHelper.fromJsonFooter1,
-                    <String>[className, fromJsonSb.toString()]);
+        fromJson = stringFormat(
+                ConfigSetting().nullsafety
+                    ? DartHelper.fromJsonHeader1NullSafety
+                    : DartHelper.fromJsonHeader1,
+                <String>[className]) +
+            fromJsonSb1.toString() +
+            stringFormat(DartHelper.fromJsonFooter1,
+                <String>[className, fromJsonSb.toString()]);
       } else {
-        fromJson =
-            stringFormat(DartHelper.fromJsonHeader, <String>[className]) +
-                fromJsonSb.toString() +
-                DartHelper.fromJsonFooter;
+        fromJson = stringFormat(
+                ConfigSetting().nullsafety
+                    ? DartHelper.fromJsonHeaderNullSafety
+                    : DartHelper.fromJsonHeader,
+                <String>[className]) +
+            fromJsonSb.toString() +
+            DartHelper.fromJsonFooter;
       }
 
       //fromJsonSb.AppendLine(DartHelper.FromJsonFooter);
@@ -319,7 +363,7 @@ class ExtendedObject extends ExtendedProperty {
 
     sb.writeLine(DartHelper.classFooter);
 
-    for (final MapEntry<String, ExtendedObject> item in objectKeys.entries) {
+    for (final MapEntry<String, DartObject> item in objectKeys.entries) {
       sb.writeLine(item.value.toString());
     }
 
@@ -332,8 +376,8 @@ class ExtendedObject extends ExtendedProperty {
       return appLocalizations.classNameAssert(uid);
     }
 
-    for (final ExtendedProperty item in properties) {
-      if (item is ExtendedObject) {
+    for (final DartProperty item in properties) {
+      if (item is DartObject) {
         if (depth > 0 &&
             !item.uid.endsWith('_Array') &&
             isNullOrWhiteSpace(item.name)) {
@@ -344,7 +388,7 @@ class ExtendedObject extends ExtendedProperty {
       }
     }
 
-    for (final MapEntry<String, ExtendedObject> item in objectKeys.entries) {
+    for (final MapEntry<String, DartObject> item in objectKeys.entries) {
       final String? msg = item.value.hasEmptyProperties();
       if (msg != null) {
         return msg;
@@ -353,7 +397,15 @@ class ExtendedObject extends ExtendedProperty {
     return null;
   }
 
-  ExtendedObject copy() {
-    return ExtendedObject(source: this, depth: depth);
+  DartObject copy() {
+    return DartObject(source: this, depth: depth);
   }
+
+  @override
+  List<Object?> get props => <Object?>[
+        className,
+        nullable,
+        propertyAccessorType,
+        type,
+      ];
 }

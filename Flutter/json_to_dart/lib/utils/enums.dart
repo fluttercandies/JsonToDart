@@ -20,12 +20,12 @@ enum PropertyAccessorType {
   /// <summary>
   /// readonly
   /// </summary>
-  get_,
+  //get_,
 
   /// <summary>
   /// get and set
   /// </summary>
-  getSet,
+  //getSet,
 }
 
 enum PropertyNamingConventionsType {

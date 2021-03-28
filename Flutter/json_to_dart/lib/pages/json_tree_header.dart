@@ -68,6 +68,9 @@ class _JsonTreeHeaderState extends State<JsonTreeHeader> {
               value: ConfigSetting().propertyAccessorType,
               underline: Container(),
               items: PropertyAccessorType.values
+                  .where((PropertyAccessorType element) =>
+                      element == PropertyAccessorType.none ||
+                      element == PropertyAccessorType.final_)
                   .map<DropdownMenuItem<PropertyAccessorType>>(
                       (PropertyAccessorType f) =>
                           DropdownMenuItem<PropertyAccessorType>(

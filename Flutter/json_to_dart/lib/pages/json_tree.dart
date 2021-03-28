@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/models/extended_object.dart';
-import 'package:json_to_dart/models/extended_property.dart';
+import 'package:json_to_dart/models/dart_object.dart';
+import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:provider/provider.dart';
 
@@ -31,7 +31,7 @@ class JsonTree extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildTree(ExtendedObject extendedObject) {
+  List<Widget> _buildTree(DartObject extendedObject) {
     final List<Widget> list = <Widget>[];
     _drawOject(
       list,
@@ -40,17 +40,17 @@ class JsonTree extends StatelessWidget {
     return list;
   }
 
-  void _drawOject(List<Widget> result, ExtendedObject object, {int depth = 0}) {
+  void _drawOject(List<Widget> result, DartObject object, {int depth = 0}) {
     ///root
     if (object.depth == 0) {
       _drawPoperty(result, object, object,
           isArray: false, isObject: true, depth: -1);
     }
 
-    for (final ExtendedProperty item in object.properties) {
+    for (final DartProperty item in object.properties) {
       final bool isArray = item.value is List;
       final bool isObject =
-          item is ExtendedObject && item.properties.isNotEmpty;
+          item is DartObject && item.properties.isNotEmpty;
 
       _drawPoperty(result, object, item,
           isArray: isArray, isObject: isObject, depth: depth);
@@ -60,7 +60,7 @@ class JsonTree extends StatelessWidget {
       } else if (isArray) {
         //var array = item.value as List;
         if (object.objectKeys.containsKey(item.key)) {
-          final ExtendedObject oject = object.objectKeys[item.key]!;
+          final DartObject oject = object.objectKeys[item.key]!;
           _drawPoperty(result, object, oject,
               depth: depth + 1, isArrayOject: true, isObject: true);
           _drawOject(result, oject, depth: depth + 2);
@@ -70,7 +70,7 @@ class JsonTree extends StatelessWidget {
   }
 
   void _drawPoperty(
-      List<Widget> result, ExtendedObject object, ExtendedProperty property,
+      List<Widget> result, DartObject object, DartProperty property,
       {bool isArray = false,
       bool isObject = false,
       int depth = 0,

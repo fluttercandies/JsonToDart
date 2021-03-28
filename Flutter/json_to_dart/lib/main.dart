@@ -1,14 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:nested/nested.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 import 'localizations/app_localizations.dart';
-import 'models/config.dart' hide Setting;
 import 'models/config.dart';
 import 'models/json_to_dart_controller.dart';
 import 'navigator/navigator.dart';
@@ -52,12 +50,7 @@ class MyApp extends StatelessWidget {
                 ),
                 navigatorKey: AppNavigator().key,
                 home: const MyHomePage(title: 'Json To Dart'),
-                localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
-                  AppLocalizations.delegate,
-                  GlobalMaterialLocalizations.delegate,
-                  GlobalWidgetsLocalizations.delegate,
-                  GlobalCupertinoLocalizations.delegate,
-                ],
+                localizationsDelegates: AppLocalizations.localizationsDelegates,
                 supportedLocales: AppLocalizations.supportedLocales,
                 locale: ConfigSetting().locale,
               );
