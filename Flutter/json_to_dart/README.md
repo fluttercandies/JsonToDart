@@ -1,6 +1,6 @@
 # json_to_dart
 
-A new Flutter project.
+The tool to convert json to dart code.
 
 ## Getting Started
 

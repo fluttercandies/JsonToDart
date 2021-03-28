@@ -49,8 +49,7 @@ class JsonTree extends StatelessWidget {
 
     for (final DartProperty item in object.properties) {
       final bool isArray = item.value is List;
-      final bool isObject =
-          item is DartObject && item.properties.isNotEmpty;
+      final bool isObject = item is DartObject && item.properties.isNotEmpty;
 
       _drawPoperty(result, object, item,
           isArray: isArray, isObject: isObject, depth: depth);

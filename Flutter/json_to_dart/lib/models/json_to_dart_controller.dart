@@ -38,9 +38,10 @@ class JsonToDartController extends ChangeNotifier {
       final Map<String, dynamic> jsonObject =
           jsonDecode(inputText) as Map<String, dynamic>;
       final DartObject extendedObject = DartObject(
-          depth: 0,
-          keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
-          uid: 'Root');
+        depth: 0,
+        keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
+        uid: 'Root',
+      );
       dartObject = extendedObject;
       _textEditingController.text =
           const JsonEncoder.withIndent('  ').convert(jsonObject);

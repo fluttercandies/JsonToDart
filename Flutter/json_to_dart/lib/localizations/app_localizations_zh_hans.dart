@@ -1,5 +1,3 @@
-
-
 import 'app_localizations_zh.dart';
 
 class AppLocalizationsZhHans extends AppLocalizationsZh {

@@ -53,7 +53,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
     final List<Widget> rowItems = <Widget>[];
 
     final String key = widget.isArrayOject
-        ? DartType.object.toString().replaceAll('DartType.', '')
+        ? DartType.Object.toString().replaceAll('DartType.', '')
         : widget.property.key;
 
     rowItems.add(Expanded(

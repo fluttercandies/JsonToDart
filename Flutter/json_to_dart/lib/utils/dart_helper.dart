@@ -76,24 +76,7 @@ import 'dart:convert';''';
 
   static String getDartTypeString(DartType dartType, DartProperty item) {
     final bool nullable = ConfigSetting().nullsafety && item.nullable;
-    String type = '';
-    switch (dartType) {
-      case DartType.string:
-        type = 'String';
-        break;
-      case DartType.int:
-        type = 'int';
-        break;
-      case DartType.object:
-        return 'Object';
-
-      case DartType.bool:
-        type = 'bool';
-        break;
-      case DartType.double:
-        type = 'double';
-        break;
-    }
+    final String type = dartType.text;
     return nullable ? type + '?' : type;
   }
 
@@ -123,12 +106,12 @@ import 'dart:convert';''';
     } else if (type == double || type == num) {
       return DartType.double;
     } else if (type == String) {
-      return DartType.string;
+      return DartType.String;
     } else if (type == bool) {
       return DartType.bool;
     }
 
-    return DartType.object;
+    return DartType.Object;
   }
 
   static const String tryCatchMethod = """void tryCatch(Function f)

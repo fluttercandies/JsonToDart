@@ -80,8 +80,7 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
     }
   }
 
-  Locale _locale =
-      const Locale.fromSubtags(languageCode: 'zh', scriptCode: 'Hans');
+  Locale _locale = const Locale.fromSubtags(languageCode: 'en');
   @HiveField(12)
   Locale get locale => _locale;
   @HiveField(12)

@@ -1,7 +1,7 @@
 enum DartType {
-  string,
+  String,
   int,
-  object,
+  Object,
   bool,
   double,
 }
@@ -57,9 +57,5 @@ enum PropertyNameSortingType {
 }
 
 extension DartTypeE on DartType {
-  String get text {
-    final String temp = toString().replaceAll('DartType.', '');
-
-    return temp[0].toUpperCase() + temp.substring(1);
-  }
+  String get text => toString().replaceAll('DartType.', '');
 }

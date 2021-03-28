@@ -1,4 +1,3 @@
-
 // ignore: unused_import
 import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
@@ -89,7 +88,8 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fileHeader => '文件头信息';
 
   @override
-  String get fileHeaderHelp => '可以在这里添加 Copyright，导入 Dart 代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式.';
+  String get fileHeaderHelp =>
+      '可以在这里添加 Copyright，导入 Dart 代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式.';
 
   @override
   String get nullsafety => '空安全';
