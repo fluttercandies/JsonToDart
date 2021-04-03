@@ -26,7 +26,7 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
   }
 
   @HiveField(0)
-  bool addMethod = false;
+  bool addMethod = true;
   @HiveField(1)
   int column1Width = 2;
   @HiveField(2)

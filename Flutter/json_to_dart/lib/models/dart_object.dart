@@ -318,8 +318,13 @@ class DartObject extends DartProperty {
             DartHelper.propertyS(item.propertyAccessorType),
             <String>[typeString, name, lowName]));
         fromJsonSb.writeLine(setString);
-        toJsonSb.writeLine(stringFormat(
-            DartHelper.toJsonSetString, <String>[item.key, setName]));
+
+        final bool nonNullAble = ConfigSetting().nullsafety && !item.nullable;
+        toJsonSb.writeLine(stringFormat(DartHelper.toJsonSetString, <String>[
+          item.key,
+          setName +
+              (item is DartObject ? '${nonNullAble ? '' : '?'}.toJson()' : '')
+        ]));
       }
 
       if (factorySb1.length == 0) {
@@ -355,10 +360,9 @@ class DartObject extends DartProperty {
       sb.writeLine(factorySb.toString());
       sb.writeLine(fromJson);
       sb.writeLine(propertySb.toString());
-
-      sb.writeLine(toJsonSb.toString());
-
       sb.writeLine(DartHelper.classToString);
+      sb.writeLine(toJsonSb.toString());
+      sb.writeLine(stringFormat(DartHelper.classToClone, <String>[className]));
     }
 
     sb.writeLine(DartHelper.classFooter);
