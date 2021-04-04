@@ -101,7 +101,7 @@ import 'dart:convert';''';
       '  \n@override\nString  toString() {\n    return jsonEncode(this);\n  }';
 
   static const String classToClone =
-      '\n{0} clone() => {0}.fromJson(toJson());\n';
+      '\n{0} clone() => {0}.fromJson(asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))){1});\n';
 
   static DartType converDartType(Type type) {
     if (type == int) {

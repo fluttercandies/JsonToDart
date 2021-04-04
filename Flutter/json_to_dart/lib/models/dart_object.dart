@@ -253,7 +253,6 @@ class DartObject extends DartProperty {
               (ConfigSetting().nullsafety && item.nullable),
         );
         final bool isGetSet = fss.startsWith('{');
-
         if (item is DartObject) {
           className = item.className;
 
@@ -319,11 +318,32 @@ class DartObject extends DartProperty {
             <String>[typeString, name, lowName]));
         fromJsonSb.writeLine(setString);
 
-        final bool nonNullAble = ConfigSetting().nullsafety && !item.nullable;
+        // String setNameTemp = setName;
+
+        // if (className != null) {
+        //   String toJson = '=> e.toJson()';
+        //   dynamic value = item.value;
+        //   String typeString = className;
+        //   while (value is List) {
+        //     toJson = '=> e.map(($typeString e) $toJson)';
+        //     typeString = 'List<$typeString>';
+        //     if (value.isNotEmpty) {
+        //       value = value.first;
+        //     } else {
+        //       break;
+        //     }
+        //   }
+        //   toJson = toJson.replaceFirst('=>', '');
+        //   toJson = toJson.replaceFirst('e', '');
+        //   toJson = toJson.trim();
+
+        //   final bool nonNullAble = ConfigSetting().nullsafety && !item.nullable;
+        //   setNameTemp += '${nonNullAble ? '' : '?'}$toJson';
+        // }
+
         toJsonSb.writeLine(stringFormat(DartHelper.toJsonSetString, <String>[
           item.key,
-          setName +
-              (item is DartObject ? '${nonNullAble ? '' : '?'}.toJson()' : '')
+          setName,
         ]));
       }
 
@@ -362,7 +382,8 @@ class DartObject extends DartProperty {
       sb.writeLine(propertySb.toString());
       sb.writeLine(DartHelper.classToString);
       sb.writeLine(toJsonSb.toString());
-      sb.writeLine(stringFormat(DartHelper.classToClone, <String>[className]));
+      sb.writeLine(stringFormat(DartHelper.classToClone,
+          <String>[className, if (ConfigSetting().nullsafety) '!' else '']));
     }
 
     sb.writeLine(DartHelper.classFooter);
@@ -408,8 +429,6 @@ class DartObject extends DartProperty {
   @override
   List<Object?> get props => <Object?>[
         className,
-        nullable,
-        propertyAccessorType,
-        type,
+        properties,
       ];
 }
