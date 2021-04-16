@@ -1,10 +1,4 @@
-enum DartType {
-  String,
-  int,
-  Object,
-  bool,
-  double,
-}
+enum DartType { String, int, Object, bool, double, Null }
 
 enum PropertyAccessorType {
   /// <summary>
@@ -57,5 +51,6 @@ enum PropertyNameSortingType {
 }
 
 extension DartTypeE on DartType {
-  String get text => toString().replaceAll('DartType.', '');
+  String get text =>
+      this == DartType.Null ? 'Object' : toString().replaceAll('DartType.', '');
 }

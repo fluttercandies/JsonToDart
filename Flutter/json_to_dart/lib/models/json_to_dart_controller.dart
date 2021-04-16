@@ -16,11 +16,13 @@ import 'dart_object.dart';
 
 class JsonToDartController extends ChangeNotifier {
   final TextEditingController _textEditingController = TextEditingController();
+
   TextEditingController get textEditingController => _textEditingController;
 
   DartObject? dartObject;
 
   String get text => _textEditingController.text;
+
   set text(String value) {
     _textEditingController.text;
   }
@@ -35,8 +37,26 @@ class JsonToDartController extends ChangeNotifier {
         // fix https://github.com/dart-lang/sdk/issues/34105
         inputText = text.replaceAll('.0', '.1');
       }
-      final Map<String, dynamic> jsonObject =
-          jsonDecode(inputText) as Map<String, dynamic>;
+
+      final dynamic jsonData = jsonDecode(inputText);
+      late final Map<String, dynamic> jsonObject;
+      if (jsonData is Map) {
+        jsonObject = jsonDecode(inputText) as Map<String, dynamic>;
+      } else if (jsonData is List) {
+        jsonObject = jsonData
+            .map((dynamic e) => e as Map<String, dynamic>)
+            .fold(<String, dynamic>{},
+                (Object? previousValue, Map<String, dynamic> eachJson) {
+          final Map<String, dynamic> previous =
+              previousValue as Map<String, dynamic>;
+          for (final MapEntry<String, dynamic> element in eachJson.entries) {
+            if (!previous.containsKey(element.key)) {
+              previous.addEntries(<MapEntry<String, dynamic>>[element]);
+            }
+          }
+          return previous;
+        });
+      }
       final DartObject extendedObject = DartObject(
         depth: 0,
         keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
@@ -163,6 +183,7 @@ class JsonToDartController extends ChangeNotifier {
   void updateNullable(bool nullable) {
     if (dartObject != null) {
       dartObject!.updateNullable(nullable);
+      notifyListeners();
     }
   }
 }

@@ -14,11 +14,14 @@ class DartProperty extends Equatable {
     required this.keyValuePair,
   })   : key = keyValuePair.key,
         uid = uid + '_' + keyValuePair.key,
-        value = keyValuePair.value,
-        name = keyValuePair.key,
         propertyAccessorType = ConfigSetting().propertyAccessorType,
         type = DartHelper.converDartType(keyValuePair.value.runtimeType),
-        nullable = ConfigSetting().nullable;
+        nullable = ConfigSetting().nullsafety &&
+            (DartHelper.converDartType(keyValuePair.value.runtimeType) ==
+                    DartType.Null ||
+                ConfigSetting().nullable),
+        value = keyValuePair.value;
+
   final String uid;
   final int depth;
   final String key;
@@ -29,6 +32,7 @@ class DartProperty extends Equatable {
   late bool nullable;
 
   late DartType type;
+
   void updateNameByNamingConventionsType() {
     switch (ConfigSetting().propertyNamingConventionsType) {
       case PropertyNamingConventionsType.none:

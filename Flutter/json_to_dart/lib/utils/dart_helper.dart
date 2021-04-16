@@ -112,6 +112,8 @@ import 'dart:convert';''';
       return DartType.String;
     } else if (type == bool) {
       return DartType.bool;
+    } else if (type == Null) {
+      return DartType.Null;
     }
 
     return DartType.Object;
