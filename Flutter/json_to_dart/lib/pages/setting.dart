@@ -91,12 +91,14 @@ class MoreSetting extends StatefulWidget {
     Key? key,
   }) : super(key: key);
   final JsonToDartController controller;
+
   @override
   _MoreSettingState createState() => _MoreSettingState();
 }
 
 class _MoreSettingState extends State<MoreSetting> {
   JsonToDartController get controller => widget.controller;
+
   @override
   Widget build(BuildContext context) {
     final AppLocalizations appLocalizations = AppLocalizations.instance;

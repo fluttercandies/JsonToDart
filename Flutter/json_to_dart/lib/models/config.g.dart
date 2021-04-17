@@ -30,7 +30,8 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..propertyNameSortingType = fields[9] as PropertyNameSortingType
       ..nullsafety = fields[10] as bool
       ..nullable = fields[11] as bool
-      ..locale = fields[12] as Locale;
+      ..locale = fields[12] as Locale
+      ..autoNullable = fields[13] as bool;
   }
 
   @override
@@ -62,7 +63,9 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..writeByte(11)
       ..write(obj.nullable)
       ..writeByte(12)
-      ..write(obj.locale);
+      ..write(obj.locale)
+      ..writeByte(13)
+      ..write(obj.autoNullable);
   }
 
   @override

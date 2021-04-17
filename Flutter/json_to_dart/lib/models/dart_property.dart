@@ -187,4 +187,9 @@ class DartProperty extends Equatable {
         propertyAccessorType,
         type,
       ];
+
+  @override
+  String toString() {
+    return 'DartProperty($key, $value, $nullable)';
+  }
 }

@@ -44,6 +44,7 @@ class DartObject extends DartProperty {
 
   Map<String, dynamic>? _jObject;
   Map<String, dynamic>? _mergeObject;
+
   Map<String, dynamic>? get jObject =>
       _mergeObject != null ? _mergeObject! : _jObject;
 
@@ -105,10 +106,25 @@ class DartObject extends DartProperty {
         if (count == 99) {
           count = array.length;
         }
-        for (int i = 0; i < array.length && i < count; i++) {
+        final Iterable<dynamic> cutArray = array.take(count);
+        for (final dynamic arrayItem in cutArray) {
           initializePropertyItem(
-              MapEntry<String, dynamic>(item.key, array[i]), depth,
+              MapEntry<String, dynamic>(item.key, arrayItem), depth,
               addProperty: false);
+        }
+
+        if (cutArray.every((dynamic e) => e is Map) && cutArray.isNotEmpty) {
+          final Iterable<Iterable<String>> jsonKeys = cutArray
+              .cast<Map<String, dynamic>>()
+              .map((Map<String, dynamic> e) => e.keys);
+
+          for (final DartProperty child in objectKeys.entries.first.value.properties) {
+            for (final Iterable<String> keys in jsonKeys) {
+              if (!keys.contains(child.key)) {
+                child.updateNullable(true);
+              }
+            }
+          }
         }
       }
     } else {

@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:json_to_dart/localizations/app_localizations.dart';
+import 'package:json_to_dart/models/dart_property.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
@@ -40,28 +41,47 @@ class JsonToDartController extends ChangeNotifier {
 
       final dynamic jsonData = jsonDecode(inputText);
       late final Map<String, dynamic> jsonObject;
+
+      late final DartObject extendedObject;
       if (jsonData is Map) {
         jsonObject = jsonDecode(inputText) as Map<String, dynamic>;
-      } else if (jsonData is List) {
+        extendedObject = DartObject(
+          depth: 0,
+          keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
+          uid: 'Root',
+        );
+      } else {
         final List<Map<String, dynamic>> jsonArray =
-            jsonData.cast<Map<String, dynamic>>();
+            (jsonData as List<dynamic>).cast();
         int count = ConfigSetting().traverseArrayCount;
         if (count == 99) {
           count = jsonArray.length;
         }
-        jsonObject = jsonArray.take(count).fold(<String, dynamic>{},
+        final Iterable<Map<String, dynamic>> cutArray = jsonArray.take(count);
+        jsonObject = cutArray.fold(<String, dynamic>{},
             (Map<String, dynamic> previous, Map<String, dynamic> element) {
           return previous
             ..addEntries(element.entries.where(
                 (MapEntry<String, dynamic> fields) =>
                     !previous.containsKey(fields.key)));
         });
+        extendedObject = DartObject(
+          depth: 0,
+          keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
+          uid: 'Root',
+        );
+        if (ConfigSetting().nullsafety) {
+          final Iterable<Iterable<String>> jsonKeys =
+              cutArray.map((Map<String, dynamic> e) => e.keys);
+          for (final DartProperty child in extendedObject.properties) {
+            for (final Iterable<String> keys in jsonKeys) {
+              if (!keys.contains(child.key)) {
+                child.nullable = true;
+              }
+            }
+          }
+        }
       }
-      final DartObject extendedObject = DartObject(
-        depth: 0,
-        keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
-        uid: 'Root',
-      );
       dartObject = extendedObject;
       _textEditingController.text =
           const JsonEncoder.withIndent('  ').convert(jsonObject);

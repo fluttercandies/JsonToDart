@@ -36,5 +36,6 @@
     "fileHeader": "文件头信息",
     "fileHeaderHelp": "可以在这里添加 Copyright，导入 Dart 代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式.",
     "nullsafety": "空安全",
-    "nullable": "可空"
+    "nullable": "可空",
+    "autoNullable": "自动可空"
 }

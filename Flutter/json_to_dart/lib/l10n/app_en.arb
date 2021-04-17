@@ -36,5 +36,6 @@
     "fileHeader": "File Header",
     "fileHeaderHelp": "You can add copyright,dart code, creator into here. support [Date yyyy MM-dd] format to generate time.",
     "nullsafety": "Null Safety",
-    "nullable": "Nullable"
+    "nullable": "Nullable",
+    "autoNullable": "Auto Nullable"
 }
