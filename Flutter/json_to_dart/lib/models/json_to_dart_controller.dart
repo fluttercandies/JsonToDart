@@ -43,18 +43,18 @@ class JsonToDartController extends ChangeNotifier {
       if (jsonData is Map) {
         jsonObject = jsonDecode(inputText) as Map<String, dynamic>;
       } else if (jsonData is List) {
-        jsonObject = jsonData
-            .map((dynamic e) => e as Map<String, dynamic>)
-            .fold(<String, dynamic>{},
-                (Object? previousValue, Map<String, dynamic> eachJson) {
-          final Map<String, dynamic> previous =
-              previousValue as Map<String, dynamic>;
-          for (final MapEntry<String, dynamic> element in eachJson.entries) {
-            if (!previous.containsKey(element.key)) {
-              previous.addEntries(<MapEntry<String, dynamic>>[element]);
-            }
-          }
-          return previous;
+        final List<Map<String, dynamic>> jsonArray =
+            jsonData.cast<Map<String, dynamic>>();
+        int count = ConfigSetting().traverseArrayCount;
+        if (count == 99) {
+          count = jsonArray.length;
+        }
+        jsonObject = jsonArray.take(count).fold(<String, dynamic>{},
+            (Map<String, dynamic> previous, Map<String, dynamic> element) {
+          return previous
+            ..addEntries(element.entries.where(
+                (MapEntry<String, dynamic> fields) =>
+                    !previous.containsKey(fields.key)));
         });
       }
       final DartObject extendedObject = DartObject(
