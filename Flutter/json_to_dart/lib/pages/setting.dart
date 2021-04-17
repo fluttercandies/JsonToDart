@@ -71,7 +71,6 @@ class _SettingWidgetState extends State<SettingWidget> {
             onChanged: (Locale? value) {
               setState(() {
                 ConfigSetting().locale = value!;
-                ConfigSetting().save();
               });
             },
           ),
@@ -111,7 +110,6 @@ class _MoreSettingState extends State<MoreSetting> {
           onChanged: (bool value) {
             setState(() {
               ConfigSetting().enableDataProtection = value;
-              ConfigSetting().save();
             });
           },
         ),
@@ -121,7 +119,6 @@ class _MoreSettingState extends State<MoreSetting> {
           onChanged: (bool value) {
             setState(() {
               ConfigSetting().enableArrayProtection = value;
-              ConfigSetting().save();
             });
           },
         ),
@@ -150,7 +147,6 @@ class _MoreSettingState extends State<MoreSetting> {
               if (ConfigSetting().traverseArrayCount != value) {
                 setState(() {
                   ConfigSetting().traverseArrayCount = value!;
-                  ConfigSetting().save();
                   if (controller.dartObject != null) {
                     controller.formatJson();
                   }
@@ -187,7 +183,6 @@ class _MoreSettingState extends State<MoreSetting> {
                 setState(() {
                   ConfigSetting().propertyNamingConventionsType = value!;
                   controller.updateNameByNamingConventionsType();
-                  ConfigSetting().save();
                 });
               }
             },
@@ -217,7 +212,6 @@ class _MoreSettingState extends State<MoreSetting> {
                 setState(() {
                   ConfigSetting().propertyNameSortingType = value!;
                   controller.orderPropeties();
-                  ConfigSetting().save();
                 });
               }
             },
@@ -229,7 +223,6 @@ class _MoreSettingState extends State<MoreSetting> {
           onChanged: (bool value) {
             setState(() {
               ConfigSetting().addMethod = value;
-              ConfigSetting().save();
             });
           },
         ),
@@ -243,7 +236,6 @@ class _MoreSettingState extends State<MoreSetting> {
               if (!value) {
                 ConfigSetting().autoNullable = false;
               }
-              ConfigSetting().save();
             });
           },
         ),
@@ -254,7 +246,6 @@ class _MoreSettingState extends State<MoreSetting> {
             setState(() {
               //controller.updateNullable(true);
               ConfigSetting().autoNullable = value;
-              ConfigSetting().save();
             });
           },
         ),
