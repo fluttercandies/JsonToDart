@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:json_to_dart/models/dart_property.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
@@ -44,7 +43,7 @@ class JsonToDartController extends ChangeNotifier {
 
       late final DartObject extendedObject;
       if (jsonData is Map) {
-        jsonObject = jsonDecode(inputText) as Map<String, dynamic>;
+        jsonObject = jsonData as Map<String, dynamic>;
         extendedObject = DartObject(
           depth: 0,
           keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
@@ -52,36 +51,18 @@ class JsonToDartController extends ChangeNotifier {
           uid: 'Root',
         );
       } else if (jsonData is List) {
-        final List<Map<String, dynamic>> jsonArray = jsonData.cast();
-        int count = ConfigSetting().traverseArrayCount;
-        if (count == 99) {
-          count = jsonArray.length;
-        }
-        final Iterable<Map<String, dynamic>> cutArray = jsonArray.take(count);
-        jsonObject = cutArray.fold(<String, dynamic>{},
-            (Map<String, dynamic> previous, Map<String, dynamic> element) {
-          return previous
-            ..addEntries(element.entries.where(
-                (MapEntry<String, dynamic> fields) =>
-                    !previous.containsKey(fields.key)));
-        });
+        jsonObject = jsonData.first as Map<String, dynamic>;
+
+        final Map<String, List<dynamic>> root = <String, List<dynamic>>{
+          'Root': jsonData
+        };
         extendedObject = DartObject(
           depth: 0,
-          keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
+          keyValuePair: MapEntry<String, dynamic>('Root', root),
           nullable: false,
           uid: 'Root',
-        );
-        if (ConfigSetting().smartNullable) {
-          final Iterable<Iterable<String>> jsonKeys =
-              cutArray.map((Map<String, dynamic> e) => e.keys);
-          for (final DartProperty child in extendedObject.properties) {
-            for (final Iterable<String> keys in jsonKeys) {
-              if (!keys.contains(child.key)) {
-                child.nullable = true;
-              }
-            }
-          }
-        }
+        ).objectKeys['Root']!
+          ..decDepth();
       } else {
         showToast(I18n.instance.illegalJson,
             duration: const Duration(seconds: 5));

@@ -22,8 +22,8 @@ class DartProperty extends Equatable {
     value = keyValuePair.value;
   }
 
-  late final String uid;
-  late final int depth;
+  late String uid;
+  late int depth;
   late final String key;
   late final dynamic value;
   final MapEntry<String, dynamic> keyValuePair;

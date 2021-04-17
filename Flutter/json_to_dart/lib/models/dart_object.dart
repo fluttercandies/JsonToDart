@@ -87,6 +87,13 @@ class DartObject extends DartProperty {
     rebuildName.close();
   }
 
+  void decDepth() {
+    depth -= 1;
+    for (final DartObject obj in objectKeys.values) {
+      obj.decDepth();
+    }
+  }
+
   void initializeProperties() {
     properties.clear();
     objectKeys.clear();
@@ -148,7 +155,8 @@ class DartObject extends DartProperty {
                   Tuple3<dynamic, DartType, bool>(
                       arrayItem,
                       DartHelper.converDartType(arrayItem.runtimeType),
-                      DartHelper.converNullable(value))),
+                      DartHelper.converNullable(value) &&
+                          ConfigSetting().smartNullable)),
               depth,
               addProperty: false);
         }
@@ -203,15 +211,14 @@ class DartObject extends DartProperty {
           } else {
             Tuple3<dynamic, DartType, bool> existObject =
                 _mergeObject![item.key]!;
-
-            if ((existObject.item2 == DartType.Null &&
-                    item.value.item2 != DartType.Null) ||
+            if ((existObject.item2.isNull && !item.value.item2.isNull) ||
+                (!existObject.item2.isNull && item.value.item2.isNull) ||
                 existObject.item3 != item.value.item3) {
               existObject = Tuple3<dynamic, DartType, bool>(
                   item.value.item1,
-                  item.value.item2 == DartType.Null
-                      ? existObject.item2
-                      : item.value.item2,
+                  item.value.item2 != DartType.Null
+                      ? item.value.item2
+                      : existObject.item2,
                   (existObject.item3 || item.value.item3) &&
                       ConfigSetting().smartNullable);
               _mergeObject![item.key] = existObject;
