@@ -19,9 +19,10 @@ class DartProperty extends Equatable {
         name = keyValuePair.key,
         value = keyValuePair.value,
         nullable = ConfigSetting().nullsafety &&
-            (DartHelper.converDartType(keyValuePair.value.runtimeType) ==
-                    DartType.Null ||
-                ConfigSetting().nullable);
+            (ConfigSetting().nullable ||
+                (DartHelper.converDartType(keyValuePair.value.runtimeType) ==
+                        DartType.Null &&
+                    ConfigSetting().autoNullable));
 
   final String uid;
   final int depth;

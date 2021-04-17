@@ -96,4 +96,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get nullable => '可空';
+
+  @override
+  String get autoNullable => '自动可空';
 }

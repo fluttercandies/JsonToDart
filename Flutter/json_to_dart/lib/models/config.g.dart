@@ -26,8 +26,8 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..traverseArrayCount = fields[6] as int
       ..propertyNamingConventionsType =
           fields[7] as PropertyNamingConventionsType
-      ..propertyAccessorType = fields[8] as PropertyAccessorType
       ..propertyNameSortingType = fields[9] as PropertyNameSortingType
+      ..propertyAccessorType = fields[8] as PropertyAccessorType
       ..nullsafety = fields[10] as bool
       ..nullable = fields[11] as bool
       ..locale = fields[12] as Locale
@@ -37,7 +37,7 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
   @override
   void write(BinaryWriter writer, ConfigSetting obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.addMethod)
       ..writeByte(1)
@@ -54,10 +54,10 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..write(obj.traverseArrayCount)
       ..writeByte(7)
       ..write(obj.propertyNamingConventionsType)
-      ..writeByte(8)
-      ..write(obj.propertyAccessorType)
       ..writeByte(9)
       ..write(obj.propertyNameSortingType)
+      ..writeByte(8)
+      ..write(obj.propertyAccessorType)
       ..writeByte(10)
       ..write(obj.nullsafety)
       ..writeByte(11)

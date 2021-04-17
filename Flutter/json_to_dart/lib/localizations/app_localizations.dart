@@ -271,6 +271,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Nullable'**
   String get nullable;
+
+  /// No description provided for @autoNullable.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto Nullable'**
+  String get autoNullable;
 }
 
 class _AppLocalizationsDelegate

@@ -240,6 +240,20 @@ class _MoreSettingState extends State<MoreSetting> {
             setState(() {
               //controller.updateNullable(true);
               ConfigSetting().nullsafety = value;
+              if (!value) {
+                ConfigSetting().autoNullable = false;
+              }
+              ConfigSetting().save();
+            });
+          },
+        ),
+        StCheckBox(
+          title: appLocalizations.autoNullable,
+          value: ConfigSetting().autoNullable && ConfigSetting().nullsafety,
+          onChanged: (bool value) {
+            setState(() {
+              //controller.updateNullable(true);
+              ConfigSetting().autoNullable = value;
               ConfigSetting().save();
             });
           },

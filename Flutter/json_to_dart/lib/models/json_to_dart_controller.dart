@@ -70,7 +70,7 @@ class JsonToDartController extends ChangeNotifier {
           keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
           uid: 'Root',
         );
-        if (ConfigSetting().nullsafety) {
+        if (ConfigSetting().nullsafety && ConfigSetting().autoNullable) {
           final Iterable<Iterable<String>> jsonKeys =
               cutArray.map((Map<String, dynamic> e) => e.keys);
           for (final DartProperty child in extendedObject.properties) {

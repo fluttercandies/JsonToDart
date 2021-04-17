@@ -113,12 +113,16 @@ class DartObject extends DartProperty {
               addProperty: false);
         }
 
-        if (cutArray.every((dynamic e) => e is Map) && cutArray.isNotEmpty) {
+        if (ConfigSetting().nullsafety &&
+            ConfigSetting().autoNullable &&
+            cutArray.isNotEmpty &&
+            cutArray.every((dynamic e) => e is Map)) {
           final Iterable<Iterable<String>> jsonKeys = cutArray
               .cast<Map<String, dynamic>>()
               .map((Map<String, dynamic> e) => e.keys);
 
-          for (final DartProperty child in objectKeys.entries.first.value.properties) {
+          for (final DartProperty child
+              in objectKeys.entries.first.value.properties) {
             for (final Iterable<String> keys in jsonKeys) {
               if (!keys.contains(child.key)) {
                 child.updateNullable(true);

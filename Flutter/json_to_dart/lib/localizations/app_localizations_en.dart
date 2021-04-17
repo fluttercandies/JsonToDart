@@ -100,4 +100,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get nullable => 'Nullable';
+
+  @override
+  String get autoNullable => 'Auto Nullable';
 }
