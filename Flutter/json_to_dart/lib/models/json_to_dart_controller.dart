@@ -48,6 +48,7 @@ class JsonToDartController extends ChangeNotifier {
         extendedObject = DartObject(
           depth: 0,
           keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
+          nullable: false,
           uid: 'Root',
         );
       } else if (jsonData is List) {
@@ -67,9 +68,10 @@ class JsonToDartController extends ChangeNotifier {
         extendedObject = DartObject(
           depth: 0,
           keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
+          nullable: false,
           uid: 'Root',
         );
-        if (ConfigSetting().nullsafety && ConfigSetting().smartNullable) {
+        if (ConfigSetting().smartNullable) {
           final Iterable<Iterable<String>> jsonKeys =
               cutArray.map((Map<String, dynamic> e) => e.keys);
           for (final DartProperty child in extendedObject.properties) {
@@ -206,7 +208,6 @@ class JsonToDartController extends ChangeNotifier {
   void updateNullable(bool nullable) {
     if (dartObject != null) {
       dartObject!.updateNullable(nullable);
-      notifyListeners();
     }
   }
 }

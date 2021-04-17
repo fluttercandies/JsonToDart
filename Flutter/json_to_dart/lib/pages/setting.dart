@@ -247,7 +247,9 @@ class _MoreSettingState extends State<MoreSetting> {
           onChanged: (bool value) {
             setState(() {
               //controller.updateNullable(true);
-              ConfigSetting().smartNullable = value;
+              if (ConfigSetting().nullsafety) {
+                ConfigSetting().smartNullable = value;
+              }
             });
           },
         ),

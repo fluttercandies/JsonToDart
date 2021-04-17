@@ -12,26 +12,24 @@ class DartProperty extends Equatable {
     required String uid,
     required this.depth,
     required this.keyValuePair,
-  })   : key = keyValuePair.key,
-        uid = uid + '_' + keyValuePair.key,
-        propertyAccessorType = ConfigSetting().propertyAccessorType,
-        type = DartHelper.converDartType(keyValuePair.value.runtimeType),
-        name = keyValuePair.key,
-        value = keyValuePair.value,
-        nullable = ConfigSetting().nullsafety &&
-            (ConfigSetting().nullable ||
-                (DartHelper.converDartType(keyValuePair.value.runtimeType) ==
-                        DartType.Null &&
-                    ConfigSetting().smartNullable));
+    required this.nullable,
+  }) {
+    key = keyValuePair.key;
+    this.uid = uid + '_' + keyValuePair.key;
+    propertyAccessorType = ConfigSetting().propertyAccessorType;
+    type = DartHelper.converDartType(keyValuePair.value.runtimeType);
+    name = keyValuePair.key;
+    value = keyValuePair.value;
+  }
 
-  final String uid;
-  final int depth;
-  final String key;
-  final dynamic value;
+  late final String uid;
+  late final int depth;
+  late final String key;
+  late final dynamic value;
   final MapEntry<String, dynamic> keyValuePair;
   late String name;
   late PropertyAccessorType propertyAccessorType;
-  late bool nullable;
+  bool nullable;
 
   late DartType type;
 
