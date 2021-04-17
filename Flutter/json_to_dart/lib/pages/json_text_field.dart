@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/localizations/app_localizations.dart';
+import 'package:json_to_dart/i18n.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:json_to_dart/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,7 @@ class JsonTextField extends StatelessWidget {
     final TextEditingController controller =
         Provider.of<JsonToDartController>(context, listen: false)
             .textEditingController;
-    final AppLocalizations appLocalizations = AppLocalizations.of(context);
+    final AppLocalizations appLocalizations = I18n.of(context);
     return Container(
       margin: const EdgeInsets.only(top: 10.0),
       decoration: ShapeDecoration(

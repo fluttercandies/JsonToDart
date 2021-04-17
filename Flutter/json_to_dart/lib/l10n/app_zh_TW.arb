@@ -1,0 +1,42 @@
+{
+    "formatButtonLabel": "格式化",
+    "generateButtonLabel": "生成",
+    "settingButtonLabel": "設置",
+    "classNameAssert": "{name} 的 Class 名字為空或者空白。",
+    "@classNameAssert": {
+        "placeholders": {
+            "name": {}
+        }
+    },
+    "propertyNameAssert": "{name}: 屬性名字為空或者空白。",
+    "@propertyNameAssert": {
+        "placeholders": {
+            "name": {}
+        }
+    },
+    "formatErrorInfo": "格式化出错. 錯誤資訊已複製到剪切板。",
+    "illegalJson": "Json格式不正确",
+    "timeFormatError": "時間格式不正確。",
+    "generateSucceed": "Dart 代碼生成成功，已複製到剪切板。",
+    "generateFailed": "Dart 代碼生成失敗，錯誤資訊已複製到剪切板。",
+    "inputHelp": "請輸入Json字串，按格式化按鈕。",
+    "type": "類型",
+    "name": "名字",
+    "dataProtection": "數據保護",
+    "arrayProtection": "數組保護",
+    "traverseArrayCount": "數組迴圈次數",
+    "nameRule": "名字規則",
+    "original": "默認",
+    "camelCase": "小駝峰",
+    "pascal": "大駝峰",
+    "hungarianNotation": "匈牙利命名法",
+    "propertyOrder": "屬性排序",
+    "ascending": "昇冪",
+    "descending": "降序",
+    "addMethod": "添加保護方法",
+    "fileHeader": "文件头信息",
+    "fileHeaderHelp": "可以在這裏添加 Copyright，導入 Dart 代碼，創建人資訊等等。支持[Date yyyy MM-dd]來生成時間，Date後面為日期格式。",
+    "nullsafety": "空安全",
+    "nullable": "可空",
+    "smartNullable": "智能可空"
+}

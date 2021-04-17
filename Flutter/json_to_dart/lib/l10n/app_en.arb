@@ -15,6 +15,7 @@
       }
     },
     "formatErrorInfo": "There is something wrong to format. The error has copied into Clipboard.",
+    "illegalJson": "Illegal JSON format",
     "timeFormatError": "The format of time is not right.",
     "generateSucceed": "The dart code is generated successfully. It has copied into Clipboard.",
     "generateFailed": "The dart code is generated failed. The error has copied into Clipboard.",
@@ -37,5 +38,5 @@
     "fileHeaderHelp": "You can add copyright,dart code, creator into here. support [Date yyyy MM-dd] format to generate time.",
     "nullsafety": "Null Safety",
     "nullable": "Nullable",
-    "autoNullable": "Auto Nullable"
+    "smartNullable": "Smart Nullable"
 }

@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'package:json_to_dart/localizations/app_localizations.dart';
+import 'package:json_to_dart/i18n.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'config.dart';
 import 'dart_property.dart';
@@ -114,7 +115,7 @@ class DartObject extends DartProperty {
         }
 
         if (ConfigSetting().nullsafety &&
-            ConfigSetting().autoNullable &&
+            ConfigSetting().smartNullable &&
             cutArray.isNotEmpty &&
             cutArray.every((dynamic e) => e is Map)) {
           final Iterable<Iterable<String>> jsonKeys = cutArray
@@ -416,7 +417,7 @@ class DartObject extends DartProperty {
   }
 
   String? hasEmptyProperties() {
-    final AppLocalizations appLocalizations = AppLocalizations.instance;
+    final AppLocalizations appLocalizations = I18n.instance;
     if (isNullOrWhiteSpace(className)) {
       return appLocalizations.classNameAssert(uid);
     }

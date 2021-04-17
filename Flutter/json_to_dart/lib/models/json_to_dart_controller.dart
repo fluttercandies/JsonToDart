@@ -5,13 +5,13 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:json_to_dart/localizations/app_localizations.dart';
 import 'package:json_to_dart/models/dart_property.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
+import 'package:json_to_dart/i18n.dart';
 
 import 'dart_object.dart';
 
@@ -50,9 +50,8 @@ class JsonToDartController extends ChangeNotifier {
           keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
           uid: 'Root',
         );
-      } else {
-        final List<Map<String, dynamic>> jsonArray =
-            (jsonData as List<dynamic>).cast();
+      } else if (jsonData is List) {
+        final List<Map<String, dynamic>> jsonArray = jsonData.cast();
         int count = ConfigSetting().traverseArrayCount;
         if (count == 99) {
           count = jsonArray.length;
@@ -70,7 +69,7 @@ class JsonToDartController extends ChangeNotifier {
           keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
           uid: 'Root',
         );
-        if (ConfigSetting().nullsafety && ConfigSetting().autoNullable) {
+        if (ConfigSetting().nullsafety && ConfigSetting().smartNullable) {
           final Iterable<Iterable<String>> jsonKeys =
               cutArray.map((Map<String, dynamic> e) => e.keys);
           for (final DartProperty child in extendedObject.properties) {
@@ -81,6 +80,10 @@ class JsonToDartController extends ChangeNotifier {
             }
           }
         }
+      } else {
+        showToast(I18n.instance.illegalJson,
+            duration: const Duration(seconds: 5));
+        return;
       }
       dartObject = extendedObject;
       _textEditingController.text =
@@ -89,7 +92,7 @@ class JsonToDartController extends ChangeNotifier {
     } catch (e, stack) {
       print('$e');
       print('$stack');
-      showToast(AppLocalizations.instance.formatErrorInfo,
+      showToast(I18n.instance.formatErrorInfo,
           duration: const Duration(seconds: 5));
       Clipboard.setData(ClipboardData(text: '$e\n$stack'));
     }
@@ -128,7 +131,7 @@ class JsonToDartController extends ChangeNotifier {
               }
             }
           } catch (e) {
-            showToast(AppLocalizations.instance.timeFormatError);
+            showToast(I18n.instance.timeFormatError);
           }
 
           sb.writeLine(info);
@@ -162,12 +165,12 @@ class JsonToDartController extends ChangeNotifier {
 
         _textEditingController.text = result;
         Clipboard.setData(ClipboardData(text: result));
-        showToast(AppLocalizations.instance.generateSucceed);
+        showToast(I18n.instance.generateSucceed);
       } catch (e, stack) {
         print('$e');
         print('$stack');
         _textEditingController.text = sb.toString();
-        showToast(AppLocalizations.instance.generateFailed,
+        showToast(I18n.instance.generateFailed,
             duration: const Duration(seconds: 5));
         Clipboard.setData(ClipboardData(text: '$e\n$stack'));
       }

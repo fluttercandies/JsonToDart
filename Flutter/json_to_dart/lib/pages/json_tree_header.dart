@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/localizations/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:json_to_dart/i18n.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/text.dart';
@@ -20,7 +21,7 @@ class _JsonTreeHeaderState extends State<JsonTreeHeader> {
   Widget build(BuildContext context) {
     final JsonToDartController controller =
         Provider.of<JsonToDartController>(context);
-    final AppLocalizations appLocalizations = AppLocalizations.of(context);
+    final AppLocalizations appLocalizations = I18n.of(context);
     return Row(
       children: <Widget>[
         const Expanded(
@@ -101,7 +102,7 @@ class _JsonTreeHeaderState extends State<JsonTreeHeader> {
                   child: Padding(
                     padding: const EdgeInsets.only(left: 8.0),
                     child: StCheckBox(
-                      title: AppLocalizations.of(context).nullable,
+                      title: I18n.of(context).nullable,
                       value: ConfigSetting().nullable,
                       onChanged: (bool value) {
                         setState(() {

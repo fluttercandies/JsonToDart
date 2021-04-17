@@ -91,13 +91,13 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
     }
   }
 
-  bool _autoNullable = false;
+  bool _smartNullable = false;
   @HiveField(13)
-  bool get autoNullable => _autoNullable;
+  bool get smartNullable => _smartNullable;
   @HiveField(13)
-  set autoNullable(bool value) {
-    if (_autoNullable != value) {
-      _autoNullable = value;
+  set smartNullable(bool value) {
+    if (_smartNullable != value) {
+      _smartNullable = value;
       notifyListeners();
     }
   }

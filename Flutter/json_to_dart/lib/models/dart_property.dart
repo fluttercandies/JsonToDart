@@ -22,7 +22,7 @@ class DartProperty extends Equatable {
             (ConfigSetting().nullable ||
                 (DartHelper.converDartType(keyValuePair.value.runtimeType) ==
                         DartType.Null &&
-                    ConfigSetting().autoNullable));
+                    ConfigSetting().smartNullable));
 
   final String uid;
   final int depth;

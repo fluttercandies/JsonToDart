@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/localizations/app_localizations.dart';
+import 'package:json_to_dart/i18n.dart';
 import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/style/color.dart';
@@ -339,7 +339,7 @@ class _NullableCheckBoxState extends State<NullableCheckBox> {
   @override
   Widget build(BuildContext context) {
     return StCheckBox(
-      title: AppLocalizations.of(context).nullable,
+      title: I18n.of(context).nullable,
       value: widget.property.nullable,
       onChanged: (bool value) {
         setState(() {
