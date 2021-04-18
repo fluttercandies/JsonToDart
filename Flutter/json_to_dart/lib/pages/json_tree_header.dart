@@ -106,7 +106,6 @@ class _JsonTreeHeaderState extends State<JsonTreeHeader> {
                       value: ConfigSetting().nullable,
                       onChanged: (bool value) {
                         setState(() {
-                          controller.updateNullable(value);
                           ConfigSetting().nullable = value;
                           ConfigSetting().save();
                         });

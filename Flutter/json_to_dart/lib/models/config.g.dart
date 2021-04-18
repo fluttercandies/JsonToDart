@@ -31,7 +31,7 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..nullsafety = fields[10] as bool
       ..nullable = fields[11] as bool
       ..locale = fields[12] as Locale
-      ..smartNullable = fields[13] as bool;
+      ..smartNullable = (fields[13] ?? false) as bool;
   }
 
   @override

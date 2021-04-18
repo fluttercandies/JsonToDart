@@ -235,6 +235,7 @@ class _MoreSettingState extends State<MoreSetting> {
             setState(() {
               //controller.updateNullable(true);
               ConfigSetting().nullsafety = value;
+              ConfigSetting().nullable = true;
               if (!value) {
                 ConfigSetting().smartNullable = false;
               }
