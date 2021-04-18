@@ -215,7 +215,7 @@ class DartObject extends DartProperty {
                 (!existObject.item2.isNull && item.value.item2.isNull) ||
                 existObject.item3 != item.value.item3) {
               existObject = Tuple3<dynamic, DartType, bool>(
-                  item.value.item1,
+                  item.value.item1 ?? existObject.item1,
                   item.value.item2 != DartType.Null
                       ? item.value.item2
                       : existObject.item2,
