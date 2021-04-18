@@ -215,7 +215,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
                   ),
           );
         } else {
-          property.updateNullable(true);
+          property.nullable = true;
           return Container();
         }
       },
@@ -343,7 +343,7 @@ class _NullableCheckBoxState extends State<NullableCheckBox> {
       value: widget.property.nullable,
       onChanged: (bool value) {
         setState(() {
-          widget.property.updateNullable(value);
+          widget.property.nullable = value;
         });
       },
     );

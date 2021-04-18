@@ -8,7 +8,6 @@ import 'package:json_to_dart/utils/enums.dart';
 import 'package:provider/provider.dart';
 
 import '../models/config.dart';
-import '../models/json_to_dart_controller.dart';
 import '../widget/checkBox.dart';
 
 class JsonTreeHeader extends StatefulWidget {
@@ -19,8 +18,6 @@ class JsonTreeHeader extends StatefulWidget {
 class _JsonTreeHeaderState extends State<JsonTreeHeader> {
   @override
   Widget build(BuildContext context) {
-    final JsonToDartController controller =
-        Provider.of<JsonToDartController>(context);
     final AppLocalizations appLocalizations = I18n.of(context);
     return Row(
       children: <Widget>[

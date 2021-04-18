@@ -72,7 +72,6 @@ class _SettingWidgetState extends State<SettingWidget> {
             onChanged: (Locale? value) {
               setState(() {
                 ConfigSetting().locale = value!;
-                ConfigSetting().save();
               });
             },
           ),
