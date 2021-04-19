@@ -85,6 +85,13 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
   Locale get locale => _locale;
   @HiveField(12)
   set locale(Locale value) {
+    // fix hive error
+    // we change zh_Hans to zh
+    if (value.languageCode == 'zh' && value.scriptCode == 'Hans') {
+      value = const Locale.fromSubtags(
+        languageCode: 'zh',
+      );
+    }
     if (_locale != value) {
       _locale = value;
       notifyListeners();

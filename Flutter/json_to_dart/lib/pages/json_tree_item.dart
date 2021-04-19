@@ -198,6 +198,9 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
     rowItems.add(Selector<ConfigSetting, Tuple2<bool, bool>>(
       builder: (BuildContext c, Tuple2<bool, bool> value, Widget? child) {
         if (ConfigSetting().nullsafety) {
+          if (!ConfigSetting().smartNullable) {
+            property.nullable = value.item2;
+          }
           return Expanded(
             flex: 1,
             child: finalDepth > 0 && !widget.isArrayOject

@@ -1,3 +1,8 @@
+## 1.2.0
+
+* Add smart nullable to support when data is null, set it to nullable automatically
+* Support List format json
+  
 ## 1.1.0
 
 * Add clone method
