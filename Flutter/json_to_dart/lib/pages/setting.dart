@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/localizations/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/style/color.dart';
@@ -8,6 +8,7 @@ import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/widget/button.dart';
 import 'package:json_to_dart/widget/checkBox.dart';
 import 'package:json_to_dart/widget/picker.dart';
+import 'package:json_to_dart/i18n.dart';
 import 'package:provider/provider.dart';
 
 class SettingWidget extends StatefulWidget {
@@ -20,7 +21,7 @@ class _SettingWidgetState extends State<SettingWidget> {
   Widget build(BuildContext context) {
     final JsonToDartController controller =
         Provider.of<JsonToDartController>(context, listen: false);
-    final AppLocalizations appLocalizations = AppLocalizations.instance;
+    final AppLocalizations appLocalizations = I18n.of(context);
     final Wrap settingRow = Wrap(
       direction: Axis.horizontal,
       children: <Widget>[
@@ -90,15 +91,17 @@ class MoreSetting extends StatefulWidget {
     Key? key,
   }) : super(key: key);
   final JsonToDartController controller;
+
   @override
   _MoreSettingState createState() => _MoreSettingState();
 }
 
 class _MoreSettingState extends State<MoreSetting> {
   JsonToDartController get controller => widget.controller;
+
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations appLocalizations = AppLocalizations.instance;
+    final AppLocalizations appLocalizations = I18n.of(context);
     final Wrap buttonGroup = Wrap(
       direction: Axis.horizontal,
       children: <Widget>[
@@ -229,12 +232,24 @@ class _MoreSettingState extends State<MoreSetting> {
           value: ConfigSetting().nullsafety,
           onChanged: (bool value) {
             setState(() {
-              //controller.updateNullable(true);
               ConfigSetting().nullsafety = value;
               ConfigSetting().nullable = true;
+              if (!value) {
+                ConfigSetting().smartNullable = false;
+              }
             });
           },
         ),
+        if (ConfigSetting().nullsafety)
+          StCheckBox(
+            title: appLocalizations.smartNullable,
+            value: ConfigSetting().smartNullable,
+            onChanged: (bool value) {
+              setState(() {
+                ConfigSetting().smartNullable = value;
+              });
+            },
+          ),
       ],
     );
     return Container(

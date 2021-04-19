@@ -30,13 +30,14 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..propertyNameSortingType = fields[9] as PropertyNameSortingType
       ..nullsafety = fields[10] as bool
       ..nullable = fields[11] as bool
-      ..locale = fields[12] as Locale;
+      ..locale = fields[12] as Locale
+      ..smartNullable = (fields[13] ?? false) as bool;
   }
 
   @override
   void write(BinaryWriter writer, ConfigSetting obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.addMethod)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..writeByte(11)
       ..write(obj.nullable)
       ..writeByte(12)
-      ..write(obj.locale);
+      ..write(obj.locale)
+      ..writeByte(13)
+      ..write(obj.smartNullable);
   }
 
   @override

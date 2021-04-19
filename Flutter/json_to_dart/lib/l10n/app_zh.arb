@@ -15,6 +15,7 @@
       }
     },
     "formatErrorInfo": "格式化出错. 错误信息已复制到剪切板。",
+    "illegalJson": "Json格式不正確",
     "timeFormatError": "时间格式不正确。",
     "generateSucceed": "Dart 代码生成成功，已复制到剪切板。",
     "generateFailed": "Dart 代码生成失败，错误信息已复制到剪切板。",
@@ -36,5 +37,6 @@
     "fileHeader": "文件头信息",
     "fileHeaderHelp": "可以在这里添加 Copyright，导入 Dart 代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式.",
     "nullsafety": "空安全",
-    "nullable": "可空"
+    "nullable": "可空",
+    "smartNullable": "智能可空"
 }

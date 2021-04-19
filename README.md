@@ -15,6 +15,7 @@ Language: English | [中文简体](README-ZH.md)
     - [Order Property](#order-property)
     - [Add Method](#add-method)
     - [NullSafety](#nullsafety)
+    - [Smart NullAble](#smart-nullable)
     - [File Header](#file-header)
     - [Property Readonly](#property-readonly)
     - [Nullable](#nullable)
@@ -159,6 +160,9 @@ none，final options are provided.
 ### Nullable
 
 You can set nullable if you are enable null-saftey.
+
+### Smart Nullable
+When smart nullable is checked, all null fields and missing properties of the array will be automatically nullable.
 
 ## Localizations
 

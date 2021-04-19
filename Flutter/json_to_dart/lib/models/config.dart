@@ -90,6 +90,17 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  bool _smartNullable = false;
+  @HiveField(13)
+  bool get smartNullable => _smartNullable;
+  @HiveField(13)
+  set smartNullable(bool value) {
+    if (_smartNullable != value) {
+      _smartNullable = value;
+      notifyListeners();
+    }
+  }
 }
 
 class TypeIds {

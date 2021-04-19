@@ -12,23 +12,27 @@ class DartProperty extends Equatable {
     required String uid,
     required this.depth,
     required this.keyValuePair,
-  })   : key = keyValuePair.key,
-        uid = uid + '_' + keyValuePair.key,
-        value = keyValuePair.value,
-        name = keyValuePair.key,
-        propertyAccessorType = ConfigSetting().propertyAccessorType,
-        type = DartHelper.converDartType(keyValuePair.value.runtimeType),
-        nullable = ConfigSetting().nullable;
-  final String uid;
-  final int depth;
-  final String key;
-  final dynamic value;
+    required this.nullable,
+  }) {
+    key = keyValuePair.key;
+    this.uid = uid + '_' + keyValuePair.key;
+    propertyAccessorType = ConfigSetting().propertyAccessorType;
+    type = DartHelper.converDartType(keyValuePair.value.runtimeType);
+    name = keyValuePair.key;
+    value = keyValuePair.value;
+  }
+
+  late String uid;
+  late int depth;
+  late final String key;
+  late final dynamic value;
   final MapEntry<String, dynamic> keyValuePair;
   late String name;
   late PropertyAccessorType propertyAccessorType;
-  late bool nullable;
+  bool nullable;
 
   late DartType type;
+
   void updateNameByNamingConventionsType() {
     switch (ConfigSetting().propertyNamingConventionsType) {
       case PropertyNamingConventionsType.none:
@@ -182,4 +186,9 @@ class DartProperty extends Equatable {
         propertyAccessorType,
         type,
       ];
+
+  @override
+  String toString() {
+    return 'DartProperty($key, $value, $nullable)';
+  }
 }

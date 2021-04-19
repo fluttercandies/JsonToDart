@@ -5,22 +5,24 @@ import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:json_to_dart/localizations/app_localizations.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
+import 'package:json_to_dart/i18n.dart';
 
 import 'dart_object.dart';
 
 class JsonToDartController extends ChangeNotifier {
   final TextEditingController _textEditingController = TextEditingController();
+
   TextEditingController get textEditingController => _textEditingController;
 
   DartObject? dartObject;
 
   String get text => _textEditingController.text;
+
   set text(String value) {
     _textEditingController.text;
   }
@@ -35,13 +37,37 @@ class JsonToDartController extends ChangeNotifier {
         // fix https://github.com/dart-lang/sdk/issues/34105
         inputText = text.replaceAll('.0', '.1');
       }
-      final Map<String, dynamic> jsonObject =
-          jsonDecode(inputText) as Map<String, dynamic>;
-      final DartObject extendedObject = DartObject(
-        depth: 0,
-        keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
-        uid: 'Root',
-      );
+
+      final dynamic jsonData = jsonDecode(inputText);
+      late final Map<String, dynamic> jsonObject;
+
+      late final DartObject extendedObject;
+      if (jsonData is Map) {
+        jsonObject = jsonData as Map<String, dynamic>;
+        extendedObject = DartObject(
+          depth: 0,
+          keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
+          nullable: false,
+          uid: 'Root',
+        );
+      } else if (jsonData is List) {
+        jsonObject = jsonData.first as Map<String, dynamic>;
+
+        final Map<String, List<dynamic>> root = <String, List<dynamic>>{
+          'Root': jsonData
+        };
+        extendedObject = DartObject(
+          depth: 0,
+          keyValuePair: MapEntry<String, dynamic>('Root', root),
+          nullable: false,
+          uid: 'Root',
+        ).objectKeys['Root']!
+          ..decDepth();
+      } else {
+        showToast(I18n.instance.illegalJson,
+            duration: const Duration(seconds: 5));
+        return;
+      }
       dartObject = extendedObject;
       _textEditingController.text =
           const JsonEncoder.withIndent('  ').convert(jsonObject);
@@ -49,7 +75,7 @@ class JsonToDartController extends ChangeNotifier {
     } catch (e, stack) {
       print('$e');
       print('$stack');
-      showToast(AppLocalizations.instance.formatErrorInfo,
+      showToast(I18n.instance.formatErrorInfo,
           duration: const Duration(seconds: 5));
       Clipboard.setData(ClipboardData(text: '$e\n$stack'));
     }
@@ -88,7 +114,7 @@ class JsonToDartController extends ChangeNotifier {
               }
             }
           } catch (e) {
-            showToast(AppLocalizations.instance.timeFormatError);
+            showToast(I18n.instance.timeFormatError);
           }
 
           sb.writeLine(info);
@@ -122,12 +148,12 @@ class JsonToDartController extends ChangeNotifier {
 
         _textEditingController.text = result;
         Clipboard.setData(ClipboardData(text: result));
-        showToast(AppLocalizations.instance.generateSucceed);
+        showToast(I18n.instance.generateSucceed);
       } catch (e, stack) {
         print('$e');
         print('$stack');
         _textEditingController.text = sb.toString();
-        showToast(AppLocalizations.instance.generateFailed,
+        showToast(I18n.instance.generateFailed,
             duration: const Duration(seconds: 5));
         Clipboard.setData(ClipboardData(text: '$e\n$stack'));
       }

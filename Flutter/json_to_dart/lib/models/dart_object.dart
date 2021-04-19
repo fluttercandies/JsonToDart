@@ -1,11 +1,13 @@
 import 'dart:async';
-import 'package:json_to_dart/localizations/app_localizations.dart';
+import 'package:json_to_dart/i18n.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:tuple/tuple.dart';
 
 import 'config.dart';
 import 'dart_property.dart';
@@ -19,19 +21,36 @@ class DartObject extends DartProperty {
     MapEntry<String, dynamic>? keyValuePair,
     required int depth,
     DartObject? source,
+    required bool nullable,
   }) : super(
-            uid: source?.uid ?? uid!,
-            keyValuePair: source?.keyValuePair ?? keyValuePair!,
-            depth: source?.depth ?? depth) {
+          uid: source?.uid ?? uid!,
+          keyValuePair: source?.keyValuePair ?? keyValuePair!,
+          depth: source?.depth ?? depth,
+          nullable: nullable,
+        ) {
     if (source != null) {
       properties = source.properties;
       objectKeys = source.objectKeys;
-      _jObject = source.keyValuePair.value as Map<String, dynamic>?;
+      _jObject = (source.keyValuePair.value as Map<String, dynamic>?)?.map(
+          (String key, dynamic value) =>
+              MapEntry<String, Tuple3<dynamic, DartType, bool>>(
+                  key,
+                  Tuple3<dynamic, DartType, bool>(
+                      value,
+                      DartHelper.converDartType(value.runtimeType),
+                      DartHelper.converNullable(value))));
       className = source.className;
     } else {
       properties = <DartProperty>[];
       objectKeys = <String, DartObject>{};
-      _jObject = this.keyValuePair.value as Map<String, dynamic>?;
+      _jObject = (this.keyValuePair.value as Map<String, dynamic>).map(
+          (String key, dynamic value) =>
+              MapEntry<String, Tuple3<dynamic, DartType, bool>>(
+                  key,
+                  Tuple3<dynamic, DartType, bool>(
+                      value,
+                      DartHelper.converDartType(value.runtimeType),
+                      DartHelper.converNullable(value))));
 
       final String key = this.keyValuePair.key;
       final String className =
@@ -42,9 +61,10 @@ class DartObject extends DartProperty {
     }
   }
 
-  Map<String, dynamic>? _jObject;
-  Map<String, dynamic>? _mergeObject;
-  Map<String, dynamic>? get jObject =>
+  Map<String, Tuple3<dynamic, DartType, bool>>? _jObject;
+  Map<String, Tuple3<dynamic, DartType, bool>>? _mergeObject;
+
+  Map<String, Tuple3<dynamic, DartType, bool>>? get jObject =>
       _mergeObject != null ? _mergeObject! : _jObject;
 
   String _className = '';
@@ -68,63 +88,98 @@ class DartObject extends DartProperty {
     rebuildName.close();
   }
 
+  void decDepth() {
+    depth -= 1;
+    for (final DartObject obj in objectKeys.values) {
+      obj.decDepth();
+    }
+  }
+
   void initializeProperties() {
     properties.clear();
     objectKeys.clear();
     if (jObject != null && jObject!.isNotEmpty) {
-      for (final MapEntry<String, dynamic> item in jObject!.entries) {
+      for (final MapEntry<String, Tuple3<dynamic, DartType, bool>> item
+          in jObject!.entries) {
         initializePropertyItem(item, depth);
       }
       orderPropeties();
     }
   }
 
-  void initializePropertyItem(MapEntry<String, dynamic> item, int depth,
+  void initializePropertyItem(
+      MapEntry<String, Tuple3<dynamic, DartType, bool>> item, int depth,
       {bool addProperty = true}) {
-    if (item.value is Map && (item.value as Map<String, dynamic>).isNotEmpty) {
+    if (item.value.item1 is Map &&
+        (item.value.item1 as Map<String, dynamic>).isNotEmpty) {
       if (objectKeys.containsKey(item.key)) {
         final DartObject temp = objectKeys[item.key]!;
-        temp.merge(item.value as Map<String, dynamic>);
+        temp.merge((item.value.item1 as Map<String, dynamic>).map(
+            (String key, dynamic value) =>
+                MapEntry<String, Tuple3<dynamic, DartType, bool>>(
+                    key,
+                    Tuple3<dynamic, DartType, bool>(
+                        value,
+                        DartHelper.converDartType(value.runtimeType),
+                        DartHelper.converNullable(value)))));
         objectKeys[item.key] = temp;
       } else {
         final DartObject temp = DartObject(
-            uid: uid + '_' + item.key, keyValuePair: item, depth: depth + 1);
+            uid: uid + '_' + item.key,
+            keyValuePair: MapEntry<String, dynamic>(item.key, item.value.item1),
+            nullable: item.value.item3,
+            depth: depth + 1);
         if (addProperty) {
           properties.add(temp);
         }
         objectKeys[item.key] = temp;
       }
-    } else if (item.value is List) {
+    } else if (item.value.item1 is List) {
       if (addProperty) {
-        properties
-            .add(DartProperty(uid: uid, keyValuePair: item, depth: depth));
+        properties.add(DartProperty(
+            uid: uid,
+            keyValuePair: MapEntry<String, dynamic>(item.key, item.value.item1),
+            nullable: item.value.item3,
+            depth: depth));
       }
-      final List<dynamic> array = item.value as List<dynamic>;
+      final List<dynamic> array = item.value.item1 as List<dynamic>;
       if (array.isNotEmpty) {
         int count = ConfigSetting().traverseArrayCount;
         if (count == 99) {
           count = array.length;
         }
-        for (int i = 0; i < array.length && i < count; i++) {
+        final Iterable<dynamic> cutArray = array.take(count);
+        for (final dynamic arrayItem in cutArray) {
           initializePropertyItem(
-              MapEntry<String, dynamic>(item.key, array[i]), depth,
+              MapEntry<String, Tuple3<dynamic, DartType, bool>>(
+                  item.key,
+                  Tuple3<dynamic, DartType, bool>(
+                      arrayItem,
+                      DartHelper.converDartType(arrayItem.runtimeType),
+                      DartHelper.converNullable(value) &&
+                          ConfigSetting().smartNullable)),
+              depth,
               addProperty: false);
         }
       }
     } else {
       if (addProperty) {
-        properties
-            .add(DartProperty(uid: uid, keyValuePair: item, depth: depth));
+        properties.add(DartProperty(
+            uid: uid,
+            keyValuePair: MapEntry<String, dynamic>(item.key, item.value.item1),
+            nullable: item.value.item3,
+            depth: depth));
       }
     }
   }
 
-  void merge(Map<String, dynamic>? other) {
+  void merge(Map<String, Tuple3<dynamic, DartType, bool>>? other) {
     bool needInitialize = false;
     if (_jObject != null) {
-      _mergeObject ??= <String, dynamic>{};
+      _mergeObject ??= <String, Tuple3<dynamic, DartType, bool>>{};
 
-      for (final MapEntry<String, dynamic> item in _jObject!.entries) {
+      for (final MapEntry<String, Tuple3<dynamic, DartType, bool>> item
+          in _jObject!.entries) {
         if (!_mergeObject!.containsKey(item.key)) {
           needInitialize = true;
           _mergeObject![item.key] = item.value;
@@ -132,15 +187,46 @@ class DartObject extends DartProperty {
       }
 
       if (other != null) {
-        _mergeObject ??= <String, dynamic>{};
+        _mergeObject ??= <String, Tuple3<dynamic, DartType, bool>>{};
 
-        for (final MapEntry<String, dynamic> item in other.entries) {
-          if (!_mergeObject!.containsKey(item.key)) {
-            needInitialize = true;
-            _mergeObject![item.key] = item.value;
+        if (ConfigSetting().smartNullable) {
+          for (final MapEntry<String,
+                  Tuple3<dynamic, DartType, bool>> existObject
+              in _mergeObject!.entries) {
+            if (!other.containsKey(existObject.key)) {
+              final Tuple3<dynamic, DartType, bool> newObject =
+                  Tuple3<dynamic, DartType, bool>(
+                      existObject.value.item1, existObject.value.item2, true);
+              _mergeObject![existObject.key] = newObject;
+              needInitialize = true;
+            }
           }
         }
 
+        for (final MapEntry<String, Tuple3<dynamic, DartType, bool>> item
+            in other.entries) {
+          if (!_mergeObject!.containsKey(item.key)) {
+            needInitialize = true;
+            _mergeObject![item.key] = Tuple3<dynamic, DartType, bool>(
+                item.value.item1, item.value.item2, true);
+          } else {
+            Tuple3<dynamic, DartType, bool> existObject =
+                _mergeObject![item.key]!;
+            if ((existObject.item2.isNull && !item.value.item2.isNull) ||
+                (!existObject.item2.isNull && item.value.item2.isNull) ||
+                existObject.item3 != item.value.item3) {
+              existObject = Tuple3<dynamic, DartType, bool>(
+                  item.value.item1 ?? existObject.item1,
+                  item.value.item2 != DartType.Null
+                      ? item.value.item2
+                      : existObject.item2,
+                  (existObject.item3 || item.value.item3) &&
+                      ConfigSetting().smartNullable);
+              _mergeObject![item.key] = existObject;
+              needInitialize = true;
+            }
+          }
+        }
         if (needInitialize) {
           initializeProperties();
         }
@@ -396,7 +482,7 @@ class DartObject extends DartProperty {
   }
 
   String? hasEmptyProperties() {
-    final AppLocalizations appLocalizations = AppLocalizations.instance;
+    final AppLocalizations appLocalizations = I18n.instance;
     if (isNullOrWhiteSpace(className)) {
       return appLocalizations.classNameAssert(uid);
     }
@@ -423,7 +509,7 @@ class DartObject extends DartProperty {
   }
 
   DartObject copy() {
-    return DartObject(source: this, depth: depth);
+    return DartObject(source: this, depth: depth, nullable: nullable);
   }
 
   @override

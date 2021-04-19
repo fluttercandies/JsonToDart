@@ -47,6 +47,7 @@ import 'dart:convert';''';
 
   static const String setObjectProperty =
       "    {0} :{3} {2}.fromJson(asT<Map<String, dynamic>>(jsonRes['{1}']){4}),";
+
   static String propertyS(PropertyAccessorType type) {
     switch (type) {
       case PropertyAccessorType.none:
@@ -112,9 +113,15 @@ import 'dart:convert';''';
       return DartType.String;
     } else if (type == bool) {
       return DartType.bool;
+    } else if (type == Null) {
+      return DartType.Null;
     }
 
     return DartType.Object;
+  }
+
+  static bool converNullable(dynamic value) {
+    return value.runtimeType == Null;
   }
 
   static const String tryCatchMethod = """void tryCatch(Function f)

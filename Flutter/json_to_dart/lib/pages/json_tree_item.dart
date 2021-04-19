@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/localizations/app_localizations.dart';
+import 'package:json_to_dart/i18n.dart';
 import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/style/color.dart';
@@ -35,6 +35,7 @@ class JsonTreeItem extends StatefulWidget {
   final bool isObject;
   final int depth;
   final bool isArrayOject;
+
   @override
   _JsonTreeItemState createState() => _JsonTreeItemState();
 }
@@ -197,7 +198,6 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
     rowItems.add(Selector<ConfigSetting, Tuple2<bool, bool>>(
       builder: (BuildContext c, Tuple2<bool, bool> value, Widget? child) {
         if (ConfigSetting().nullsafety) {
-          property.nullable = value.item2;
           return Expanded(
             flex: 1,
             child: finalDepth > 0 && !widget.isArrayOject
@@ -240,7 +240,9 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
 
 class ClassNameTextField extends StatefulWidget {
   const ClassNameTextField(this.property);
+
   final DartObject property;
+
   @override
   _ClassNameTextFieldState createState() => _ClassNameTextFieldState();
 }
@@ -286,6 +288,7 @@ class PropertyNameTextField extends StatefulWidget {
   const PropertyNameTextField(this.property);
 
   final DartProperty property;
+
   @override
   _PropertyNameTextFieldState createState() => _PropertyNameTextFieldState();
 }
@@ -325,7 +328,9 @@ class _PropertyNameTextFieldState extends State<PropertyNameTextField> {
 
 class NullableCheckBox extends StatefulWidget {
   const NullableCheckBox(this.property);
+
   final DartProperty property;
+
   @override
   _NullableCheckBoxState createState() => _NullableCheckBoxState();
 }
@@ -334,7 +339,7 @@ class _NullableCheckBoxState extends State<NullableCheckBox> {
   @override
   Widget build(BuildContext context) {
     return StCheckBox(
-      title: AppLocalizations.of(context).nullable,
+      title: I18n.of(context).nullable,
       value: widget.property.nullable,
       onChanged: (bool value) {
         setState(() {
@@ -347,7 +352,9 @@ class _NullableCheckBoxState extends State<NullableCheckBox> {
 
 class PropertyAccessorTypeDropdownButton extends StatefulWidget {
   const PropertyAccessorTypeDropdownButton(this.property);
+
   final DartProperty property;
+
   @override
   _PropertyAccessorTypeDropdownButtonState createState() =>
       _PropertyAccessorTypeDropdownButtonState();
@@ -387,7 +394,9 @@ class _PropertyAccessorTypeDropdownButtonState
 
 class DartTypeDropdownButton extends StatefulWidget {
   const DartTypeDropdownButton(this.property);
+
   final DartProperty property;
+
   @override
   _DartTypeDropdownButtonState createState() => _DartTypeDropdownButtonState();
 }
@@ -396,21 +405,25 @@ class _DartTypeDropdownButtonState extends State<DartTypeDropdownButton> {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<DartType>(
-        onChanged: (DartType? value) {
-          if (widget.property.type != value) {
-            setState(() {
-              widget.property.type = value!;
-            });
-          }
-        },
-        underline: Container(),
-        value: widget.property.type,
-        items: DartType.values
-            .map<DropdownMenuItem<DartType>>(
-                (DartType f) => DropdownMenuItem<DartType>(
-                      value: f,
-                      child: Text(f.text),
-                    ))
-            .toList());
+      onChanged: (DartType? value) {
+        if (widget.property.type != value) {
+          setState(() {
+            widget.property.type = value!;
+          });
+        }
+      },
+      underline: Container(),
+      value: widget.property.type == DartType.Null
+          ? DartType.Object
+          : widget.property.type,
+      items: DartType.values
+          .where((DartType e) => e != DartType.Null)
+          .map<DropdownMenuItem<DartType>>(
+              (DartType f) => DropdownMenuItem<DartType>(
+                    value: f,
+                    child: Text(f.text),
+                  ))
+          .toList(),
+    );
   }
 }
