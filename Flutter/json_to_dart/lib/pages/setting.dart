@@ -232,7 +232,6 @@ class _MoreSettingState extends State<MoreSetting> {
           value: ConfigSetting().nullsafety,
           onChanged: (bool value) {
             setState(() {
-              //controller.updateNullable(true);
               ConfigSetting().nullsafety = value;
               ConfigSetting().nullable = true;
               if (!value) {
@@ -241,18 +240,16 @@ class _MoreSettingState extends State<MoreSetting> {
             });
           },
         ),
-        StCheckBox(
-          title: appLocalizations.smartNullable,
-          value: ConfigSetting().smartNullable && ConfigSetting().nullsafety,
-          onChanged: (bool value) {
-            setState(() {
-              //controller.updateNullable(true);
-              if (ConfigSetting().nullsafety) {
+        if (ConfigSetting().nullsafety)
+          StCheckBox(
+            title: appLocalizations.smartNullable,
+            value: ConfigSetting().smartNullable,
+            onChanged: (bool value) {
+              setState(() {
                 ConfigSetting().smartNullable = value;
-              }
-            });
-          },
-        ),
+              });
+            },
+          ),
       ],
     );
     return Container(

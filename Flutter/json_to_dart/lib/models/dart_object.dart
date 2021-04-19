@@ -23,10 +23,11 @@ class DartObject extends DartProperty {
     DartObject? source,
     required bool nullable,
   }) : super(
-            uid: source?.uid ?? uid!,
-            keyValuePair: source?.keyValuePair ?? keyValuePair!,
-            depth: source?.depth ?? depth,
-            nullable: nullable) {
+          uid: source?.uid ?? uid!,
+          keyValuePair: source?.keyValuePair ?? keyValuePair!,
+          depth: source?.depth ?? depth,
+          nullable: nullable,
+        ) {
     if (source != null) {
       properties = source.properties;
       objectKeys = source.objectKeys;
