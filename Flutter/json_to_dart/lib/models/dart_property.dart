@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
@@ -176,6 +177,83 @@ class DartProperty extends Equatable {
     sb.writeLine(result);
     sb.writeLine('    }\n');
 
+    return sb.toString();
+  }
+
+  String getDepthType(int depth, String baseType) {
+    String? result;
+    while (depth > 0) {
+      if (result == null) {
+        result = 'List<{0}>';
+      } else {
+        result = stringFormat('List<{0}>', <String>[result]);
+      }
+      depth--;
+    }
+    return  result != null ? stringFormat(result, <String>[baseType]) : baseType;
+  }
+
+  String getArrayCopyString(String setName, String typeString,
+      {String? className, required String baseType}) {
+    dynamic temp = value;
+    final MyStringBuffer sb = MyStringBuffer();
+    int count = 0;
+    String? result;
+    int depth = 0;
+    dynamic temp1 = value;
+    while (temp1 is List) {
+      if (temp1 is List && temp1.isNotEmpty) {
+        temp1 = temp1.first;
+      } else {
+        temp1 = null;
+      }
+      depth++;
+    }
+
+
+    while (temp is List) {
+      if (temp is List && temp.isNotEmpty) {
+        temp = temp.first;
+      } else {
+        temp = null;
+      }
+      // next is array
+       final String depthType = getDepthType(depth - count - 1, baseType);
+      if (temp != null && temp is List) {
+       
+        if (count == 0) {
+          result =
+              "$setName${ConfigSetting().nullsafety ? '?' : ''}.map<$depthType>(($depthType item$count) => {0}).toList()";
+        } else {
+          result = result!.replaceAll(
+              '{0}', 'item${count - 1}.map<$depthType>(($depthType item$count) => {0}).toList()');
+        }
+      } else {
+        if (count == 0) {
+          String str = 'List<$baseType>.from($setName ?? <$baseType>[])';
+          if (className != null) {
+            str =
+                '$setName${ConfigSetting().nullsafety ? '?' : ''}.map<$depthType>(($depthType e) => e.copy()).toList()';
+          }
+          result = stringFormat(DartHelper.copySetString, <String>[
+            key,
+            str,
+          ]);
+        } else {
+          String item = 'item${count - 1}';
+          if (className != null) {
+            item = '$item.map<$depthType>(($depthType item$count) => item$count.copy()).toList()';
+          }
+          result = stringFormat(DartHelper.copySetString, <String>[
+            key,
+            result!.replaceAll('{0}', item),
+          ]);
+        }
+      }
+
+      count++;
+    }
+    sb.writeLine(result);
     return sb.toString();
   }
 

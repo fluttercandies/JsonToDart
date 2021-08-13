@@ -21,10 +21,19 @@ class DartHelper {
   static const String toJsonHeader =
       '  Map<String, dynamic> toJson() => <String, dynamic>{';
   static const String toJsonFooter = '};';
-
-  static const String copyWithHeader =
+    static const String copyWithHeader = 
       '  Map<String, dynamic> toJson() => <String, dynamic>{';
   static const String copyWithFooter = '};';
+
+  static const String copyHeader = 
+      '''  {0} copy() {
+             return {0}(
+
+      ''';
+  static const String copyFooter = ');}';
+  
+  static const String copySetString = '     {0}: {1},';
+  static const String copySetString1 = '     {0}: {1}.copy(),';
 
   static const String toJsonSetString = "        '{0}': {1},";
   static const String jsonImport = '''
