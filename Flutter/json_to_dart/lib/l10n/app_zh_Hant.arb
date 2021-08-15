@@ -38,5 +38,6 @@
     "fileHeaderHelp": "可以在這裏添加 Copyright，導入 Dart 代碼，創建人資訊等等。支持[Date yyyy MM-dd]來生成時間，Date後面為日期格式。",
     "nullsafety": "空安全",
     "nullable": "可空",
-    "smartNullable": "智能可空"
+    "smartNullable": "智能可空",
+    "addCopyMethod":"添加複製方法"
 }

@@ -25,28 +25,58 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
     await super.init(adapter: ConfigSettingAdapter(), defaultValue: this);
   }
 
-  @HiveField(0)
+  @HiveField(
+    0,
+    defaultValue: true,
+  )
   bool addMethod = true;
-  @HiveField(1)
+  @HiveField(
+    1,
+    defaultValue: 2,
+  )
   int column1Width = 2;
-  @HiveField(2)
+  @HiveField(
+    2,
+    defaultValue: 3,
+  )
   int column2Width = 3;
-  @HiveField(3)
+  @HiveField(
+    3,
+    defaultValue: false,
+  )
   bool enableArrayProtection = false;
-  @HiveField(4)
+  @HiveField(
+    4,
+    defaultValue: false,
+  )
   bool enableDataProtection = false;
-  @HiveField(5)
+  @HiveField(
+    5,
+    defaultValue: '',
+  )
   String fileHeaderInfo = '';
-  @HiveField(6)
+  @HiveField(
+    6,
+    defaultValue: 1,
+  )
   int traverseArrayCount = 1;
-  @HiveField(7)
+  @HiveField(
+    7,
+    defaultValue: PropertyNamingConventionsType.camelCase,
+  )
   PropertyNamingConventionsType propertyNamingConventionsType =
       PropertyNamingConventionsType.camelCase;
 
   PropertyAccessorType _propertyAccessorType = PropertyAccessorType.none;
-  @HiveField(8)
+  @HiveField(
+    8,
+    defaultValue: PropertyAccessorType.none,
+  )
   PropertyAccessorType get propertyAccessorType => _propertyAccessorType;
-  @HiveField(8)
+  @HiveField(
+    8,
+    defaultValue: PropertyAccessorType.none,
+  )
   set propertyAccessorType(PropertyAccessorType value) {
     if (_propertyAccessorType != value) {
       _propertyAccessorType = value;
@@ -54,14 +84,23 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
     }
   }
 
-  @HiveField(9)
+  @HiveField(
+    9,
+    defaultValue: PropertyNameSortingType.none,
+  )
   PropertyNameSortingType propertyNameSortingType =
       PropertyNameSortingType.none;
 
   bool _nullsafety = false;
-  @HiveField(10)
+  @HiveField(
+    10,
+    defaultValue: false,
+  )
   bool get nullsafety => _nullsafety;
-  @HiveField(10)
+  @HiveField(
+    10,
+    defaultValue: false,
+  )
   set nullsafety(bool value) {
     if (_nullsafety != value) {
       _nullsafety = value;
@@ -70,9 +109,15 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
   }
 
   bool _nullable = true;
-  @HiveField(11)
+  @HiveField(
+    11,
+    defaultValue: true,
+  )
   bool get nullable => _nullable;
-  @HiveField(11)
+  @HiveField(
+    11,
+    defaultValue: true,
+  )
   set nullable(bool value) {
     if (_nullable != value) {
       _nullable = value;
@@ -81,9 +126,15 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
   }
 
   Locale _locale = const Locale.fromSubtags(languageCode: 'en');
-  @HiveField(12)
+  @HiveField(
+    12,
+    defaultValue: Locale.fromSubtags(languageCode: 'en'),
+  )
   Locale get locale => _locale;
-  @HiveField(12)
+  @HiveField(
+    12,
+    defaultValue: Locale.fromSubtags(languageCode: 'en'),
+  )
   set locale(Locale value) {
     // fix hive error
     // we change zh_Hans to zh
@@ -99,15 +150,27 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
   }
 
   bool _smartNullable = false;
-  @HiveField(13)
+  @HiveField(
+    13,
+    defaultValue: false,
+  )
   bool get smartNullable => _smartNullable;
-  @HiveField(13)
+  @HiveField(
+    13,
+    defaultValue: false,
+  )
   set smartNullable(bool value) {
     if (_smartNullable != value) {
       _smartNullable = value;
       notifyListeners();
     }
   }
+
+  @HiveField(
+    14,
+    defaultValue: false,
+  )
+  bool addCopyMethod = false;
 }
 
 class TypeIds {

@@ -89,6 +89,48 @@ class DartProperty extends Equatable {
     return result ?? (className ?? DartHelper.getDartTypeString(type, this));
   }
 
+  String getListCopy({String? className}) {
+    // if (className == null) {
+    //   return '$name$toList';
+    // }
+    dynamic temp = value;
+    String copy = '';
+    String type = '{0}';
+
+    while (temp is List) {
+      if (copy == '') {
+        copy =
+            'e.map(($type e) => ${className != null ? 'e.copy()' : 'e'}).toList()';
+      } else {
+        type = 'List<$type>';
+        copy = 'e.map(($type e)=> $copy).toList()';
+      }
+      if (temp is List) {
+        temp = temp.first;
+      }
+    }
+
+    //type = 'List<$type>';
+    // copy =
+    //     '${ConfigSetting().nullsafety && !nullable ? name : name + '?'}.map(($type e)=> $copy)$toList';
+    copy = stringFormat(copy, <String>[
+      className ??
+          DartHelper.getDartTypeString(
+                  DartHelper.converDartType(temp?.runtimeType ?? Object), this)
+              .replaceAll('?', '')
+    ]);
+    copy = copy.replaceFirst(
+      'e',
+      ConfigSetting().nullsafety && !nullable ? name : name + '?',
+    );
+
+    if (!ConfigSetting().nullsafety) {
+      copy = copy.replaceRange(
+          copy.length - '.toList()'.length, null, '?.toList()');
+    }
+    return copy;
+  }
+
   String getBaseTypeString({String? className}) {
     if (className != null) {
       return className;
