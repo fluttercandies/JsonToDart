@@ -486,7 +486,9 @@ class DartObject extends DartProperty {
       sb.writeLine(propertySb.toString());
       sb.writeLine(DartHelper.classToString);
       sb.writeLine(toJsonSb.toString());
-      sb.writeLine(copySb.toString());
+      if (ConfigSetting().addCopy) {
+         sb.writeLine(copySb.toString());
+      }
       sb.writeLine(stringFormat(DartHelper.classToClone,
           <String>[className, if (ConfigSetting().nullsafety) '!' else '']));
     }

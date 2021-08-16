@@ -108,6 +108,16 @@ class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
       notifyListeners();
     }
   }
+  bool  _addCopy = false;
+  @HiveField(14)
+  bool get addCopy => _addCopy;
+  @HiveField(14)
+  set addCopy(bool value) {
+    if (_addCopy != value) {
+      _addCopy = value;
+      notifyListeners();
+    }
+  }
 }
 
 class TypeIds {

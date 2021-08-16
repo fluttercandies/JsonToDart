@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
@@ -211,6 +210,7 @@ class DartProperty extends Equatable {
     }
 
 
+
     while (temp is List) {
       if (temp is List && temp.isNotEmpty) {
         temp = temp.first;
@@ -230,7 +230,7 @@ class DartProperty extends Equatable {
         }
       } else {
         if (count == 0) {
-          String str = 'List<$baseType>.from($setName ?? <$baseType>[])';
+          String str = '$setName${ConfigSetting().nullsafety ? '?' : ''}.map<$depthType>(($depthType e) => e).toList()';
           if (className != null) {
             str =
                 '$setName${ConfigSetting().nullsafety ? '?' : ''}.map<$depthType>(($depthType e) => e.copy()).toList()';
