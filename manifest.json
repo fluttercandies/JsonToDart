@@ -1,11 +1,11 @@
 {
-    "name": "JsonToDart",
-    "short_name": "JsonToDart",
+    "name": "json_to_dart",
+    "short_name": "json_to_dart",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "The tool to convert json to dart code.",
+    "description": "A new Flutter project.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
