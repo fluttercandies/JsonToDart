@@ -250,12 +250,12 @@ class _MoreSettingState extends State<MoreSetting> {
               });
             },
           ),
-         StCheckBox(
-          title: appLocalizations.addCopy,
-          value: ConfigSetting().addCopy,
+        StCheckBox(
+          title: appLocalizations.addCopyMethod,
+          value: ConfigSetting().addCopyMethod,
           onChanged: (bool value) {
             setState(() {
-              ConfigSetting().addCopy = value;
+              ConfigSetting().addCopyMethod = value;
             });
           },
         ),

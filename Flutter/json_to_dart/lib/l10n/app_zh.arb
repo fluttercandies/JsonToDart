@@ -39,5 +39,5 @@
     "nullsafety": "空安全",
     "nullable": "可空",
     "smartNullable": "智能可空",
-    "addCopy": "添加拷贝方法"
+    "addCopyMethod":"添加复制方法"
 }
