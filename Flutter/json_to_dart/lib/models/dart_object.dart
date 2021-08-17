@@ -321,6 +321,8 @@ class DartObject extends DartProperty {
       final MyStringBuffer toJsonSb = MyStringBuffer();
       final MyStringBuffer copySb = MyStringBuffer();
 
+      final MyStringBuffer copySb = MyStringBuffer();
+
       factorySb.writeLine(
           stringFormat(DartHelper.factoryStringHeader, <String>[className]));
 
@@ -341,6 +343,7 @@ class DartObject extends DartProperty {
               (ConfigSetting().nullsafety && item.nullable),
         );
         final bool isGetSet = fss.startsWith('{');
+        String copyProperty = item.name;
 
         if (item is DartObject) {
           className = item.className;
@@ -358,13 +361,17 @@ class DartObject extends DartProperty {
           if (ConfigSetting().nullsafety && item.nullable) {
             typeString += '?';
           }
-          copySb.writeLine(stringFormat(
-              DartHelper.copySetString1, <String>[item.key, setName + (ConfigSetting().nullsafety && item.nullable ? '?' : '')]));
+
+          if (!ConfigSetting().nullsafety || item.nullable) {
+            copyProperty += '?';
+          }
+          copyProperty += '.copy()';
         } else if (item.value is List) {
           if (objectKeys.containsKey(item.key)) {
             className = objectKeys[item.key]!.className;
           }
           typeString = item.getTypeString(className: className);
+
           typeString = typeString.replaceAll('?', '');
 
           fromJsonSb1.writeLine(item.getArraySetPropertyString(
@@ -387,14 +394,7 @@ class DartObject extends DartProperty {
           }
           setString += ',';
 
-          copySb.writeLine(item.getArrayCopyString(
-            setName,
-            typeString,
-            className: className,
-            baseType: item
-                .getBaseTypeString(className: className)
-                .replaceAll('?', ''),
-          ));
+          copyProperty = item.getListCopy(className: className);
         } else {
           setString = DartHelper.setProperty(item.name, item, this.className);
           typeString = DartHelper.getDartTypeString(item.type, item);
@@ -448,6 +448,8 @@ class DartObject extends DartProperty {
           item.key,
           setName,
         ]));
+
+        copySb.writeLine('${item.name}:$copyProperty,');
       }
 
       if (factorySb1.length == 0) {
@@ -486,11 +488,14 @@ class DartObject extends DartProperty {
       sb.writeLine(propertySb.toString());
       sb.writeLine(DartHelper.classToString);
       sb.writeLine(toJsonSb.toString());
-      if (ConfigSetting().addCopy) {
-         sb.writeLine(copySb.toString());
+      if (ConfigSetting().addCopyMethod) {
+        sb.writeLine(stringFormat(DartHelper.copyWithString, <String>[
+          className,
+          copySb.toString(),
+        ]));
       }
-      sb.writeLine(stringFormat(DartHelper.classToClone,
-          <String>[className, if (ConfigSetting().nullsafety) '!' else '']));
+      // sb.writeLine(stringFormat(DartHelper.classToClone,
+      //     <String>[className, if (ConfigSetting().nullsafety) '!' else '']));
     }
 
     sb.writeLine(DartHelper.classFooter);

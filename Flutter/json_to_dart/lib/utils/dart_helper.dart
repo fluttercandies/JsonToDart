@@ -258,4 +258,13 @@ T? asT<T extends Object?>(dynamic value, [T? defaultValue]) {
     }
     return asTString;
   }
+
+  static const String copyWithString = '''
+
+    {0} copy() {
+    return {0}(
+      {1}
+    );
+  }
+  ''';
 }

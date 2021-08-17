@@ -39,5 +39,5 @@
     "nullsafety": "Null Safety",
     "nullable": "Nullable",
     "smartNullable": "Smart Nullable",
-    "addCopy": "Add Copy Method"
+    "addCopyMethod":"Add Copy Method"
 }
