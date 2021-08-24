@@ -250,7 +250,7 @@ T? asT<T extends Object?>(dynamic value, [T? defaultValue]) {
     return asTString;
   }
 
-  static const String copyWithString = '''
+  static const String copyMethodString = '''
 
     {0} copy() {
     return {0}(

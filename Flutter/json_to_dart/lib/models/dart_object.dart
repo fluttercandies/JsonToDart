@@ -322,8 +322,12 @@ class DartObject extends DartProperty {
 
       final MyStringBuffer copySb = MyStringBuffer();
 
-      factorySb.writeLine(
-          stringFormat(DartHelper.factoryStringHeader, <String>[className]));
+      final bool isAllFinalProperties = !properties.any(
+          (DartProperty element) =>
+              element.propertyAccessorType != PropertyAccessorType.final_);
+
+      factorySb.writeLine(stringFormat(DartHelper.factoryStringHeader,
+          <String>['${isAllFinalProperties ? 'const' : ''} $className']));
 
       toJsonSb.writeLine(DartHelper.toJsonHeader);
 
@@ -361,10 +365,12 @@ class DartObject extends DartProperty {
             typeString += '?';
           }
 
-          if (!ConfigSetting().nullsafety || item.nullable) {
-            copyProperty += '?';
+          if (ConfigSetting().addCopyMethod) {
+            if (!ConfigSetting().nullsafety || item.nullable) {
+              copyProperty += '?';
+            }
+            copyProperty += '.copy()';
           }
-          copyProperty += '.copy()';
         } else if (item.value is List) {
           if (objectKeys.containsKey(item.key)) {
             className = objectKeys[item.key]!.className;
@@ -392,8 +398,8 @@ class DartObject extends DartProperty {
             }
           }
           setString += ',';
-
-          copyProperty = item.getListCopy(className: className);
+          if (ConfigSetting().addCopyMethod)
+            copyProperty = item.getListCopy(className: className);
         } else {
           setString = DartHelper.setProperty(item.name, item, this.className);
           typeString = DartHelper.getDartTypeString(item.type, item);
@@ -443,8 +449,8 @@ class DartObject extends DartProperty {
           item.key,
           setName,
         ]));
-
-        copySb.writeLine('${item.name}:$copyProperty,');
+        if (ConfigSetting().addCopyMethod)
+          copySb.writeLine('${item.name}:$copyProperty,');
       }
 
       if (factorySb1.length == 0) {
@@ -483,7 +489,7 @@ class DartObject extends DartProperty {
       sb.writeLine(DartHelper.classToString);
       sb.writeLine(toJsonSb.toString());
       if (ConfigSetting().addCopyMethod) {
-        sb.writeLine(stringFormat(DartHelper.copyWithString, <String>[
+        sb.writeLine(stringFormat(DartHelper.copyMethodString, <String>[
           className,
           copySb.toString(),
         ]));

@@ -1,3 +1,9 @@
+
+## 1.4.0
+
+* Fix error when List is empty
+* Add const ctor when properties are all final
+
 ## 1.3.0
 
 * Add copy method button
