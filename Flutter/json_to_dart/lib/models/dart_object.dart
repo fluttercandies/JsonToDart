@@ -1,4 +1,6 @@
 import 'dart:async';
+
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:json_to_dart/i18n.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
@@ -6,7 +8,6 @@ import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:tuple/tuple.dart';
 
 import 'config.dart';

@@ -5,6 +5,7 @@ import '../models/dart_property.dart';
 import 'enums.dart';
 
 class DartHelper {
+  const DartHelper._();
   static const String classHeader = 'class {0} {';
   static const String classFooter = '}';
 

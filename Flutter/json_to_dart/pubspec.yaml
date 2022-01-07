@@ -14,8 +14,8 @@ description: The tool to convert json to dart code.
 version: 1.4.0
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
-
+  sdk: '>=2.15.0 <3.0.0'
+  flutter: ">=2.8.0"
 dependencies:
 
   # collection: any
@@ -36,9 +36,10 @@ dependencies:
   tuple: any
 
 dependency_overrides:
-  dart_style: ^2.0.0
+  #dart_style: ^2.0.0
 dev_dependencies:
   build_runner: any
+  flutter_native_splash: ^1.1.7+1  
   flutter_test:
     sdk: flutter
   hive_generator: any
@@ -53,6 +54,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   generate: true
+    
   # fonts:
   #   - family: Roboto
   #     fonts:
@@ -95,3 +97,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+# flutter pub run flutter_native_splash:create
+# flutter pub run flutter_native_splash:remove
+flutter_native_splash:
+  color: "#42a5f5"
+  image: web/favicon.png

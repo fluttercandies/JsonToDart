@@ -2,15 +2,15 @@ import 'dart:convert';
 
 import 'package:dart_style/dart_style.dart';
 import 'package:flutter/foundation.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:oktoast/oktoast.dart';
+import 'package:intl/intl.dart';
+import 'package:json_to_dart/i18n.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
-import 'package:json_to_dart/i18n.dart';
+import 'package:oktoast/oktoast.dart';
 
 import 'dart_object.dart';
 

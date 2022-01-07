@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/i18n.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:json_to_dart/i18n.dart';
 import 'package:json_to_dart/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:provider/provider.dart';

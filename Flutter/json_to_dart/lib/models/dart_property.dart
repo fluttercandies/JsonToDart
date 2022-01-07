@@ -1,9 +1,10 @@
 import 'package:equatable/equatable.dart';
-import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
+import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
+
 import 'config.dart';
 
 // ignore: must_be_immutable
@@ -71,7 +72,7 @@ class DartProperty extends Equatable {
       } else {
         result = stringFormat('List<{0}>', <String>[result]);
       }
-      if (temp is List && temp.isNotEmpty) {
+      if (temp.isNotEmpty) {
         temp = temp.first;
       } else {
         break;
@@ -105,7 +106,7 @@ class DartProperty extends Equatable {
         type = 'List<$type>';
         copy = 'e.map(($type e)=> $copy).toList()';
       }
-      if (temp is List && temp.isNotEmpty) {
+      if (temp.isNotEmpty) {
         temp = temp.first;
       }
     }
@@ -137,7 +138,7 @@ class DartProperty extends Equatable {
     }
     dynamic temp = value;
     while (temp is List) {
-      if (temp is List && temp.isNotEmpty) {
+      if (temp.isNotEmpty) {
         temp = temp.first;
       } else {
         break;
@@ -160,7 +161,7 @@ class DartProperty extends Equatable {
     int count = 0;
     String? result;
     while (temp is List) {
-      if (temp is List && temp.isNotEmpty) {
+      if (temp.isNotEmpty) {
         temp = temp.first;
       } else {
         temp = null;
