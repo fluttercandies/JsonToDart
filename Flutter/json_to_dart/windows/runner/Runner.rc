@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "The tool to convert json to dart code." "\0"
+            VALUE "FileDescription", "A new Flutter project." "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "JsonToDart" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2021 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "JsonToDart.exe" "\0"
-            VALUE "ProductName", "JsonToDart" "\0"
+            VALUE "InternalName", "json_to_dart" "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 com.example. All rights reserved." "\0"
+            VALUE "OriginalFilename", "json_to_dart.exe" "\0"
+            VALUE "ProductName", "json_to_dart" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END
