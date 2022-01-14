@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
@@ -52,6 +53,18 @@ class DartProperty extends Equatable {
         name = key;
         break;
     }
+
+    // avoid property as following:
+    // int int;
+    // Test Test;
+    // double double;
+    // List List;
+    final String? type = (this is DartObject)
+        ? (this as DartObject).className
+        : (value is List
+            ? 'List'
+            : DartHelper.converDartType(value?.runtimeType ?? Object).text);
+    name = correctName(name, type: type);
   }
 
   void updatePropertyAccessorType() {

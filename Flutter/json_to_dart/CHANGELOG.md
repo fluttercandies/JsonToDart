@@ -1,4 +1,8 @@
 
+## 1.4.1
+
+* correct property and class name automatically(avoid keyword and special character).
+
 ## 1.4.0
 
 * Fix error when List is empty

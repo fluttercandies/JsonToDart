@@ -54,9 +54,8 @@ class DartObject extends DartProperty {
                       DartHelper.converNullable(value))));
 
       final String key = this.keyValuePair.key;
-      final String className =
-          key.substring(0, 1).toUpperCase() + key.substring(1);
-      this.className = className;
+      className = upcaseCamelName(key);
+      className = correctName(className, isClassName: true);
       initializeProperties();
       updateNameByNamingConventionsType();
     }

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+//import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:nested/nested.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +19,7 @@ import 'style/color.dart';
 import 'widget/drag_icon.dart';
 
 Future<void> main() async {
+  //print(correctName('-0dd-jj/j.k-l0'));
   await Hive.initFlutter();
   await ConfigSetting().init();
   runApp(MyApp());
