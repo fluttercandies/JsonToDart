@@ -39,5 +39,8 @@
     "nullsafety": "Null Safety",
     "nullable": "Nullable",
     "smartNullable": "Smart Nullable",
-    "addCopyMethod":"Add Copy Method"
+    "addCopyMethod":"Add Copy Method",
+    "duplicateClasses":"There are duplicate classes",
+    "warning":"Warning",
+    "ok":"OK"
 }

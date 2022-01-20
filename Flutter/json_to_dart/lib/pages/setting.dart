@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:json_to_dart/i18n.dart';
+import 'package:get/get.dart';
+import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/config.dart';
-import 'package:json_to_dart/models/json_to_dart_controller.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/text.dart';
 import 'package:json_to_dart/utils/enums.dart';
+import 'package:json_to_dart/utils/extension.dart';
 import 'package:json_to_dart/widget/button.dart';
 import 'package:json_to_dart/widget/checkBox.dart';
 import 'package:json_to_dart/widget/picker.dart';
-import 'package:provider/provider.dart';
 
-class SettingWidget extends StatefulWidget {
-  @override
-  _SettingWidgetState createState() => _SettingWidgetState();
-}
+class SettingWidget extends StatelessWidget {
+  const SettingWidget({Key? key}) : super(key: key);
 
-class _SettingWidgetState extends State<SettingWidget> {
   @override
   Widget build(BuildContext context) {
-    final JsonToDartController controller =
-        Provider.of<JsonToDartController>(context, listen: false);
-    final AppLocalizations appLocalizations = I18n.of(context);
+    final MainController controller = Get.find();
     final Wrap settingRow = Wrap(
       direction: Axis.horizontal,
       children: <Widget>[
@@ -48,217 +43,227 @@ class _SettingWidgetState extends State<SettingWidget> {
               builder: (BuildContext ctx) {
                 return Container(
                   height: double.infinity,
-                  child: MoreSetting(controller),
+                  child: const MoreSetting(),
                 );
               },
-            ).whenComplete(() {
-              ConfigSetting().save();
-            });
+            ).whenComplete(() {});
           },
         ),
-        StPicker(
-          title: 'Language',
-          child: DropdownButton<Locale>(
-            value: ConfigSetting().locale,
-            iconEnabledColor: ColorPlate.blue,
-            elevation: 1,
-            style: StandardTextStyle.normal.apply(color: ColorPlate.blue),
-            items: AppLocalizations.supportedLocales
-                .map((Locale locale) => DropdownMenuItem<Locale>(
-                      value: locale,
-                      child: StText.normal(locale.toString()),
-                    ))
-                .toList(),
-            onChanged: (Locale? value) {
-              setState(() {
-                ConfigSetting().locale = value!;
-              });
-            },
-          ),
-        ),
+        Obx(() {
+          return StPicker(
+            title: 'Language',
+            child: DropdownButton<Locale>(
+              value: ConfigSetting().locale.value,
+              iconEnabledColor: ColorPlate.blue,
+              elevation: 1,
+              style: StandardTextStyle.normal.apply(color: ColorPlate.blue),
+              items: AppLocalizations.supportedLocales
+                  .map((Locale locale) => DropdownMenuItem<Locale>(
+                        value: locale,
+                        child: StText.normal(locale.toString()),
+                      ))
+                  .toList(),
+              onChanged: (Locale? value) {
+                ConfigSetting().locale.value = value!;
+                Get.updateLocale(ConfigSetting().locale.value);
+              },
+            ),
+          );
+        }),
       ],
     );
-    return Container(
+    return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: settingRow,
     );
   }
 }
 
-class MoreSetting extends StatefulWidget {
-  const MoreSetting(
-    this.controller, {
-    Key? key,
-  }) : super(key: key);
-  final JsonToDartController controller;
-
-  @override
-  _MoreSettingState createState() => _MoreSettingState();
-}
-
-class _MoreSettingState extends State<MoreSetting> {
-  JsonToDartController get controller => widget.controller;
+class MoreSetting extends StatelessWidget {
+  const MoreSetting({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations appLocalizations = I18n.of(context);
+    final MainController controller = Get.find();
     final Wrap buttonGroup = Wrap(
       direction: Axis.horizontal,
       children: <Widget>[
-        StCheckBox(
-          title: appLocalizations.dataProtection,
-          value: ConfigSetting().enableDataProtection,
-          onChanged: (bool value) {
-            setState(() {
-              ConfigSetting().enableDataProtection = value;
-            });
-          },
-        ),
-        StCheckBox(
-          title: appLocalizations.arrayProtection,
-          value: ConfigSetting().enableArrayProtection,
-          onChanged: (bool value) {
-            setState(() {
-              ConfigSetting().enableArrayProtection = value;
-            });
-          },
-        ),
-        StPicker(
-          title: appLocalizations.traverseArrayCount,
-          child: DropdownButton<int>(
-            value: ConfigSetting().traverseArrayCount,
-            iconEnabledColor: ColorPlate.blue,
-            elevation: 1,
-            style: StandardTextStyle.normal.apply(color: ColorPlate.blue),
-            items: const <DropdownMenuItem<int>>[
-              DropdownMenuItem<int>(
-                value: 1,
-                child: StText.normal('1'),
-              ),
-              DropdownMenuItem<int>(
-                value: 20,
-                child: StText.normal('20'),
-              ),
-              DropdownMenuItem<int>(
-                value: 99,
-                child: StText.normal('99'),
-              )
-            ],
-            onChanged: (int? value) {
-              if (ConfigSetting().traverseArrayCount != value) {
-                setState(() {
-                  ConfigSetting().traverseArrayCount = value!;
+        Obx(() {
+          return StCheckBox(
+            title: appLocalizations.dataProtection,
+            value: ConfigSetting().enableDataProtection.value,
+            onChanged: (bool value) {
+              if (ConfigSetting().enableDataProtection.value != value) {
+                ConfigSetting().enableDataProtection.value = value;
+              }
+            },
+          );
+        }),
+        Obx(() {
+          return StCheckBox(
+            title: appLocalizations.arrayProtection,
+            value: ConfigSetting().enableArrayProtection.value,
+            onChanged: (bool value) {
+              if (value != ConfigSetting().enableArrayProtection.value) {
+                ConfigSetting().enableArrayProtection.value = value;
+              }
+            },
+          );
+        }),
+        Obx(() {
+          return StPicker(
+            title: appLocalizations.traverseArrayCount,
+            child: DropdownButton<int>(
+              value: ConfigSetting().traverseArrayCount.value,
+              iconEnabledColor: ColorPlate.blue,
+              elevation: 1,
+              style: StandardTextStyle.normal.apply(color: ColorPlate.blue),
+              items: const <DropdownMenuItem<int>>[
+                DropdownMenuItem<int>(
+                  value: 1,
+                  child: StText.normal('1'),
+                ),
+                DropdownMenuItem<int>(
+                  value: 20,
+                  child: StText.normal('20'),
+                ),
+                DropdownMenuItem<int>(
+                  value: 99,
+                  child: StText.normal('99'),
+                )
+              ],
+              onChanged: (int? value) {
+                if (ConfigSetting().traverseArrayCount.value != value) {
+                  ConfigSetting().traverseArrayCount.value = value!;
+
                   if (controller.dartObject != null) {
                     controller.formatJson();
                   }
-                });
-              }
-            },
-          ),
-        ),
-        StPicker(
-          title: appLocalizations.nameRule,
-          child: DropdownButton<PropertyNamingConventionsType>(
-            iconEnabledColor: ColorPlate.blue,
-            value: ConfigSetting().propertyNamingConventionsType,
-            items: <DropdownMenuItem<PropertyNamingConventionsType>>[
-              DropdownMenuItem<PropertyNamingConventionsType>(
-                value: PropertyNamingConventionsType.none,
-                child: StText.normal(appLocalizations.original),
-              ),
-              DropdownMenuItem<PropertyNamingConventionsType>(
-                value: PropertyNamingConventionsType.camelCase,
-                child: StText.normal(appLocalizations.camelCase),
-              ),
-              DropdownMenuItem<PropertyNamingConventionsType>(
-                value: PropertyNamingConventionsType.pascal,
-                child: StText.normal(appLocalizations.pascal),
-              ),
-              DropdownMenuItem<PropertyNamingConventionsType>(
-                value: PropertyNamingConventionsType.hungarianNotation,
-                child: StText.normal(appLocalizations.hungarianNotation),
-              )
-            ],
-            onChanged: (PropertyNamingConventionsType? value) {
-              if (ConfigSetting().propertyNamingConventionsType != value) {
-                setState(() {
-                  ConfigSetting().propertyNamingConventionsType = value!;
+                }
+              },
+            ),
+          );
+        }),
+        Obx(() {
+          return StPicker(
+            title: appLocalizations.nameRule,
+            child: DropdownButton<PropertyNamingConventionsType>(
+              iconEnabledColor: ColorPlate.blue,
+              value: ConfigSetting().propertyNamingConventionsType.value,
+              items: <DropdownMenuItem<PropertyNamingConventionsType>>[
+                DropdownMenuItem<PropertyNamingConventionsType>(
+                  value: PropertyNamingConventionsType.none,
+                  child: StText.normal(appLocalizations.original),
+                ),
+                DropdownMenuItem<PropertyNamingConventionsType>(
+                  value: PropertyNamingConventionsType.camelCase,
+                  child: StText.normal(appLocalizations.camelCase),
+                ),
+                DropdownMenuItem<PropertyNamingConventionsType>(
+                  value: PropertyNamingConventionsType.pascal,
+                  child: StText.normal(appLocalizations.pascal),
+                ),
+                DropdownMenuItem<PropertyNamingConventionsType>(
+                  value: PropertyNamingConventionsType.hungarianNotation,
+                  child: StText.normal(appLocalizations.hungarianNotation),
+                )
+              ],
+              onChanged: (PropertyNamingConventionsType? value) {
+                if (ConfigSetting().propertyNamingConventionsType.value !=
+                    value) {
+                  ConfigSetting().propertyNamingConventionsType.value = value!;
+
                   controller.updateNameByNamingConventionsType();
-                });
-              }
-            },
-          ),
-        ),
-        StPicker(
-          title: appLocalizations.propertyOrder,
-          child: DropdownButton<PropertyNameSortingType>(
-            iconEnabledColor: ColorPlate.blue,
-            value: ConfigSetting().propertyNameSortingType,
-            items: <DropdownMenuItem<PropertyNameSortingType>>[
-              DropdownMenuItem<PropertyNameSortingType>(
-                value: PropertyNameSortingType.none,
-                child: StText.normal(appLocalizations.original),
-              ),
-              DropdownMenuItem<PropertyNameSortingType>(
-                value: PropertyNameSortingType.ascending,
-                child: StText.normal(appLocalizations.ascending),
-              ),
-              DropdownMenuItem<PropertyNameSortingType>(
-                value: PropertyNameSortingType.descending,
-                child: StText.normal(appLocalizations.descending),
-              ),
-            ],
-            onChanged: (PropertyNameSortingType? value) {
-              if (ConfigSetting().propertyNameSortingType != value) {
-                setState(() {
-                  ConfigSetting().propertyNameSortingType = value!;
+                }
+              },
+            ),
+          );
+        }),
+        Obx(() {
+          return StPicker(
+            title: appLocalizations.propertyOrder,
+            child: DropdownButton<PropertyNameSortingType>(
+              iconEnabledColor: ColorPlate.blue,
+              value: ConfigSetting().propertyNameSortingType.value,
+              items: <DropdownMenuItem<PropertyNameSortingType>>[
+                DropdownMenuItem<PropertyNameSortingType>(
+                  value: PropertyNameSortingType.none,
+                  child: StText.normal(appLocalizations.original),
+                ),
+                DropdownMenuItem<PropertyNameSortingType>(
+                  value: PropertyNameSortingType.ascending,
+                  child: StText.normal(appLocalizations.ascending),
+                ),
+                DropdownMenuItem<PropertyNameSortingType>(
+                  value: PropertyNameSortingType.descending,
+                  child: StText.normal(appLocalizations.descending),
+                ),
+              ],
+              onChanged: (PropertyNameSortingType? value) {
+                if (ConfigSetting().propertyNameSortingType.value != value) {
+                  ConfigSetting().propertyNameSortingType.value = value!;
+
                   controller.orderPropeties();
-                });
+                }
+              },
+            ),
+          );
+        }),
+        Obx(() {
+          return StCheckBox(
+            title: appLocalizations.addMethod,
+            value: ConfigSetting().addMethod.value,
+            onChanged: (bool value) {
+              if (ConfigSetting().addMethod.value != value) {
+                ConfigSetting().addMethod.value = value;
               }
             },
-          ),
-        ),
-        StCheckBox(
-          title: appLocalizations.addMethod,
-          value: ConfigSetting().addMethod,
-          onChanged: (bool value) {
-            setState(() {
-              ConfigSetting().addMethod = value;
-            });
-          },
-        ),
-        StCheckBox(
-          title: appLocalizations.nullsafety,
-          value: ConfigSetting().nullsafety,
-          onChanged: (bool value) {
-            setState(() {
+          );
+        }),
+        Obx(() {
+          return StCheckBox(
+            title: appLocalizations.nullsafety,
+            value: ConfigSetting().nullsafetyObs.value,
+            onChanged: (bool value) {
               ConfigSetting().nullsafety = value;
-              ConfigSetting().nullable = true;
+              //ConfigSetting().nullable = true;
               if (!value) {
                 ConfigSetting().smartNullable = false;
               }
-            });
-          },
-        ),
-        if (ConfigSetting().nullsafety)
-          StCheckBox(
-            title: appLocalizations.smartNullable,
-            value: ConfigSetting().smartNullable,
-            onChanged: (bool value) {
-              setState(() {
-                ConfigSetting().smartNullable = value;
-              });
+              ConfigSetting().nullsafetyObs.value = value;
             },
-          ),
-        StCheckBox(
-          title: appLocalizations.addCopyMethod,
-          value: ConfigSetting().addCopyMethod,
-          onChanged: (bool value) {
-            setState(() {
-              ConfigSetting().addCopyMethod = value;
-            });
-          },
-        ),
+          );
+        }),
+        Obx(() {
+          if (ConfigSetting().nullsafetyObs.value) {
+            return StCheckBox(
+              title: appLocalizations.smartNullable,
+              value: ConfigSetting().smartNullableObs.value,
+              onChanged: (bool value) {
+                ConfigSetting().smartNullable = value;
+                ConfigSetting().smartNullableObs.value = value;
+                // if (!value) {
+                //   controller.updateNullable(true);
+                // }
+              },
+            );
+          }
+          return Container(
+            width: 0,
+            height: 0,
+          );
+        }),
+        Obx(() {
+          return StCheckBox(
+            title: appLocalizations.addCopyMethod,
+            value: ConfigSetting().addCopyMethod.value,
+            onChanged: (bool value) {
+              if (ConfigSetting().addCopyMethod.value != value) {
+                ConfigSetting().addCopyMethod.value = value;
+              }
+            },
+          );
+        }),
       ],
     );
     return Container(
@@ -286,8 +291,7 @@ class _MoreSettingState extends State<MoreSetting> {
             ),
             child: TextField(
               maxLines: null,
-              controller: TextEditingController()
-                ..text = ConfigSetting().fileHeaderInfo,
+              controller: controller.fileHeaderHelpController,
               onChanged: (String value) {
                 ConfigSetting().fileHeaderInfo = value;
               },

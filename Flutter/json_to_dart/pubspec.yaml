@@ -27,13 +27,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  flutter_smart_dialog: any    
   hive: any
   hive_flutter: any
+  dartx: any
+  get: any
   intl: any
   nested: any
-  oktoast: any
-  provider: any
-  tuple: any
 
 
 
@@ -44,7 +44,10 @@ dev_dependencies:
   flutter_native_splash: ^1.1.7+1  
   flutter_test:
     sdk: flutter
-  hive_generator: any
+  hive_generator: 
+    git:
+      url: https://github.com/zmtzawqlp/hive.git
+      ref: hive_generator
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

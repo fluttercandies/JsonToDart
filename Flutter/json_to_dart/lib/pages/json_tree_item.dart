@@ -1,14 +1,13 @@
+import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/i18n.dart';
+import 'package:get/get.dart';
 import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/size.dart';
 import 'package:json_to_dart/style/text.dart';
-import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/enums.dart';
-import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
+import 'package:json_to_dart/utils/extension.dart';
 
 import '../models/config.dart';
 import '../models/dart_object.dart';
@@ -69,11 +68,12 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
     if (widget.isArray) {
       if (object.objectKeys.containsKey(property.key)) {
         final DartObject oject = object.objectKeys[property.key]!;
-        String typeString = property.getTypeString(className: oject.className);
+        String typeString =
+            property.getTypeString(className: oject.className.value);
         List<String> ss;
         String start;
         String end;
-        if (oject.className != '') {
+        if (oject.className.value != '') {
           typeString = typeString.replaceAll('<${oject.className}>', '<>');
         }
         typeString = typeString.replaceAll('?', '');
@@ -99,14 +99,10 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
               child: Row(
                 children: <Widget>[
                   Text(start),
-                  StreamBuilder<String>(
-                    builder: (_, AsyncSnapshot<String> snapshot) {
-                      return Text(snapshot.data ?? '');
-                    },
-                    stream: oject.rebuildName.stream,
-                    initialData: oject.className,
-                  ),
-                  Text(end)
+                  Obx(() {
+                    return Text(oject.className.value);
+                  }),
+                  Text(end),
                 ],
               ),
             )));
@@ -146,7 +142,9 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
               ),
             ),
           ),
-          child: ClassNameTextField(property as DartObject),
+          child: ClassNameTextField(
+            property: property as DartObject,
+          ),
         ),
       ));
     } else {
@@ -159,13 +157,14 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
               left: BorderSide(color: borderColor, width: 1.0),
             ),
           ),
-          child: DartTypeDropdownButton(property),
+          child: DartTypeDropdownButton(property: property),
         ),
       ));
     }
 
     if (finalDepth > 0 && !widget.isArrayOject) {
-      rowItems.add(Expanded(flex: 1, child: PropertyNameTextField(property)));
+      rowItems.add(
+          Expanded(flex: 1, child: PropertyNameTextField(property: property)));
     } else {
       rowItems.add(_emptyWidget);
     }
@@ -180,51 +179,43 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
                   left: BorderSide(color: borderColor, width: 1.0),
                 ),
               ),
-              child: Selector<ConfigSetting, PropertyAccessorType>(
-                builder: (BuildContext c, PropertyAccessorType value,
-                    Widget? child) {
-                  property.propertyAccessorType = value;
-                  return PropertyAccessorTypeDropdownButton(property);
-                },
-                selector: (BuildContext c, ConfigSetting vm) =>
-                    vm.propertyAccessorType,
-              ),
-            )
+              child: Obx(() {
+                property.propertyAccessorType.value =
+                    ConfigSetting().propertyAccessorType.value;
+                return PropertyAccessorTypeDropdownButton(property: property);
+              }))
           : Container(
               color: ColorPlate.borderGray,
             ),
     ));
 
-    rowItems.add(Selector<ConfigSetting, Tuple2<bool, bool>>(
-      builder: (BuildContext c, Tuple2<bool, bool> value, Widget? child) {
-        if (ConfigSetting().nullsafety) {
-          if (!ConfigSetting().smartNullable) {
-            property.nullable = value.item2;
-          }
-          return Expanded(
-            flex: 1,
-            child: finalDepth > 0 && !widget.isArrayOject
-                ? Container(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    decoration: const BoxDecoration(
-                      border: Border(
-                        left: BorderSide(color: borderColor, width: 1.0),
-                      ),
+    rowItems.add(Obx(() {
+      if (ConfigSetting().nullsafetyObs.value) {
+        return Expanded(
+          flex: 1,
+          child: finalDepth > 0 && !widget.isArrayOject
+              ? Container(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      left: BorderSide(color: borderColor, width: 1.0),
                     ),
-                    child: NullableCheckBox(property),
-                  )
-                : Container(
-                    color: ColorPlate.borderGray,
                   ),
-          );
-        } else {
-          property.nullable = true;
-          return Container();
-        }
-      },
-      selector: (BuildContext c, ConfigSetting vm) =>
-          Tuple2<bool, bool>(vm.nullsafety, vm.nullable),
-    ));
+                  child: NullableCheckBox(property: property),
+                )
+              : Container(
+                  color: ColorPlate.borderGray,
+                ),
+        );
+      } else {
+        // property.nullable = true;
+        // property.nullableObs.value = true;
+        return Container(
+          width: 0,
+          height: 0,
+        );
+      }
+    }));
 
     return Container(
       height: 50.0,
@@ -241,43 +232,45 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
   }
 }
 
-class ClassNameTextField extends StatefulWidget {
-  const ClassNameTextField(this.property);
-
+class ClassNameTextField extends StatelessWidget {
+  const ClassNameTextField({
+    Key? key,
+    required this.property,
+  }) : super(key: key);
   final DartObject property;
-
-  @override
-  _ClassNameTextFieldState createState() => _ClassNameTextFieldState();
-}
-
-class _ClassNameTextFieldState extends State<ClassNameTextField> {
   @override
   Widget build(BuildContext context) {
     return Row(
       children: <Widget>[
-        Container(
-          padding: const EdgeInsets.only(right: 4),
-          child: Icon(
-            Icons.label,
-            size: SysSize.normal,
-            color: isNullOrWhiteSpace(widget.property.className)
-                ? Colors.red
-                : Colors.blue,
-          ),
-        ),
+        Obx(() {
+          return Tooltip(
+            message: property.className.value.isNullOrEmpty
+                ? appLocalizations.classNameAssert(property.uid)
+                : property.error.value,
+            child: Container(
+              padding: const EdgeInsets.only(right: 4),
+              child: Icon(
+                Icons.label,
+                size: SysSize.normal,
+                color: property.error.value.isNotEmpty ||
+                        property.className.value.isNullOrEmpty
+                    ? Colors.red
+                    : Colors.blue,
+              ),
+            ),
+          );
+        }),
         Expanded(
           child: TextField(
             decoration: const InputDecoration(
               border: InputBorder.none,
             ),
-            controller: TextEditingController()
-              ..text = widget.property.className,
+            controller: property.classNameTextEditingController,
             onChanged: (String value) {
-              final String oldValue = widget.property.className;
-              widget.property.className = value;
-              if (value != oldValue &&
-                  (isNullOrWhiteSpace(value) || isNullOrWhiteSpace(oldValue))) {
-                setState(() {});
+              if (property.className.value != value) {
+                property.className.value = value;
+                property.error.value = '';
+                property.duplicateClass?.error.value = '';
               }
             },
           ),
@@ -287,146 +280,131 @@ class _ClassNameTextFieldState extends State<ClassNameTextField> {
   }
 }
 
-class PropertyNameTextField extends StatefulWidget {
-  const PropertyNameTextField(this.property);
-
+class PropertyNameTextField extends StatelessWidget {
+  const PropertyNameTextField({Key? key, required this.property})
+      : super(key: key);
   final DartProperty property;
-
-  @override
-  _PropertyNameTextFieldState createState() => _PropertyNameTextFieldState();
-}
-
-class _PropertyNameTextFieldState extends State<PropertyNameTextField> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: double.infinity,
-      padding: const EdgeInsets.only(left: 8.0),
-      decoration: BoxDecoration(
-        color: isNullOrWhiteSpace(widget.property.name) ? Colors.red : null,
-        border: const Border(
-          left: BorderSide(
-            color: ColorPlate.borderGray,
-            width: 1.0,
+    return Row(
+      children: <Widget>[
+        Obx(() {
+          if (property.name.value.isNullOrEmpty) {
+            return Tooltip(
+              message:
+                  appLocalizations.propertyNameAssert('').replaceAll(':', ''),
+              child: Container(
+                padding: const EdgeInsets.only(right: 4),
+                child: const Icon(
+                  Icons.label,
+                  size: SysSize.normal,
+                  color: Colors.red,
+                ),
+              ),
+            );
+          }
+
+          return Container();
+        }),
+        Expanded(
+            child: TextField(
+          controller: property.nameTextEditingController,
+          decoration: const InputDecoration(
+            border: InputBorder.none,
           ),
-        ),
-      ),
-      child: TextField(
-        controller: TextEditingController()..text = widget.property.name,
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-        ),
-        onChanged: (String value) {
-          final String oldValue = widget.property.name;
-          widget.property.name = value;
-          if (value != oldValue &&
-              (isNullOrWhiteSpace(value) || isNullOrWhiteSpace(oldValue))) {
-            setState(() {});
-          }
+          onChanged: (String value) {
+            if (property.name.value != value) {
+              property.name.value = value;
+            }
+          },
+        )),
+      ],
+    );
+  }
+}
+
+class NullableCheckBox extends StatelessWidget {
+  const NullableCheckBox({
+    Key? key,
+    required this.property,
+  }) : super(key: key);
+  final DartProperty property;
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return StCheckBox(
+        title: appLocalizations.nullable,
+        value: property.nullableObs.value,
+        onChanged: (bool value) {
+          property.nullable = value;
+          property.nullableObs.value = value;
         },
-      ),
-    );
+      );
+    });
   }
 }
 
-class NullableCheckBox extends StatefulWidget {
-  const NullableCheckBox(this.property);
-
+class PropertyAccessorTypeDropdownButton extends StatelessWidget {
+  const PropertyAccessorTypeDropdownButton({
+    Key? key,
+    required this.property,
+  }) : super(key: key);
   final DartProperty property;
-
-  @override
-  _NullableCheckBoxState createState() => _NullableCheckBoxState();
-}
-
-class _NullableCheckBoxState extends State<NullableCheckBox> {
   @override
   Widget build(BuildContext context) {
-    return StCheckBox(
-      title: I18n.of(context).nullable,
-      value: widget.property.nullable,
-      onChanged: (bool value) {
-        setState(() {
-          widget.property.nullable = value;
-        });
-      },
-    );
+    return Obx(() {
+      return DropdownButton<PropertyAccessorType>(
+          onChanged: (PropertyAccessorType? value) {
+            property.propertyAccessorType.value = value!;
+          },
+          underline: Container(),
+          value: property.propertyAccessorType.value,
+          items: PropertyAccessorType.values
+              .where((PropertyAccessorType element) =>
+                  element == PropertyAccessorType.none ||
+                  element == PropertyAccessorType.final_)
+              .map<DropdownMenuItem<PropertyAccessorType>>(
+                  (PropertyAccessorType f) =>
+                      DropdownMenuItem<PropertyAccessorType>(
+                        value: f,
+                        child: Text(f
+                            .toString()
+                            .replaceAll('PropertyAccessorType.', '')
+                            .replaceAll('_', '')
+                            .toLowerCase()),
+                      ))
+              .toList());
+    });
   }
 }
 
-class PropertyAccessorTypeDropdownButton extends StatefulWidget {
-  const PropertyAccessorTypeDropdownButton(this.property);
-
+class DartTypeDropdownButton extends StatelessWidget {
+  const DartTypeDropdownButton({
+    Key? key,
+    required this.property,
+  }) : super(key: key);
   final DartProperty property;
 
   @override
-  _PropertyAccessorTypeDropdownButtonState createState() =>
-      _PropertyAccessorTypeDropdownButtonState();
-}
-
-class _PropertyAccessorTypeDropdownButtonState
-    extends State<PropertyAccessorTypeDropdownButton> {
-  @override
   Widget build(BuildContext context) {
-    return DropdownButton<PropertyAccessorType>(
-        onChanged: (PropertyAccessorType? value) {
-          if (widget.property.propertyAccessorType != value) {
-            setState(() {
-              widget.property.propertyAccessorType = value!;
-            });
-          }
+    return Obx(() {
+      return DropdownButton<DartType>(
+        onChanged: (DartType? value) {
+          property.type.value = value!;
         },
         underline: Container(),
-        value: widget.property.propertyAccessorType,
-        items: PropertyAccessorType.values
-            .where((PropertyAccessorType element) =>
-                element == PropertyAccessorType.none ||
-                element == PropertyAccessorType.final_)
-            .map<DropdownMenuItem<PropertyAccessorType>>(
-                (PropertyAccessorType f) =>
-                    DropdownMenuItem<PropertyAccessorType>(
+        value: property.type.value == DartType.Null
+            ? DartType.Object
+            : property.type.value,
+        items: DartType.values
+            .where((DartType e) => e != DartType.Null)
+            .map<DropdownMenuItem<DartType>>(
+                (DartType f) => DropdownMenuItem<DartType>(
                       value: f,
-                      child: Text(f
-                          .toString()
-                          .replaceAll('PropertyAccessorType.', '')
-                          .replaceAll('_', '')
-                          .toLowerCase()),
+                      child: Text(f.text),
                     ))
-            .toList());
-  }
-}
-
-class DartTypeDropdownButton extends StatefulWidget {
-  const DartTypeDropdownButton(this.property);
-
-  final DartProperty property;
-
-  @override
-  _DartTypeDropdownButtonState createState() => _DartTypeDropdownButtonState();
-}
-
-class _DartTypeDropdownButtonState extends State<DartTypeDropdownButton> {
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton<DartType>(
-      onChanged: (DartType? value) {
-        if (widget.property.type != value) {
-          setState(() {
-            widget.property.type = value!;
-          });
-        }
-      },
-      underline: Container(),
-      value: widget.property.type == DartType.Null
-          ? DartType.Object
-          : widget.property.type,
-      items: DartType.values
-          .where((DartType e) => e != DartType.Null)
-          .map<DropdownMenuItem<DartType>>(
-              (DartType f) => DropdownMenuItem<DartType>(
-                    value: f,
-                    child: Text(f.text),
-                  ))
-          .toList(),
-    );
+            .toList(),
+      );
+    });
   }
 }

@@ -2,15 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-//import 'package:json_to_dart/utils/camel_under_score_converter.dart';
-import 'package:nested/nested.dart';
-import 'package:oktoast/oktoast.dart';
-import 'package:provider/provider.dart';
-
+import 'main_controller.dart';
 import 'models/config.dart';
-import 'models/json_to_dart_controller.dart';
-import 'navigator/navigator.dart';
 import 'pages/json_text_field.dart';
 import 'pages/json_tree.dart';
 import 'pages/json_tree_header.dart';
@@ -22,43 +18,53 @@ Future<void> main() async {
   //print(correctName('-0dd-jj/j.k-l0'));
   await Hive.initFlutter();
   await ConfigSetting().init();
+  Get.put(MainController());
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final JsonToDartController controller = JsonToDartController();
   @override
   Widget build(BuildContext context) {
-    return OKToast(
-      radius: 4,
-      backgroundColor: ColorPlate.black.withOpacity(0.6),
-      child: MultiProvider(
-          providers: <SingleChildWidget>[
-            ChangeNotifierProvider<JsonToDartController>.value(
-              value: controller,
-            ),
-            ChangeNotifierProvider<ConfigSetting>.value(
-              value: ConfigSetting(),
-            )
-          ],
-          child: Selector<ConfigSetting, Locale>(
-            selector: (BuildContext c, ConfigSetting vm) => vm.locale,
-            builder: (BuildContext c, Locale value, Widget? child) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                title: 'Json To Dart',
-                theme: ThemeData(
-                  primarySwatch: Colors.blue,
-                ),
-                navigatorKey: AppNavigator().key,
-                home: const MyHomePage(title: 'Json To Dart'),
-                localizationsDelegates: AppLocalizations.localizationsDelegates,
-                supportedLocales: AppLocalizations.supportedLocales,
-                locale: ConfigSetting().locale,
-              );
-            },
-          )),
-    );
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Json To Dart',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      builder: FlutterSmartDialog.init(),
+      home: const MyHomePage(title: 'Json To Dart'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: ConfigSetting().locale.value,
+    )
+
+        // MultiProvider(
+        //     providers: <SingleChildWidget>[
+        //       ChangeNotifierProvider<JsonToDartController>.value(
+        //         value: controller,
+        //       ),
+        //       ChangeNotifierProvider<ConfigSetting>.value(
+        //         value: ConfigSetting(),
+        //       )
+        //     ],
+        //     child: Selector<ConfigSetting, Locale>(
+        //       selector: (BuildContext c, ConfigSetting vm) => vm.locale,
+        //       builder: (BuildContext c, Locale value, Widget? child) {
+        //         return MaterialApp(
+        //           debugShowCheckedModeBanner: false,
+        //           title: 'Json To Dart',
+        //           theme: ThemeData(
+        //             primarySwatch: Colors.blue,
+        //           ),
+        //           navigatorKey: AppNavigator().key,
+        //           home: const MyHomePage(title: 'Json To Dart'),
+        //           localizationsDelegates: AppLocalizations.localizationsDelegates,
+        //           supportedLocales: AppLocalizations.supportedLocales,
+        //           locale: ConfigSetting().locale,
+        //         );
+        //       },
+        //     )),
+        ;
   }
 }
 
@@ -87,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Expanded(
                     child: JsonTextField(),
                   ),
-                  SettingWidget(),
+                  const SettingWidget(),
                 ],
               ),
             ),
@@ -105,7 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
               margin: const EdgeInsets.all(10.0),
               child: Column(
                 children: <Widget>[
-                  JsonTreeHeader(),
+                  const JsonTreeHeader(),
                   Expanded(
                     child: JsonTree(),
                   )
@@ -124,7 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
         (ConfigSetting().column1Width + ConfigSetting().column2Width);
     final double width1 = max(width * ConfigSetting().column1Width + x, 50.0);
     final double width2 = max(width * ConfigSetting().column2Width - x, 50.0);
-
     ConfigSetting().column1Width =
         (double.parse((width1 / (width1 + width2)).toStringAsFixed(5)) * 10000)
             .toInt();

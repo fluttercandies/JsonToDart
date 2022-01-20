@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/style/color.dart';
-import 'package:provider/provider.dart';
-
-import '../models/json_to_dart_controller.dart';
 import 'json_tree_item.dart';
 
 class JsonTree extends StatelessWidget {
@@ -18,16 +17,18 @@ class JsonTree extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: SingleChildScrollView(child: Consumer<JsonToDartController>(
-          builder: (BuildContext context, JsonToDartController controller, _) {
-        if (controller.dartObject == null || controller.dartObject?.uid == '') {
-          return Container();
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: _buildTree(controller.dartObject!),
-        );
-      })),
+      child: SingleChildScrollView(child: GetBuilder<MainController>(
+        builder: (MainController controller) {
+          if (controller.dartObject == null ||
+              controller.dartObject?.uid == '') {
+            return Container();
+          }
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: _buildTree(controller.dartObject!),
+          );
+        },
+      )),
     );
   }
 

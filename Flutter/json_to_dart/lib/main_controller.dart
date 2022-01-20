@@ -1,34 +1,54 @@
 import 'dart:convert';
 
 import 'package:dart_style/dart_style.dart';
+import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
-import 'package:json_to_dart/i18n.dart';
-import 'package:json_to_dart/models/config.dart';
-import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
+import 'package:json_to_dart/utils/extension.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
-import 'package:oktoast/oktoast.dart';
 
-import 'dart_object.dart';
+import 'models/config.dart';
+import 'models/dart_object.dart';
 
-class JsonToDartController extends ChangeNotifier {
+void showAlertDialog(String msg, [IconData data = Icons.warning]) {
+  SmartDialog.show(
+      widget: AlertDialog(
+    title: Icon(data),
+    content: Text(msg),
+    actions: <Widget>[
+      TextButton(
+        child: Text(appLocalizations.ok),
+        onPressed: () {
+          SmartDialog.dismiss();
+        },
+      ),
+    ],
+  ));
+}
+
+class MainController extends GetxController {
   final TextEditingController _textEditingController = TextEditingController();
 
-  TextEditingController get textEditingController => _textEditingController;
+  final TextEditingController fileHeaderHelpController = TextEditingController()
+    ..text = ConfigSetting().fileHeaderInfo;
 
   DartObject? dartObject;
 
   String get text => _textEditingController.text;
 
   set text(String value) {
-    _textEditingController.text;
+    _textEditingController.text = value;
   }
 
+  TextEditingController get textEditingController => _textEditingController;
+
   void formatJson() {
-    if (isNullOrWhiteSpace(text)) {
+    if (text.isNullOrEmpty) {
       return;
     }
     String inputText = text;
@@ -64,19 +84,18 @@ class JsonToDartController extends ChangeNotifier {
         ).objectKeys['Root']!
           ..decDepth();
       } else {
-        showToast(I18n.instance.illegalJson,
-            duration: const Duration(seconds: 5));
+        showAlertDialog(appLocalizations.illegalJson, Icons.error);
         return;
       }
       dartObject = extendedObject;
       _textEditingController.text =
           const JsonEncoder.withIndent('  ').convert(jsonObject);
-      notifyListeners();
+      update();
     } catch (e, stack) {
       print('$e');
       print('$stack');
-      showToast(I18n.instance.formatErrorInfo,
-          duration: const Duration(seconds: 5));
+      showAlertDialog(appLocalizations.formatErrorInfo, Icons.error);
+
       Clipboard.setData(ClipboardData(text: '$e\n$stack'));
     }
   }
@@ -84,14 +103,16 @@ class JsonToDartController extends ChangeNotifier {
   void generateDart() {
     printedObjects.clear();
     if (dartObject != null) {
-      final String? msg = dartObject?.hasEmptyProperties();
-      if (!isNullOrWhiteSpace(msg)) {
-        showToast(msg!);
+      try {
+        dartObject?.checkError(<DartObject>[]);
+      } on CheckError catch (e) {
+        showAlertDialog(e.msg);
         return;
       }
+
       final MyStringBuffer sb = MyStringBuffer();
       try {
-        if (!isNullOrWhiteSpace(ConfigSetting().fileHeaderInfo)) {
+        if (ConfigSetting().fileHeaderInfo.isNotEmpty) {
           String info = ConfigSetting().fileHeaderInfo;
           //[Date MM-dd HH:mm]
           try {
@@ -114,7 +135,7 @@ class JsonToDartController extends ChangeNotifier {
               }
             }
           } catch (e) {
-            showToast(I18n.instance.timeFormatError);
+            showAlertDialog(appLocalizations.timeFormatError, Icons.error);
           }
 
           sb.writeLine(info);
@@ -122,15 +143,15 @@ class JsonToDartController extends ChangeNotifier {
 
         sb.writeLine(DartHelper.jsonImport);
 
-        if (ConfigSetting().addMethod) {
-          if (ConfigSetting().enableArrayProtection) {
+        if (ConfigSetting().addMethod.value) {
+          if (ConfigSetting().enableArrayProtection.value) {
             sb.writeLine('import \'dart:developer\';');
             sb.writeLine(ConfigSetting().nullsafety
                 ? DartHelper.tryCatchMethodNullSafety
                 : DartHelper.tryCatchMethod);
           }
 
-          sb.writeLine(ConfigSetting().enableDataProtection
+          sb.writeLine(ConfigSetting().enableDataProtection.value
               ? ConfigSetting().nullsafety
                   ? DartHelper.asTMethodWithDataProtectionNullSafety
                   : DartHelper.asTMethodWithDataProtection
@@ -148,15 +169,21 @@ class JsonToDartController extends ChangeNotifier {
 
         _textEditingController.text = result;
         Clipboard.setData(ClipboardData(text: result));
-        showToast(I18n.instance.generateSucceed);
+        SmartDialog.showToast(appLocalizations.generateSucceed);
       } catch (e, stack) {
         print('$e');
         print('$stack');
         _textEditingController.text = sb.toString();
-        showToast(I18n.instance.generateFailed,
-            duration: const Duration(seconds: 5));
+        showAlertDialog(appLocalizations.generateFailed, Icons.error);
         Clipboard.setData(ClipboardData(text: '$e\n$stack'));
       }
+    }
+  }
+
+  void orderPropeties() {
+    if (dartObject != null) {
+      dartObject!.orderPropeties();
+      update();
     }
   }
 
@@ -166,23 +193,10 @@ class JsonToDartController extends ChangeNotifier {
       ..selection = TextSelection(baseOffset: 0, extentOffset: text.length - 1);
   }
 
-  void orderPropeties() {
-    if (dartObject != null) {
-      dartObject!.orderPropeties();
-      notifyListeners();
-    }
-  }
-
   void updateNameByNamingConventionsType() {
     if (dartObject != null) {
       dartObject!.updateNameByNamingConventionsType();
-      notifyListeners();
-    }
-  }
-
-  void updatePropertyAccessorType() {
-    if (dartObject != null) {
-      dartObject!.updatePropertyAccessorType();
+      update();
     }
   }
 
@@ -191,12 +205,10 @@ class JsonToDartController extends ChangeNotifier {
       dartObject!.updateNullable(nullable);
     }
   }
-}
 
-class ExtendedObjectValue extends ValueNotifier<DartObject?> {
-  ExtendedObjectValue(DartObject? value) : super(value);
-}
-
-class TextEditingControllerValue extends ValueNotifier<TextEditingController> {
-  TextEditingControllerValue(TextEditingController value) : super(value);
+  void updatePropertyAccessorType() {
+    if (dartObject != null) {
+      dartObject!.updatePropertyAccessorType();
+    }
+  }
 }

@@ -2,6 +2,7 @@
 ## 1.4.1
 
 * correct property and class name automatically(avoid keyword and special character).
+* support nest list object merge
 
 ## 1.4.0
 

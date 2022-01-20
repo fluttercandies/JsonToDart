@@ -1,4 +1,5 @@
-import 'package:json_to_dart/utils/my_string_buffer.dart';
+import 'package:dartx/dartx.dart';
+import 'package:json_to_dart/utils/extension.dart';
 
 final Set<String> symbolSet = <String>{' ', '.', '/', '\\', '-'};
 
@@ -8,7 +9,7 @@ final Set<String> symbolSet = <String>{' ', '.', '/', '\\', '-'};
 /// <param name="name"></param>
 /// <returns></returns>
 String underScoreName(String name) {
-  if (isNullOrWhiteSpace(name)) {
+  if (name.isNullOrEmpty) {
     return '';
   }
 
@@ -38,7 +39,7 @@ String underScoreName(String name) {
 
 String camelName(String name, {bool firstCharLowerCase = true}) {
   final StringBuffer result = StringBuffer();
-  if (isNullOrWhiteSpace(name)) {
+  if (name.isNullOrEmpty) {
     return '';
   }
   for (final String symbol in symbolSet) {
@@ -50,7 +51,7 @@ String camelName(String name, {bool firstCharLowerCase = true}) {
     if (result.length == 0 && firstCharLowerCase) {
       result.write(camel.toLowerCase());
     } else {
-      if (!isNullOrWhiteSpace(name)) {
+      if (!name.isNullOrEmpty) {
         result.write(camel.substring(0, 1).toUpperCase());
         result.write(camel.substring(1).toLowerCase());
       }
@@ -67,10 +68,6 @@ String camelName(String name, {bool firstCharLowerCase = true}) {
 /// <returns></returns>
 String upcaseCamelName(String name) {
   return camelName(name, firstCharLowerCase: false);
-}
-
-bool isNullOrWhiteSpace(String? value) {
-  return value == null || value == '';
 }
 
 String correctName(

@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
@@ -18,9 +20,11 @@ class DartProperty extends Equatable {
   }) {
     key = keyValuePair.key;
     this.uid = uid + '_' + keyValuePair.key;
-    propertyAccessorType = ConfigSetting().propertyAccessorType;
-    type = DartHelper.converDartType(keyValuePair.value.runtimeType);
-    name = keyValuePair.key;
+    nullableObs.value = nullable;
+    propertyAccessorType.value = ConfigSetting().propertyAccessorType.value;
+    type.value = DartHelper.converDartType(keyValuePair.value.runtimeType);
+    name.value = keyValuePair.key;
+    nameTextEditingController.text = name.value;
     value = keyValuePair.value;
   }
 
@@ -29,14 +33,18 @@ class DartProperty extends Equatable {
   late final String key;
   late final dynamic value;
   final MapEntry<String, dynamic> keyValuePair;
-  late String name;
-  late PropertyAccessorType propertyAccessorType;
-  bool nullable;
+  RxString name = ''.obs;
 
-  late DartType type;
+  TextEditingController nameTextEditingController = TextEditingController();
+  Rx<PropertyAccessorType> propertyAccessorType = PropertyAccessorType.none.obs;
+  bool nullable = false;
+  RxBool nullableObs = false.obs;
+  Rx<DartType> type = DartType.Object.obs;
+  RxString error = ''.obs;
 
   void updateNameByNamingConventionsType() {
-    switch (ConfigSetting().propertyNamingConventionsType) {
+    String name = this.name.value;
+    switch (ConfigSetting().propertyNamingConventionsType.value) {
       case PropertyNamingConventionsType.none:
         name = key;
         break;
@@ -60,19 +68,20 @@ class DartProperty extends Equatable {
     // double double;
     // List List;
     final String? type = (this is DartObject)
-        ? (this as DartObject).className
+        ? (this as DartObject).className.value
         : (value is List
             ? 'List'
             : DartHelper.converDartType(value?.runtimeType ?? Object).text);
-    name = correctName(name, type: type);
+    this.name.value = correctName(name, type: type);
   }
 
   void updatePropertyAccessorType() {
-    propertyAccessorType = ConfigSetting().propertyAccessorType;
+    propertyAccessorType.value = ConfigSetting().propertyAccessorType.value;
   }
 
   void updateNullable(bool nullable) {
     this.nullable = nullable;
+    nullableObs.value = nullable;
   }
 
   String getTypeString({String? className}) {
@@ -100,7 +109,8 @@ class DartProperty extends Equatable {
       ]);
     }
 
-    return result ?? (className ?? DartHelper.getDartTypeString(type, this));
+    return result ??
+        (className ?? DartHelper.getDartTypeString(type.value, this));
   }
 
   String getListCopy({String? className}) {
@@ -135,7 +145,7 @@ class DartProperty extends Equatable {
     ]);
     copy = copy.replaceFirst(
       'e',
-      ConfigSetting().nullsafety && !nullable ? name : name + '?',
+      ConfigSetting().nullsafety && !nullable ? name.value : name + '?',
     );
 
     if (!ConfigSetting().nullsafety) {
@@ -169,7 +179,7 @@ class DartProperty extends Equatable {
     sb.writeLine(
         " final  ${ConfigSetting().nullsafety ? typeString + '?' : typeString} $setName = jsonRes['$key'] is List ? ${typeString.substring('List'.length).replaceAll('?', '')}[]: null; ");
     sb.writeLine('    if($setName!=null) {');
-    final bool enableTryCatch = ConfigSetting().enableArrayProtection;
+    final bool enableTryCatch = ConfigSetting().enableArrayProtection.value;
     final String nonNullable = ConfigSetting().nullsafety ? '!' : '';
     int count = 0;
     String? result;

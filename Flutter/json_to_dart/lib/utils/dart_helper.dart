@@ -38,7 +38,7 @@ import 'dart:convert';''';
 
   static String setProperty(
       String setName, DartProperty item, String? className) {
-    return '    $setName : ${getUseAsT(getDartTypeString(item.type, item), "jsonRes['${item.key}']")},';
+    return '    $setName : ${getUseAsT(getDartTypeString(item.type.value, item), "jsonRes['${item.key}']")},';
     // if (appConfig.enableDataProtection) {
     //   return "    $setName : convertValueByType(jsonRes['${item.key}'],${item.value.runtimeType.toString()},stack:\"$className-${item.key}\"),";
     // } else {
@@ -63,8 +63,8 @@ import 'dart:convert';''';
   }
 
   static String getSetPropertyString(DartProperty property) {
-    final String name = property.name;
-    switch (property.propertyAccessorType) {
+    final String name = property.name.value;
+    switch (property.propertyAccessorType.value) {
       case PropertyAccessorType.none:
       case PropertyAccessorType.final_:
         return name;

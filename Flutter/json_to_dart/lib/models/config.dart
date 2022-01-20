@@ -1,184 +1,140 @@
 import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:json_to_dart/utils/enums.dart';
+
 part 'config.g.dart';
 
 /// flutter packages pub run build_runner build --delete-conflicting-outputs
 @HiveType(typeId: TypeIds.appSetting)
-class ConfigSetting extends Setting<ConfigSetting> with ChangeNotifier {
+class ConfigSetting extends Setting<ConfigSetting> {
   factory ConfigSetting() => _appSetting;
   ConfigSetting._();
   static final ConfigSetting _appSetting = ConfigSetting._();
+  @HiveField(0)
+  RxBool addMethod = true.obs;
+  @HiveField(1)
+  int column1Width = 2;
+
+  @HiveField(2)
+  int column2Width = 3;
+
+  @HiveField(3)
+  RxBool enableArrayProtection = false.obs;
+
+  @HiveField(4)
+  RxBool enableDataProtection = false.obs;
+
+  @HiveField(5)
+  String fileHeaderInfo = '';
+
+  @HiveField(6)
+  RxInt traverseArrayCount = 1.obs;
+  @HiveField(7)
+  Rx<PropertyNamingConventionsType> propertyNamingConventionsType =
+      PropertyNamingConventionsType.camelCase.obs;
+  @HiveField(8)
+  Rx<PropertyAccessorType> propertyAccessorType = PropertyAccessorType.none.obs;
+  @HiveField(9)
+  Rx<PropertyNameSortingType> propertyNameSortingType =
+      PropertyNameSortingType.none.obs;
+
+  @HiveField(10, defaultValue: false)
+  bool nullsafety = false;
+  RxBool nullsafetyObs = false.obs;
+
+  @HiveField(11, defaultValue: true)
+  bool nullable = true;
+  RxBool nullableObs = true.obs;
+
+  @HiveField(12)
+  Rx<Locale> locale = const Locale.fromSubtags(languageCode: 'en').obs;
+
+  @HiveField(13, defaultValue: false)
+  bool smartNullable = false;
+  RxBool smartNullableObs = false.obs;
+  @HiveField(14)
+  RxBool addCopyMethod = false.obs;
 
   @override
   Future<void> init({
     TypeAdapter<ConfigSetting>? adapter,
     ConfigSetting? defaultValue,
   }) async {
-    Hive.registerAdapter(PropertyAccessorTypeAdapter());
-    Hive.registerAdapter(PropertyNamingConventionsTypeAdapter());
-    Hive.registerAdapter(PropertyNameSortingTypeAdapter());
-    Hive.registerAdapter(LocaleAdapter());
+    Hive.registerAdapter(RxTypeAdapter<PropertyAccessorType>(5));
+    Hive.registerAdapter(RxTypeAdapter<PropertyNamingConventionsType>(6));
+    Hive.registerAdapter(RxTypeAdapter<PropertyNameSortingType>(7));
+    Hive.registerAdapter(RxTypeAdapter<Locale>(8));
+    Hive.registerAdapter(RxTypeAdapter<int>(9));
+    Hive.registerAdapter(RxTypeAdapter<String>(10));
+    Hive.registerAdapter(RxTypeAdapter<bool>(11));
     await super.init(adapter: ConfigSettingAdapter(), defaultValue: this);
   }
-
-  @HiveField(
-    0,
-    defaultValue: true,
-  )
-  bool addMethod = true;
-  @HiveField(
-    1,
-    defaultValue: 2,
-  )
-  int column1Width = 2;
-  @HiveField(
-    2,
-    defaultValue: 3,
-  )
-  int column2Width = 3;
-  @HiveField(
-    3,
-    defaultValue: false,
-  )
-  bool enableArrayProtection = false;
-  @HiveField(
-    4,
-    defaultValue: false,
-  )
-  bool enableDataProtection = false;
-  @HiveField(
-    5,
-    defaultValue: '',
-  )
-  String fileHeaderInfo = '';
-  @HiveField(
-    6,
-    defaultValue: 1,
-  )
-  int traverseArrayCount = 1;
-  @HiveField(
-    7,
-    defaultValue: PropertyNamingConventionsType.camelCase,
-  )
-  PropertyNamingConventionsType propertyNamingConventionsType =
-      PropertyNamingConventionsType.camelCase;
-
-  PropertyAccessorType _propertyAccessorType = PropertyAccessorType.none;
-  @HiveField(
-    8,
-    defaultValue: PropertyAccessorType.none,
-  )
-  PropertyAccessorType get propertyAccessorType => _propertyAccessorType;
-  @HiveField(
-    8,
-    defaultValue: PropertyAccessorType.none,
-  )
-  set propertyAccessorType(PropertyAccessorType value) {
-    if (_propertyAccessorType != value) {
-      _propertyAccessorType = value;
-      notifyListeners();
-    }
-  }
-
-  @HiveField(
-    9,
-    defaultValue: PropertyNameSortingType.none,
-  )
-  PropertyNameSortingType propertyNameSortingType =
-      PropertyNameSortingType.none;
-
-  bool _nullsafety = false;
-  @HiveField(
-    10,
-    defaultValue: false,
-  )
-  bool get nullsafety => _nullsafety;
-  @HiveField(
-    10,
-    defaultValue: false,
-  )
-  set nullsafety(bool value) {
-    if (_nullsafety != value) {
-      _nullsafety = value;
-      notifyListeners();
-    }
-  }
-
-  bool _nullable = true;
-  @HiveField(
-    11,
-    defaultValue: true,
-  )
-  bool get nullable => _nullable;
-  @HiveField(
-    11,
-    defaultValue: true,
-  )
-  set nullable(bool value) {
-    if (_nullable != value) {
-      _nullable = value;
-      notifyListeners();
-    }
-  }
-
-  Locale _locale = const Locale.fromSubtags(languageCode: 'en');
-  @HiveField(
-    12,
-    defaultValue: Locale.fromSubtags(languageCode: 'en'),
-  )
-  Locale get locale => _locale;
-  @HiveField(
-    12,
-    defaultValue: Locale.fromSubtags(languageCode: 'en'),
-  )
-  set locale(Locale value) {
-    // fix hive error
-    // we change zh_Hans to zh
-    if (value.languageCode == 'zh' && value.scriptCode == 'Hans') {
-      value = const Locale.fromSubtags(
-        languageCode: 'zh',
-      );
-    }
-    if (_locale != value) {
-      _locale = value;
-      notifyListeners();
-    }
-  }
-
-  bool _smartNullable = false;
-  @HiveField(
-    13,
-    defaultValue: false,
-  )
-  bool get smartNullable => _smartNullable;
-  @HiveField(
-    13,
-    defaultValue: false,
-  )
-  set smartNullable(bool value) {
-    if (_smartNullable != value) {
-      _smartNullable = value;
-      notifyListeners();
-    }
-  }
-
-  @HiveField(
-    14,
-    defaultValue: false,
-  )
-  bool addCopyMethod = false;
 }
 
-class TypeIds {
-  const TypeIds._();
-  static const int appSetting = 0;
-  static const int propertyNamingConventionsType = 1;
-  static const int propertyAccessorType = 2;
-  static const int propertyNameSortingType = 3;
-  static const int localeType = 4;
+class RxTypeAdapter<T> extends TypeAdapter<Rx<T>> {
+  RxTypeAdapter(this.typeId);
+  @override
+  final int typeId;
+  @override
+  Rx<T> read(BinaryReader reader) {
+    if (0 is T) {
+      return reader.readInt().obs as Rx<T>;
+    } else if (true is T) {
+      return reader.readBool().obs as Rx<T>;
+    } else if ('' is T) {
+      return reader.readString().obs as Rx<T>;
+    } else if (PropertyAccessorType.none is T) {
+      return PropertyAccessorType.values[reader.readInt()].obs as Rx<T>;
+    } else if (PropertyNamingConventionsType.none is T) {
+      return PropertyNamingConventionsType.values[reader.readInt()].obs
+          as Rx<T>;
+    } else if (PropertyNameSortingType.none is T) {
+      return PropertyNameSortingType.values[reader.readInt()].obs as Rx<T>;
+    } else if (T.toString() == 'Locale') {
+      final Map<String, dynamic> map =
+          jsonDecode(reader.readString()) as Map<String, dynamic>;
+      return Locale.fromSubtags(
+        languageCode: map['languageCode']!.toString(),
+        scriptCode: map['scriptCode']?.toString(),
+        countryCode: map['countryCode']?.toString(),
+      ).obs as Rx<T>;
+    } else {
+      throw Exception('not support');
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, Rx<T> obj) {
+    if (obj.value is PropertyAccessorType) {
+      writer.writeInt(PropertyAccessorType.values
+          .indexOf(obj.value as PropertyAccessorType));
+    } else if (obj.value is PropertyNamingConventionsType) {
+      writer.writeInt(PropertyNamingConventionsType.values
+          .indexOf(obj.value as PropertyNamingConventionsType));
+    } else if (obj.value is PropertyNameSortingType) {
+      writer.writeInt(PropertyNameSortingType.values
+          .indexOf(obj.value as PropertyNameSortingType));
+    } else if (obj.value is Locale) {
+      final Locale locale = obj.value as Locale;
+      writer.writeString(jsonEncode(
+        <String, String>{
+          'languageCode': locale.languageCode,
+          if (locale.scriptCode != null) 'scriptCode': locale.scriptCode!,
+          if (locale.countryCode != null) 'countryCode': locale.countryCode!,
+        },
+      ));
+    } else if (obj.value is bool) {
+      writer.writeBool(obj.value as bool);
+    } else if (obj.value is int) {
+      writer.writeInt(obj.value as int);
+    } else if (obj.value is String) {
+      writer.writeString(obj.value as String);
+    } else {
+      throw Exception('not support');
+    }
+  }
 }
 
 class Setting<T extends HiveObject> extends HiveObject {
@@ -193,79 +149,11 @@ class Setting<T extends HiveObject> extends HiveObject {
   }
 }
 
-class PropertyAccessorTypeAdapter extends TypeAdapter<PropertyAccessorType> {
-  @override
-  final int typeId = TypeIds.propertyAccessorType;
-
-  @override
-  PropertyAccessorType read(BinaryReader reader) {
-    final int index = reader.readInt();
-    return PropertyAccessorType.values[index];
-  }
-
-  @override
-  void write(BinaryWriter writer, PropertyAccessorType obj) {
-    writer.writeInt(PropertyAccessorType.values.indexOf(obj));
-  }
-}
-
-class PropertyNamingConventionsTypeAdapter
-    extends TypeAdapter<PropertyNamingConventionsType> {
-  @override
-  final int typeId = TypeIds.propertyNamingConventionsType;
-
-  @override
-  PropertyNamingConventionsType read(BinaryReader reader) {
-    final int index = reader.readInt();
-    return PropertyNamingConventionsType.values[index];
-  }
-
-  @override
-  void write(BinaryWriter writer, PropertyNamingConventionsType obj) {
-    writer.writeInt(PropertyNamingConventionsType.values.indexOf(obj));
-  }
-}
-
-class PropertyNameSortingTypeAdapter
-    extends TypeAdapter<PropertyNameSortingType> {
-  @override
-  final int typeId = TypeIds.propertyNameSortingType;
-
-  @override
-  PropertyNameSortingType read(BinaryReader reader) {
-    final int index = reader.readInt();
-    return PropertyNameSortingType.values[index];
-  }
-
-  @override
-  void write(BinaryWriter writer, PropertyNameSortingType obj) {
-    writer.writeInt(PropertyNameSortingType.values.indexOf(obj));
-  }
-}
-
-class LocaleAdapter extends TypeAdapter<Locale> {
-  @override
-  Locale read(BinaryReader reader) {
-    final Map<String, dynamic> map =
-        jsonDecode(reader.readString()) as Map<String, dynamic>;
-    return Locale.fromSubtags(
-      languageCode: map['languageCode']!.toString(),
-      scriptCode: map['scriptCode']?.toString(),
-      countryCode: map['countryCode']?.toString(),
-    );
-  }
-
-  @override
-  int get typeId => TypeIds.localeType;
-
-  @override
-  void write(BinaryWriter writer, Locale obj) {
-    writer.writeString(jsonEncode(
-      <String, String>{
-        'languageCode': obj.languageCode,
-        if (obj.scriptCode != null) 'scriptCode': obj.scriptCode!,
-        if (obj.countryCode != null) 'countryCode': obj.countryCode!,
-      },
-    ));
-  }
+class TypeIds {
+  const TypeIds._();
+  static const int appSetting = 0;
+  static const int propertyNamingConventionsType = 1;
+  static const int propertyAccessorType = 2;
+  static const int propertyNameSortingType = 3;
+  static const int localeType = 4;
 }

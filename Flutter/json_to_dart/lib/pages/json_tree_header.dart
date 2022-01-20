@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:json_to_dart/i18n.dart';
+import 'package:get/get.dart';
+import 'package:json_to_dart/main_controller.dart';
+
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/text.dart';
 import 'package:json_to_dart/utils/enums.dart';
-import 'package:provider/provider.dart';
+import 'package:json_to_dart/utils/extension.dart';
 
 import '../models/config.dart';
 import '../widget/checkBox.dart';
 
-class JsonTreeHeader extends StatefulWidget {
-  @override
-  _JsonTreeHeaderState createState() => _JsonTreeHeaderState();
-}
+class JsonTreeHeader extends StatelessWidget {
+  const JsonTreeHeader({Key? key}) : super(key: key);
 
-class _JsonTreeHeaderState extends State<JsonTreeHeader> {
   @override
   Widget build(BuildContext context) {
-    final AppLocalizations appLocalizations = I18n.of(context);
     return Row(
       children: <Widget>[
         const Expanded(
@@ -63,59 +60,60 @@ class _JsonTreeHeaderState extends State<JsonTreeHeader> {
         Expanded(
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
-            child: DropdownButton<PropertyAccessorType>(
-              value: ConfigSetting().propertyAccessorType,
-              underline: Container(),
-              items: PropertyAccessorType.values
-                  .where((PropertyAccessorType element) =>
-                      element == PropertyAccessorType.none ||
-                      element == PropertyAccessorType.final_)
-                  .map<DropdownMenuItem<PropertyAccessorType>>(
-                      (PropertyAccessorType f) =>
-                          DropdownMenuItem<PropertyAccessorType>(
-                            value: f,
-                            child: Text(f
-                                .toString()
-                                .replaceAll('PropertyAccessorType.', '')
-                                .replaceAll('_', '')
-                                .toLowerCase()),
-                          ))
-                  .toList(),
-              onChanged: (PropertyAccessorType? value) {
-                setState(() {
+            child: Obx(() {
+              return DropdownButton<PropertyAccessorType>(
+                value: ConfigSetting().propertyAccessorType.value,
+                underline: Container(),
+                items: PropertyAccessorType.values
+                    .where((PropertyAccessorType element) =>
+                        element == PropertyAccessorType.none ||
+                        element == PropertyAccessorType.final_)
+                    .map<DropdownMenuItem<PropertyAccessorType>>(
+                        (PropertyAccessorType f) =>
+                            DropdownMenuItem<PropertyAccessorType>(
+                              value: f,
+                              child: Text(f
+                                  .toString()
+                                  .replaceAll('PropertyAccessorType.', '')
+                                  .replaceAll('_', '')
+                                  .toLowerCase()),
+                            ))
+                    .toList(),
+                onChanged: (PropertyAccessorType? value) {
                   //controller.updatePropertyAccessorType();
-                  ConfigSetting().propertyAccessorType = value!;
+                  ConfigSetting().propertyAccessorType.value = value!;
                   ConfigSetting().save();
-                });
-              },
-            ),
+                },
+              );
+            }),
           ),
           flex: 1,
         ),
-        Selector<ConfigSetting, bool>(
-            builder: (BuildContext c, bool value, Widget? child) {
-              if (value) {
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: StCheckBox(
-                      title: I18n.of(context).nullable,
-                      value: ConfigSetting().nullable,
-                      onChanged: (bool value) {
-                        setState(() {
-                          ConfigSetting().nullable = value;
-                          ConfigSetting().save();
-                        });
-                      },
-                    ),
-                  ),
-                  flex: 1,
-                );
-              } else {
-                return Container();
-              }
-            },
-            selector: (BuildContext c, ConfigSetting vm) => vm.nullsafety)
+        Obx(() {
+          if (ConfigSetting().nullsafetyObs.value) {
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: StCheckBox(
+                  title: appLocalizations.nullable,
+                  value: ConfigSetting().nullableObs.value,
+                  onChanged: (bool value) {
+                    ConfigSetting().nullable = value;
+                    ConfigSetting().save();
+                    ConfigSetting().nullableObs.value = value;
+                    Get.find<MainController>().updateNullable(value);
+                  },
+                ),
+              ),
+              flex: 1,
+            );
+          } else {
+            return Container(
+              width: 0,
+              height: 0,
+            );
+          }
+        }),
       ],
     );
   }

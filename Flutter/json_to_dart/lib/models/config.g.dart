@@ -16,30 +16,57 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return ConfigSetting()
-      ..addMethod = fields[0] == null ? true : fields[0] as bool
-      ..column1Width = fields[1] == null ? 2 : fields[1] as int
-      ..column2Width = fields[2] == null ? 3 : fields[2] as int
-      ..enableArrayProtection = fields[3] == null ? false : fields[3] as bool
-      ..enableDataProtection = fields[4] == null ? false : fields[4] as bool
-      ..fileHeaderInfo = fields[5] == null ? '' : fields[5] as String
-      ..traverseArrayCount = fields[6] == null ? 1 : fields[6] as int
-      ..propertyNamingConventionsType = fields[7] == null
-          ? PropertyNamingConventionsType.camelCase
-          : fields[7] as PropertyNamingConventionsType
-      ..propertyNameSortingType = fields[9] == null
-          ? PropertyNameSortingType.none
-          : fields[9] as PropertyNameSortingType
-      ..addCopyMethod = fields[14] == null ? false : fields[14] as bool
-      ..propertyAccessorType = fields[8] == null
-          ? PropertyAccessorType.none
-          : fields[8] as PropertyAccessorType
-      ..nullsafety = fields[10] == null ? false : fields[10] as bool
-      ..nullable = fields[11] == null ? true : fields[11] as bool
-      ..locale = fields[12] == null
-          ? const Locale.fromSubtags(languageCode: 'en')
-          : fields[12] as Locale
-      ..smartNullable = fields[13] == null ? false : fields[13] as bool;
+    final result = ConfigSetting();
+    if (fields[0] != null) {
+      result.addMethod = fields[0] as RxBool;
+    }
+    if (fields[1] != null) {
+      result.column1Width = fields[1] as int;
+    }
+    if (fields[2] != null) {
+      result.column2Width = fields[2] as int;
+    }
+    if (fields[3] != null) {
+      result.enableArrayProtection = fields[3] as RxBool;
+    }
+    if (fields[4] != null) {
+      result.enableDataProtection = fields[4] as RxBool;
+    }
+    if (fields[5] != null) {
+      result.fileHeaderInfo = fields[5] as String;
+    }
+    if (fields[6] != null) {
+      result.traverseArrayCount = fields[6] as RxInt;
+    }
+    if (fields[7] != null) {
+      result.propertyNamingConventionsType =
+          fields[7] as Rx<PropertyNamingConventionsType>;
+    }
+    if (fields[8] != null) {
+      result.propertyAccessorType = fields[8] as Rx<PropertyAccessorType>;
+    }
+    if (fields[9] != null) {
+      result.propertyNameSortingType = fields[9] as Rx<PropertyNameSortingType>;
+    }
+    if ((fields[10] ?? false) != null) {
+      result.nullsafety = fields[10] ?? false;
+    }
+
+    if ((fields[11] ?? true) != null) {
+      result.nullable = fields[11] ?? true;
+    }
+
+    if (fields[12] != null) {
+      result.locale = fields[12] as Rx<Locale>;
+    }
+    if ((fields[13] ?? false) != null) {
+      result.smartNullable = fields[13] ?? false;
+    }
+
+    if (fields[14] != null) {
+      result.addCopyMethod = fields[14] as RxBool;
+    }
+    return result;
   }
 
   @override
@@ -62,12 +89,10 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..write(obj.traverseArrayCount)
       ..writeByte(7)
       ..write(obj.propertyNamingConventionsType)
-      ..writeByte(9)
-      ..write(obj.propertyNameSortingType)
-      ..writeByte(14)
-      ..write(obj.addCopyMethod)
       ..writeByte(8)
       ..write(obj.propertyAccessorType)
+      ..writeByte(9)
+      ..write(obj.propertyNameSortingType)
       ..writeByte(10)
       ..write(obj.nullsafety)
       ..writeByte(11)
@@ -75,7 +100,9 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..writeByte(12)
       ..write(obj.locale)
       ..writeByte(13)
-      ..write(obj.smartNullable);
+      ..write(obj.smartNullable)
+      ..writeByte(14)
+      ..write(obj.addCopyMethod);
   }
 
   @override

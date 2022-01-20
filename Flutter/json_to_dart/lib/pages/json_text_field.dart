@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:json_to_dart/i18n.dart';
-import 'package:json_to_dart/models/json_to_dart_controller.dart';
+import 'package:get/get.dart';
+import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/style/color.dart';
-import 'package:provider/provider.dart';
+import 'package:json_to_dart/utils/extension.dart';
 
 class JsonTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final TextEditingController controller =
-        Provider.of<JsonToDartController>(context, listen: false)
-            .textEditingController;
-    final AppLocalizations appLocalizations = I18n.of(context);
+    final MainController controller = Get.find();
     return Container(
       margin: const EdgeInsets.only(top: 10.0),
       decoration: ShapeDecoration(
@@ -21,7 +17,7 @@ class JsonTextField extends StatelessWidget {
         color: ColorPlate.lightGray,
       ),
       child: TextField(
-        controller: controller,
+        controller: controller.textEditingController,
         maxLines: null,
         decoration: InputDecoration(
           border: InputBorder.none,
