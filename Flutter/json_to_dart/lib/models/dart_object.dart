@@ -1,11 +1,10 @@
-import 'package:dartx/dartx.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
-import 'package:json_to_dart/utils/extension.dart';
+import 'package:json_to_dart/utils/error_check/text_editing_controller.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
 
@@ -20,43 +19,38 @@ class DartObject extends DartProperty {
     String? uid,
     MapEntry<String, dynamic>? keyValuePair,
     required int depth,
-    DartObject? source,
     required bool nullable,
   }) : super(
-          uid: source?.uid ?? uid!,
-          keyValuePair: source?.keyValuePair ?? keyValuePair!,
-          depth: source?.depth ?? depth,
+          uid: uid!,
+          keyValuePair: keyValuePair!,
+          depth: depth,
           nullable: nullable,
         ) {
-    if (source != null) {
-      properties = source.properties;
-      objectKeys = source.objectKeys;
-      _jObject = (source.keyValuePair.value as Map<String, dynamic>?)?.map(
-          (String key, dynamic value) => MapEntry<String, _InnerObject>(
-              key,
-              _InnerObject(
-                  data: value,
-                  type: DartHelper.converDartType(value.runtimeType),
-                  nullable: DartHelper.converNullable(value))));
-      className = source.className;
-    } else {
-      properties = <DartProperty>[];
-      objectKeys = <String, DartObject>{};
-      _jObject = (this.keyValuePair.value as Map<String, dynamic>).map(
-          (String key, dynamic value) => MapEntry<String, _InnerObject>(
-              key,
-              _InnerObject(
-                  data: value,
-                  type: DartHelper.converDartType(value.runtimeType),
-                  nullable: DartHelper.converNullable(value))));
+    classNameTextEditingController =
+        ClassNameCheckerTextEditingController(this);
 
-      final String key = this.keyValuePair.key;
-      className.value = upcaseCamelName(key);
-      className.value = correctName(className.value, isClassName: true);
-      classNameTextEditingController.text = className.value;
-      initializeProperties();
-      updateNameByNamingConventionsType();
-    }
+    properties = <DartProperty>[];
+    objectKeys = <String, DartObject>{};
+    _jObject = (this.keyValuePair.value as Map<String, dynamic>).map(
+        (String key, dynamic value) => MapEntry<String, _InnerObject>(
+            key,
+            _InnerObject(
+                data: value,
+                type: DartHelper.converDartType(value.runtimeType),
+                nullable: DartHelper.converNullable(value))));
+
+    final String key = this.keyValuePair.key;
+    className.value = correctName(
+      upcaseCamelName(key),
+      isClassName: true,
+    );
+    classNameTextEditingController.text = className.value;
+    initializeProperties();
+    updateNameByNamingConventionsType();
+
+    Get.find<MainController>().allObjects.add(this);
+
+    updateError(className);
   }
 
   Map<String, _InnerObject>? _jObject;
@@ -69,9 +63,7 @@ class DartObject extends DartProperty {
 
   RxString className = ''.obs;
 
-  TextEditingController classNameTextEditingController =
-      TextEditingController();
-
+  late ClassNameCheckerTextEditingController classNameTextEditingController;
   late List<DartProperty> properties;
 
   late Map<String, DartObject> objectKeys;
@@ -206,11 +198,11 @@ class DartObject extends DartProperty {
                       ConfigSetting().smartNullable);
               _mergeObject![item.key] = existObject;
               needInitialize = true;
-            } else if (!existObject.isNull &&
-                !item.value.isNull &&
-                existObject.isList &&
+            } else if (existObject.isList &&
                 item.value.isList &&
-                (existObject.isEmpty || item.value.isEmpty)) {
+                ((existObject.isEmpty || item.value.isEmpty) ||
+                    // make sure Object will be merge
+                    (existObject.isObject || item.value.isObject))) {
               existObject = _InnerObject(
                 data: (item.value.data as List<dynamic>)
                   ..addAll(existObject.data as List<dynamic>),
@@ -506,43 +498,67 @@ class DartObject extends DartProperty {
   }
 
   void checkError(List<DartObject> dartObjects) {
-    final DartObject? sameClass = dartObjects.firstOrNullWhere(
-        (DartObject element) => element.className.value == className.value);
-    if (sameClass != null) {
-      sameClass.error.value = error.value = appLocalizations.duplicateClasses;
-      sameClass.duplicateClass = this;
-      duplicateClass = sameClass;
-      throw CheckError(sameClass.uid + '\n' + uid + '\n' + error.value);
-    } else {
-      dartObjects.add(this);
-    }
+    // for (final DartObject dartObject in dartObjects) {
+    //   if (dartObject.className.value == className.value) {
+    //     dartObject.classError.value =
+    //         classError.value = appLocalizations.duplicateClasses;
+    //     dartObject.duplicateClass = this;
+    //     duplicateClass = dartObject;
+    //     throw CheckError(
+    //       dartObject.uid +
+    //           '\n' +
+    //           uid +
+    //           '\n' +
+    //           appLocalizations.duplicateClasses,
+    //     );
+    //   }
+    // }
 
-    if (className.value.isNullOrEmpty) {
-      error.value = appLocalizations.classNameAssert(uid);
-      throw CheckError(error.value);
-    }
+    // if (className.value.isNullOrEmpty) {
+    //   classError.value = appLocalizations.classNameAssert(uid);
+    //   throw CheckError(appLocalizations.classNameAssert(uid));
+    // }
 
-    for (final DartProperty item in properties) {
-      if (item is DartObject) {
-        if (depth > 0 &&
-            !item.uid.endsWith('_Array') &&
-            item.name.value.isNullOrEmpty) {
-          error.value = appLocalizations.propertyNameAssert(item.uid);
-          throw CheckError(error.value);
-        }
-      } else if (item.name.value.isNullOrEmpty) {
-        error.value = appLocalizations.propertyNameAssert(item.uid);
-        throw CheckError(error.value);
-      }
-    }
+    // for (final DartProperty item in properties) {
+    //   if (item.name.value.isNullOrEmpty) {
+    //     propertyError.value = appLocalizations.propertyNameAssert(item.uid);
+    //     throw CheckError(propertyError.value);
+    //   } else if (item.name.value == className.value) {
+    //     sameName = item;
+    //     item.sameName = this;
+    //     classError.value = item.propertyError.value =
+    //         appLocalizations.properyNameClassNameError;
 
-    for (final MapEntry<String, DartObject> item in objectKeys.entries) {
-      item.value.checkError(dartObjects);
-    }
-  }
+    //     throw CheckError(uid + classError.value);
+    //   } else if (item is DartObject) {
+    //     if (depth > 0 &&
+    //         !item.uid.endsWith('_Array') &&
+    //         item.name.value.isNullOrEmpty) {
+    //       propertyError.value = appLocalizations.propertyNameAssert(item.uid);
+    //       throw CheckError(propertyError.value);
+    //     } else if (item.name.value == item.className.value) {
+    //       item.classError.value = item.propertyError.value =
+    //           appLocalizations.properyNameClassNameError;
+    //       item.sameName = item;
+    //       throw CheckError(item.uid + item.classError.value);
+    //     }
+    //   } else {
+    //     for (final DartObject dartObject in dartObjects) {
+    //       if (item.name.value == dartObject.className.value) {
+    //         dartObject.sameName = item;
+    //         item.sameName = dartObject;
+    //         dartObject.classError.value = item.propertyError.value =
+    //             appLocalizations.properyNameClassNameError;
+    //         throw CheckError(dartObject.classError.value);
+    //       }
+    //     }
+    //   }
+    // }
+    // dartObjects.add(this);
 
-  DartObject copy() {
-    return DartObject(source: this, depth: depth, nullable: nullable);
+    // for (final MapEntry<String, DartObject> item in objectKeys.entries) {
+    //   item.value.checkError(dartObjects);
+    // }
   }
 
   @override
@@ -550,6 +566,52 @@ class DartObject extends DartProperty {
         className,
         properties,
       ];
+
+  RxSet<String> classError = <String>{}.obs;
+
+  bool get hasClassError => classError.isNotEmpty;
+  @override
+  void updateError(RxString input) {
+    super.updateError(input);
+    // String errorInfo = '';
+
+    // if (duplicateClass != null) {
+    //   if (duplicateClass!.className != className) {
+    //     errorInfo = '';
+    //     duplicateClass!.classError.value = '';
+    //     duplicateClass!.duplicateClass = null;
+    //     duplicateClass = null;
+    //   }
+    // } else if (sameName != null) {
+    //   if (sameName is DartObject) {
+    //     if (className.value != sameName!.name.value &&
+    //         name.value != (sameName as DartObject).className.value) {
+    //       errorInfo = '';
+    //       (sameName as DartObject).classError.value = '';
+    //       sameName!.sameName = null;
+    //       sameName = null;
+    //     }
+    //   } else {
+    //     if (className.value != sameName!.name.value) {
+    //       errorInfo = '';
+    //       sameName!.propertyError.value = '';
+    //       sameName!.sameName = null;
+    //       sameName = null;
+    //     }
+    //   }
+    // } else if (className.isEmpty) {
+    //   errorInfo = appLocalizations.classNameAssert(uid);
+    // }
+
+    // if (name.isEmpty) {
+    //   propertyError.value =
+    //       appLocalizations.propertyNameAssert('').replaceAll(':', '');
+    // }
+
+    // classError.value = errorInfo;
+
+    //super.updateError();
+  }
 }
 
 class _InnerObject {
@@ -565,6 +627,7 @@ class _InnerObject {
   bool get isList => data is List;
   bool get isEmpty => isList && (data as List<dynamic>).isEmpty;
   bool get isNull => type.isNull;
+  bool get isObject => type == DartType.Object;
 }
 
 class CheckError implements Exception {

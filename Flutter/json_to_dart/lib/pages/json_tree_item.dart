@@ -1,4 +1,3 @@
-import 'package:dartx/dartx.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:json_to_dart/models/dart_object.dart';
@@ -244,18 +243,13 @@ class ClassNameTextField extends StatelessWidget {
       children: <Widget>[
         Obx(() {
           return Tooltip(
-            message: property.className.value.isNullOrEmpty
-                ? appLocalizations.classNameAssert(property.uid)
-                : property.error.value,
+            message: property.classError.join('\n'),
             child: Container(
               padding: const EdgeInsets.only(right: 4),
               child: Icon(
                 Icons.label,
                 size: SysSize.normal,
-                color: property.error.value.isNotEmpty ||
-                        property.className.value.isNullOrEmpty
-                    ? Colors.red
-                    : Colors.blue,
+                color: property.hasClassError ? Colors.red : Colors.blue,
               ),
             ),
           );
@@ -269,8 +263,7 @@ class ClassNameTextField extends StatelessWidget {
             onChanged: (String value) {
               if (property.className.value != value) {
                 property.className.value = value;
-                property.error.value = '';
-                property.duplicateClass?.error.value = '';
+                property.updateError(property.className);
               }
             },
           ),
@@ -289,10 +282,9 @@ class PropertyNameTextField extends StatelessWidget {
     return Row(
       children: <Widget>[
         Obx(() {
-          if (property.name.value.isNullOrEmpty) {
+          if (property.hasPropertyError) {
             return Tooltip(
-              message:
-                  appLocalizations.propertyNameAssert('').replaceAll(':', ''),
+              message: property.propertyError.join('\n'),
               child: Container(
                 padding: const EdgeInsets.only(right: 4),
                 child: const Icon(
@@ -315,6 +307,7 @@ class PropertyNameTextField extends StatelessWidget {
           onChanged: (String value) {
             if (property.name.value != value) {
               property.name.value = value;
+              property.updateError(property.name);
             }
           },
         )),

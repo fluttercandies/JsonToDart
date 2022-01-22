@@ -1,4 +1,6 @@
 import 'package:dartx/dartx.dart';
+import 'package:json_to_dart/models/dart_object.dart';
+import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/utils/extension.dart';
 
 final Set<String> symbolSet = <String>{' ', '.', '/', '\\', '-'};
@@ -73,7 +75,7 @@ String upcaseCamelName(String name) {
 String correctName(
   String name, {
   bool isClassName = false,
-  String? type,
+  DartProperty? dartProperty,
 }) {
   if (name.isEmpty) {
     return name;
@@ -97,8 +99,24 @@ String correctName(
     out = out.uid;
   }
 
-  if (type != null && out == type) {
-    out = out.uid;
+  // avoid property as following:
+  // int int;
+  // Test Test;
+  // double double;
+  // List List;
+  // List<int> int;
+  if (dartProperty != null) {
+    if (dartProperty is DartObject && dartProperty.className.value == out) {
+      out = out.uid;
+    } else if (dartProperty.value is List) {
+      if (out == 'List') {
+        out = out.uid;
+      } else if (dartProperty.getTypeString().contains('<$out>')) {
+        out = out.uid;
+      }
+    } else if (dartProperty.getBaseTypeString() == out) {
+      out = out.uid;
+    }
   }
 
   return out;

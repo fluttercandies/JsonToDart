@@ -2,13 +2,13 @@
     "formatButtonLabel": "格式化",
     "generateButtonLabel": "生成",
     "settingButtonLabel": "设置",
-    "classNameAssert": "{name} 的 Class 名字为空或者空白。",
+    "classNameAssert": "{name} 的 Class 名字为空。",
     "@classNameAssert": {
       "placeholders": {
         "name": {}
       }
     },
-    "propertyNameAssert": "{name}: 属性名字为空或者空白。",
+    "propertyNameAssert": "{name}: 属性名字为空。",
     "@propertyNameAssert": {
       "placeholders": {
         "name": {}
@@ -42,5 +42,14 @@
     "addCopyMethod":"添加复制方法",
     "duplicateClasses":"包含重复的类",
     "warning":"警告",
-    "ok":"确认"
+    "ok":"确认",
+    "propertyCantSameAsClassName":"属性名不能为类名",
+    "keywordCheckFailed": "'{name}' 是关键字!",
+    "@keywordCheckFailed": {
+      "placeholders": {
+        "name": {}
+      }
+    },
+    "propertyCantSameAsType": "属性名不能跟类型相同",
+    "containsIllegalCharacters": "包含非法字符"                  
 }

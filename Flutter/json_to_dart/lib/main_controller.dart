@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
+import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/extension.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
@@ -47,7 +48,12 @@ class MainController extends GetxController {
 
   TextEditingController get textEditingController => _textEditingController;
 
+  List<DartProperty> allProperties = <DartProperty>[];
+  List<DartObject> allObjects = <DartObject>[];
+
   void formatJson() {
+    allProperties.clear();
+    allObjects.clear();
     if (text.isNullOrEmpty) {
       return;
     }
@@ -101,12 +107,26 @@ class MainController extends GetxController {
   }
 
   void generateDart() {
+    // allProperties.clear();
+    // allObjects.clear();
     printedObjects.clear();
     if (dartObject != null) {
-      try {
-        dartObject?.checkError(<DartObject>[]);
-      } on CheckError catch (e) {
-        showAlertDialog(e.msg);
+      final DartObject? errorObject = allObjects.firstOrNullWhere(
+          (DartObject element) =>
+              element.classError.isNotEmpty ||
+              element.propertyError.isNotEmpty);
+      if (errorObject != null) {
+        showAlertDialog(errorObject.classError.join('\n') +
+            '\n' +
+            errorObject.propertyError.join('\n'));
+        return;
+      }
+
+      final DartProperty? errorProperty = allProperties.firstOrNullWhere(
+          (DartProperty element) => element.propertyError.isNotEmpty);
+
+      if (errorProperty != null) {
+        showAlertDialog(errorProperty.propertyError.join('\n'));
         return;
       }
 

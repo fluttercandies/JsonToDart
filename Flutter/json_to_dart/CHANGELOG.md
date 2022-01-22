@@ -3,6 +3,7 @@
 
 * correct property and class name automatically(avoid keyword and special character).
 * support nest list object merge
+* add more friendly warning
 
 ## 1.4.0
 

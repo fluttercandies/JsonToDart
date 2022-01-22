@@ -141,7 +141,7 @@ class Setting<T extends HiveObject> extends HiveObject {
   @mustCallSuper
   Future<void> init({TypeAdapter<T>? adapter, T? defaultValue}) async {
     Hive.registerAdapter<T>(adapter!);
-    final String tType = runtimeType.toString();
+    final String tType = 'JsonToDart' + runtimeType.toString();
     final Box<T> box = await Hive.openBox<T>(tType);
     if ((box.isEmpty || box.getAt(0) == null) && defaultValue != null) {
       box.add(defaultValue);

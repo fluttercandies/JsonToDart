@@ -1,10 +1,14 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:get/get.dart';
+
+import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
+import 'package:json_to_dart/utils/error_check/error_checker.dart';
+import 'package:json_to_dart/utils/error_check/text_editing_controller.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
 
@@ -24,8 +28,16 @@ class DartProperty extends Equatable {
     propertyAccessorType.value = ConfigSetting().propertyAccessorType.value;
     type.value = DartHelper.converDartType(keyValuePair.value.runtimeType);
     name.value = keyValuePair.key;
+    nameTextEditingController = PropertyNameCheckerTextEditingController(this);
     nameTextEditingController.text = name.value;
     value = keyValuePair.value;
+    if (this is! DartObject) {
+      Get.find<MainController>().allProperties.add(this);
+    }
+
+    errors.add(EmptyErrorChecker(property: this));
+    errors.add(ValidityChecker(property: this));
+    updateError(name);
   }
 
   late String uid;
@@ -35,12 +47,44 @@ class DartProperty extends Equatable {
   final MapEntry<String, dynamic> keyValuePair;
   RxString name = ''.obs;
 
-  TextEditingController nameTextEditingController = TextEditingController();
+  late PropertyNameCheckerTextEditingController nameTextEditingController;
   Rx<PropertyAccessorType> propertyAccessorType = PropertyAccessorType.none.obs;
   bool nullable = false;
   RxBool nullableObs = false.obs;
   Rx<DartType> type = DartType.Object.obs;
-  RxString error = ''.obs;
+
+  RxSet<String> propertyError = <String>{}.obs;
+
+  List<DartErrorChecker> errors = <DartErrorChecker>[];
+
+  bool get hasPropertyError => propertyError.isNotEmpty;
+
+  /// property has the same name with some Class
+  DartProperty? sameName;
+
+  void updateError(RxString input) {
+    for (final DartErrorChecker error in errors) {
+      error.checkError(input);
+    }
+    // if (errorMap.isNotEmpty) {}
+
+    // String errorInfo = '';
+    // if (sameName != null && sameName is DartObject) {
+    //   if (sameName is DartObject) {
+    //     if (name.value != (sameName as DartObject).className.value) {
+    //       errorInfo = '';
+    //       (sameName as DartObject).classError.value = '';
+    //       sameName?.sameName = null;
+    //       sameName = null;
+    //     }
+    //   }
+    // }
+    // if (name.isEmpty) {
+    //   errorInfo = appLocalizations.propertyNameAssert('').replaceAll(':', '');
+    // }
+
+    // propertyError.value = errorInfo;
+  }
 
   void updateNameByNamingConventionsType() {
     String name = this.name.value;
@@ -62,17 +106,7 @@ class DartProperty extends Equatable {
         break;
     }
 
-    // avoid property as following:
-    // int int;
-    // Test Test;
-    // double double;
-    // List List;
-    final String? type = (this is DartObject)
-        ? (this as DartObject).className.value
-        : (value is List
-            ? 'List'
-            : DartHelper.converDartType(value?.runtimeType ?? Object).text);
-    this.name.value = correctName(name, type: type);
+    this.name.value = correctName(name, dartProperty: this);
   }
 
   void updatePropertyAccessorType() {
@@ -257,4 +291,18 @@ class DartProperty extends Equatable {
   String toString() {
     return 'DartProperty($key, $value, $nullable)';
   }
+}
+
+enum ErrorType {
+  /// property name is empty
+  propertyEmpty,
+
+  /// class name is empty
+  classEmpty,
+
+  /// there are same class name
+  duplicateClass,
+
+  /// one property name is the same as class name
+  snpc,
 }

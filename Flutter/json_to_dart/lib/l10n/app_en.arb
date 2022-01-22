@@ -1,14 +1,14 @@
 {
     "formatButtonLabel": "Format",
     "generateButtonLabel": "Generate",
-    "settingButtonLabel": "Setting",
-    "classNameAssert": "{name}'s class name is null or empty.",
+    "settingButtonLabel": "Setting",  
+    "classNameAssert": "{name}'s class name is empty.",
     "@classNameAssert": {
       "placeholders": {
         "name": {}
       }
     },
-    "propertyNameAssert": "{name}: property name is null or empty",
+    "propertyNameAssert": "{name}: property name is empty",
     "@propertyNameAssert": {
       "placeholders": {
         "name": {}
@@ -42,5 +42,14 @@
     "addCopyMethod":"Add Copy Method",
     "duplicateClasses":"There are duplicate classes",
     "warning":"Warning",
-    "ok":"OK"
+    "ok":"OK",
+    "propertyCantSameAsClassName":"property can't the same as Class name",
+    "keywordCheckFailed": "'{name}' is a key word!",
+    "@keywordCheckFailed": {
+      "placeholders": {
+        "name": {}
+      }
+    },
+    "propertyCantSameAsType": "property can't the same as Type",
+    "containsIllegalCharacters": "contains illegal characters"      
 }

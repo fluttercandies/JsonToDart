@@ -22,16 +22,17 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   dart_style: ^2.0.0
+  dartx: any
+  diff_match_patch: ^0.4.1  
   equatable: ^2.0.0
   flutter:
     sdk: flutter
   flutter_localizations:
-    sdk: flutter
-  flutter_smart_dialog: any    
-  hive: any
-  hive_flutter: any
-  dartx: any
+    sdk: flutter   
+  flutter_smart_dialog: any      
   get: any
+  hive: any
+  hive_flutter: any  
   intl: any
   nested: any
 
@@ -44,10 +45,11 @@ dev_dependencies:
   flutter_native_splash: ^1.1.7+1  
   flutter_test:
     sdk: flutter
-  hive_generator: 
-    git:
-      url: https://github.com/zmtzawqlp/hive.git
-      ref: hive_generator
+  hive_generator: any  
+  # hive_generator: 
+  #   git:
+  #     url: https://github.com/zmtzawqlp/hive.git
+  #     path: hive_generator
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
