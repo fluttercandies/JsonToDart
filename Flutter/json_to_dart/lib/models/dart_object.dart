@@ -4,6 +4,7 @@ import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/utils/camel_under_score_converter.dart';
 import 'package:json_to_dart/utils/dart_helper.dart';
 import 'package:json_to_dart/utils/enums.dart';
+import 'package:json_to_dart/utils/error_check/error_checker.dart';
 import 'package:json_to_dart/utils/error_check/text_editing_controller.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
@@ -49,7 +50,8 @@ class DartObject extends DartProperty {
     updateNameByNamingConventionsType();
 
     Get.find<MainController>().allObjects.add(this);
-
+    duplicateClassChecker = DuplicateClassChecker(this);
+    errors.add(duplicateClassChecker);
     updateError(className);
   }
 
@@ -59,7 +61,7 @@ class DartObject extends DartProperty {
   Map<String, _InnerObject>? get jObject =>
       _mergeObject != null ? _mergeObject! : _jObject;
 
-  DartObject? duplicateClass;
+  late DuplicateClassChecker duplicateClassChecker;
 
   RxString className = ''.obs;
 
@@ -565,53 +567,12 @@ class DartObject extends DartProperty {
   List<Object?> get props => <Object?>[
         className,
         properties,
+        uid,
       ];
 
   RxSet<String> classError = <String>{}.obs;
 
   bool get hasClassError => classError.isNotEmpty;
-  @override
-  void updateError(RxString input) {
-    super.updateError(input);
-    // String errorInfo = '';
-
-    // if (duplicateClass != null) {
-    //   if (duplicateClass!.className != className) {
-    //     errorInfo = '';
-    //     duplicateClass!.classError.value = '';
-    //     duplicateClass!.duplicateClass = null;
-    //     duplicateClass = null;
-    //   }
-    // } else if (sameName != null) {
-    //   if (sameName is DartObject) {
-    //     if (className.value != sameName!.name.value &&
-    //         name.value != (sameName as DartObject).className.value) {
-    //       errorInfo = '';
-    //       (sameName as DartObject).classError.value = '';
-    //       sameName!.sameName = null;
-    //       sameName = null;
-    //     }
-    //   } else {
-    //     if (className.value != sameName!.name.value) {
-    //       errorInfo = '';
-    //       sameName!.propertyError.value = '';
-    //       sameName!.sameName = null;
-    //       sameName = null;
-    //     }
-    //   }
-    // } else if (className.isEmpty) {
-    //   errorInfo = appLocalizations.classNameAssert(uid);
-    // }
-
-    // if (name.isEmpty) {
-    //   propertyError.value =
-    //       appLocalizations.propertyNameAssert('').replaceAll(':', '');
-    // }
-
-    // classError.value = errorInfo;
-
-    //super.updateError();
-  }
 }
 
 class _InnerObject {

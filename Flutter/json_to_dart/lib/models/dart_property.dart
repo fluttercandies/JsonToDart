@@ -28,6 +28,7 @@ class DartProperty extends Equatable {
     propertyAccessorType.value = ConfigSetting().propertyAccessorType.value;
     type.value = DartHelper.converDartType(keyValuePair.value.runtimeType);
     name.value = keyValuePair.key;
+
     nameTextEditingController = PropertyNameCheckerTextEditingController(this);
     nameTextEditingController.text = name.value;
     value = keyValuePair.value;
@@ -35,9 +36,8 @@ class DartProperty extends Equatable {
       Get.find<MainController>().allProperties.add(this);
     }
 
-    errors.add(EmptyErrorChecker(property: this));
-    errors.add(ValidityChecker(property: this));
-    updateError(name);
+    errors.add(EmptyErrorChecker(this));
+    errors.add(ValidityChecker(this));
   }
 
   late String uid;
@@ -59,31 +59,10 @@ class DartProperty extends Equatable {
 
   bool get hasPropertyError => propertyError.isNotEmpty;
 
-  /// property has the same name with some Class
-  DartProperty? sameName;
-
   void updateError(RxString input) {
     for (final DartErrorChecker error in errors) {
       error.checkError(input);
     }
-    // if (errorMap.isNotEmpty) {}
-
-    // String errorInfo = '';
-    // if (sameName != null && sameName is DartObject) {
-    //   if (sameName is DartObject) {
-    //     if (name.value != (sameName as DartObject).className.value) {
-    //       errorInfo = '';
-    //       (sameName as DartObject).classError.value = '';
-    //       sameName?.sameName = null;
-    //       sameName = null;
-    //     }
-    //   }
-    // }
-    // if (name.isEmpty) {
-    //   errorInfo = appLocalizations.propertyNameAssert('').replaceAll(':', '');
-    // }
-
-    // propertyError.value = errorInfo;
   }
 
   void updateNameByNamingConventionsType() {
@@ -107,6 +86,8 @@ class DartProperty extends Equatable {
     }
 
     this.name.value = correctName(name, dartProperty: this);
+    nameTextEditingController.text = this.name.value;
+    updateError(this.name);
   }
 
   void updatePropertyAccessorType() {
@@ -285,24 +266,11 @@ class DartProperty extends Equatable {
         nullable,
         propertyAccessorType,
         type,
+        uid,
       ];
 
   @override
   String toString() {
     return 'DartProperty($key, $value, $nullable)';
   }
-}
-
-enum ErrorType {
-  /// property name is empty
-  propertyEmpty,
-
-  /// class name is empty
-  classEmpty,
-
-  /// there are same class name
-  duplicateClass,
-
-  /// one property name is the same as class name
-  snpc,
 }
