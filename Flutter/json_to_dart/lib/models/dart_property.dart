@@ -21,6 +21,7 @@ class DartProperty extends Equatable {
     required this.depth,
     required this.keyValuePair,
     required this.nullable,
+    this.dartObject,
   }) {
     key = keyValuePair.key;
     this.uid = uid + '_' + keyValuePair.key;
@@ -38,8 +39,10 @@ class DartProperty extends Equatable {
 
     errors.add(EmptyErrorChecker(this));
     errors.add(ValidityChecker(this));
+    errors.add(DuplicatePropertyNameChecker(this));
   }
 
+  final DartObject? dartObject;
   late String uid;
   late int depth;
   late final String key;

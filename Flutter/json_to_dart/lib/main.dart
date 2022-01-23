@@ -36,35 +36,7 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       locale: ConfigSetting().locale.value,
-    )
-
-        // MultiProvider(
-        //     providers: <SingleChildWidget>[
-        //       ChangeNotifierProvider<JsonToDartController>.value(
-        //         value: controller,
-        //       ),
-        //       ChangeNotifierProvider<ConfigSetting>.value(
-        //         value: ConfigSetting(),
-        //       )
-        //     ],
-        //     child: Selector<ConfigSetting, Locale>(
-        //       selector: (BuildContext c, ConfigSetting vm) => vm.locale,
-        //       builder: (BuildContext c, Locale value, Widget? child) {
-        //         return MaterialApp(
-        //           debugShowCheckedModeBanner: false,
-        //           title: 'Json To Dart',
-        //           theme: ThemeData(
-        //             primarySwatch: Colors.blue,
-        //           ),
-        //           navigatorKey: AppNavigator().key,
-        //           home: const MyHomePage(title: 'Json To Dart'),
-        //           localizationsDelegates: AppLocalizations.localizationsDelegates,
-        //           supportedLocales: AppLocalizations.supportedLocales,
-        //           locale: ConfigSetting().locale,
-        //         );
-        //       },
-        //     )),
-        ;
+    );
   }
 }
 

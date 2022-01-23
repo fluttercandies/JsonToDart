@@ -21,11 +21,13 @@ class DartObject extends DartProperty {
     MapEntry<String, dynamic>? keyValuePair,
     required int depth,
     required bool nullable,
+    DartObject? dartObject,
   }) : super(
           uid: uid!,
           keyValuePair: keyValuePair!,
           depth: depth,
           nullable: nullable,
+          dartObject: dartObject,
         ) {
     classNameTextEditingController =
         ClassNameCheckerTextEditingController(this);
@@ -104,10 +106,12 @@ class DartObject extends DartProperty {
         objectKeys[item.key] = temp;
       } else {
         final DartObject temp = DartObject(
-            uid: uid + '_' + item.key,
-            keyValuePair: MapEntry<String, dynamic>(item.key, item.value.data),
-            nullable: item.value.nullable,
-            depth: depth + 1);
+          uid: uid + '_' + item.key,
+          keyValuePair: MapEntry<String, dynamic>(item.key, item.value.data),
+          nullable: item.value.nullable,
+          depth: depth + 1,
+          dartObject: this,
+        );
         if (addProperty) {
           properties.add(temp);
         }
@@ -119,7 +123,8 @@ class DartObject extends DartProperty {
             uid: uid,
             keyValuePair: MapEntry<String, dynamic>(item.key, item.value.data),
             nullable: item.value.nullable,
-            depth: depth));
+            depth: depth,
+            dartObject: this));
       }
       final List<dynamic> array = item.value.data as List<dynamic>;
       if (array.isNotEmpty) {
@@ -144,10 +149,12 @@ class DartObject extends DartProperty {
     } else {
       if (addProperty) {
         properties.add(DartProperty(
-            uid: uid,
-            keyValuePair: MapEntry<String, dynamic>(item.key, item.value.data),
-            nullable: item.value.nullable,
-            depth: depth));
+          uid: uid,
+          keyValuePair: MapEntry<String, dynamic>(item.key, item.value.data),
+          nullable: item.value.nullable,
+          depth: depth,
+          dartObject: this,
+        ));
       }
     }
   }
@@ -566,7 +573,7 @@ class DartObject extends DartProperty {
   @override
   List<Object?> get props => <Object?>[
         className,
-        properties,
+        // properties,
         uid,
       ];
 

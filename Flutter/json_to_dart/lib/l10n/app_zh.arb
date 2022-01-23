@@ -51,5 +51,6 @@
       }
     },
     "propertyCantSameAsType": "属性名不能跟类型相同",
-    "containsIllegalCharacters": "包含非法字符"                  
+    "containsIllegalCharacters": "包含非法字符",
+    "duplicateProperties":"属性名重复"                    
 }

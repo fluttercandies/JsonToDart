@@ -1,5 +1,5 @@
+import 'package:dartx/dartx.dart';
 import 'package:equatable/equatable.dart';
-
 import 'package:get/get.dart';
 import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/dart_object.dart';
@@ -157,6 +157,32 @@ class DuplicateClassChecker extends DartErrorChecker {
         entry.value.classError.add(errorInfo);
       }
       dartObject.classError.add(errorInfo);
+    }
+  }
+}
+
+class DuplicatePropertyNameChecker extends DartErrorChecker {
+  DuplicatePropertyNameChecker(DartProperty property) : super(property);
+  @override
+  void checkError(RxString input) {
+    if (property.dartObject == null || !identical(input, property.name)) {
+      return;
+    }
+
+    final DartObject dartObject = property.dartObject!;
+
+    final Map<String, List<DartProperty>> groupProperies = dartObject.properties
+        .groupBy((DartProperty element) => element.name.value);
+
+    for (final MapEntry<String, List<DartProperty>> item
+        in groupProperies.entries) {
+      for (final DartProperty element in item.value) {
+        if (item.value.length > 1) {
+          element.propertyError.add(appLocalizations.duplicateProperties);
+        } else {
+          element.propertyError.remove(appLocalizations.duplicateProperties);
+        }
+      }
     }
   }
 }

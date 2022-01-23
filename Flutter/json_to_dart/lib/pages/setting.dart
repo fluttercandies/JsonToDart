@@ -66,6 +66,7 @@ class SettingWidget extends StatelessWidget {
               onChanged: (Locale? value) {
                 ConfigSetting().locale.value = value!;
                 Get.updateLocale(ConfigSetting().locale.value);
+                controller.formatJson();
               },
             ),
           );
