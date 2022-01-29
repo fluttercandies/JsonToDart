@@ -57,6 +57,9 @@ class ConfigSetting extends Setting<ConfigSetting> {
   @HiveField(14)
   RxBool addCopyMethod = false.obs;
 
+  @HiveField(15)
+  RxBool automaticCheck = true.obs;
+
   @override
   Future<void> init({
     TypeAdapter<ConfigSetting>? adapter,

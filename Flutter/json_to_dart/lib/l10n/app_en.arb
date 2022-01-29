@@ -52,5 +52,6 @@
     },
     "propertyCantSameAsType": "property can't the same as Type",
     "containsIllegalCharacters": "contains illegal characters",
-    "duplicateProperties":"There are duplicate properties"      
+    "duplicateProperties":"There are duplicate properties",
+    "automaticCheck":"automatic check"      
 }

@@ -242,6 +242,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.3.1"
+  flutter_spinkit:
+    dependency: "direct main"
+    description:
+      name: flutter_spinkit
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "5.1.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -292,9 +299,11 @@ packages:
   hive_generator:
     dependency: "direct dev"
     description:
-      name: hive_generator
-      url: "https://pub.flutter-io.cn"
-    source: hosted
+      path: hive_generator
+      ref: HEAD
+      resolved-ref: "20f70bbccb2afd18f3a2f791452103e5d40608e2"
+      url: "https://github.com/zmtzawqlp/hive.git"
+    source: git
     version: "1.1.2"
   http_multi_server:
     dependency: transitive

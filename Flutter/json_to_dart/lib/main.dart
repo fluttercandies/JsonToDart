@@ -15,7 +15,6 @@ import 'style/color.dart';
 import 'widget/drag_icon.dart';
 
 Future<void> main() async {
-  //print(correctName('-0dd-jj/j.k-l0'));
   await Hive.initFlutter();
   await ConfigSetting().init();
   Get.put(MainController());
@@ -97,17 +96,26 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   bool pointerPressed = false;
+  double delta = 0;
   void updateGridSplitter(double x) {
-    final double width = (MediaQuery.of(context).size.width) /
-        (ConfigSetting().column1Width + ConfigSetting().column2Width);
-    final double width1 = max(width * ConfigSetting().column1Width + x, 50.0);
-    final double width2 = max(width * ConfigSetting().column2Width - x, 50.0);
-    ConfigSetting().column1Width =
-        (double.parse((width1 / (width1 + width2)).toStringAsFixed(5)) * 10000)
-            .toInt();
-    ConfigSetting().column2Width =
-        (double.parse((width2 / (width1 + width2)).toStringAsFixed(5)) * 10000)
-            .toInt();
+    delta += x;
+    if (delta.abs() > 10) {
+      final double width = (MediaQuery.of(context).size.width) /
+          (ConfigSetting().column1Width + ConfigSetting().column2Width);
+      final double width1 =
+          max(width * ConfigSetting().column1Width + delta, 50.0);
+      final double width2 =
+          max(width * ConfigSetting().column2Width - delta, 50.0);
+      ConfigSetting().column1Width =
+          (double.parse((width1 / (width1 + width2)).toStringAsFixed(5)) *
+                  10000)
+              .toInt();
+      ConfigSetting().column2Width =
+          (double.parse((width2 / (width1 + width2)).toStringAsFixed(5)) *
+                  10000)
+              .toInt();
+      delta = 0;
+    }
   }
 
   void onPointerDown(PointerDownEvent event) {

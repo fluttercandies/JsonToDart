@@ -52,5 +52,6 @@
     },
     "propertyCantSameAsType": "屬性名不能跟類型相同",
     "containsIllegalCharacters": "包含非法字符",
-    "duplicateProperties":"屬性名重複"                                
+    "duplicateProperties":"屬性名重複",
+    "automaticCheck":"自動校驗"                                     
 }

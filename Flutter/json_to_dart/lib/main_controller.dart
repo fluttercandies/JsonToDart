@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:json_to_dart/models/dart_property.dart';
@@ -48,15 +49,22 @@ class MainController extends GetxController {
 
   TextEditingController get textEditingController => _textEditingController;
 
-  List<DartProperty> allProperties = <DartProperty>[];
-  List<DartObject> allObjects = <DartObject>[];
+  Set<DartProperty> allProperties = <DartProperty>{};
+  Set<DartObject> allObjects = <DartObject>{};
+  Set<DartObject> printedObjects = <DartObject>{};
 
-  void formatJson() {
+  Future<void> formatJsonAndCreateDartObject() async {
     allProperties.clear();
     allObjects.clear();
     if (text.isNullOrEmpty) {
       return;
     }
+
+    SmartDialog.showLoading(
+        widget: const Center(
+      child: SpinKitCubeGrid(color: Colors.orange),
+    ));
+
     String inputText = text;
     try {
       if (kIsWeb) {
@@ -64,52 +72,46 @@ class MainController extends GetxController {
         inputText = text.replaceAll('.0', '.1');
       }
 
-      final dynamic jsonData = jsonDecode(inputText);
-      late final Map<String, dynamic> jsonObject;
+      final dynamic jsonData =
+          await compute<String, dynamic>(jsonDecode, inputText)
+              .onError((Object? error, StackTrace stackTrace) {
+        handleError(error, stackTrace);
+      });
 
-      late final DartObject extendedObject;
-      if (jsonData is Map) {
-        jsonObject = jsonData as Map<String, dynamic>;
-        extendedObject = DartObject(
-          depth: 0,
-          keyValuePair: MapEntry<String, dynamic>('Root', jsonObject),
-          nullable: false,
-          uid: 'Root',
-        );
-      } else if (jsonData is List) {
-        jsonObject = jsonData.first as Map<String, dynamic>;
-
-        final Map<String, List<dynamic>> root = <String, List<dynamic>>{
-          'Root': jsonData
-        };
-        extendedObject = DartObject(
-          depth: 0,
-          keyValuePair: MapEntry<String, dynamic>('Root', root),
-          nullable: false,
-          uid: 'Root',
-        ).objectKeys['Root']!
-          ..decDepth();
-      } else {
+      final DartObject? extendedObject = createDartObject(jsonData);
+      // final DartObject? extendedObject =
+      //     await compute<dynamic, DartObject?>(createDartObject, jsonData)
+      //         .onError((Object? error, StackTrace stackTrace) {
+      //   handleError(error, stackTrace);
+      // });
+      if (extendedObject == null) {
         showAlertDialog(appLocalizations.illegalJson, Icons.error);
         return;
       }
-      dartObject = extendedObject;
-      _textEditingController.text =
-          const JsonEncoder.withIndent('  ').convert(jsonObject);
-      update();
-    } catch (e, stack) {
-      print('$e');
-      print('$stack');
-      showAlertDialog(appLocalizations.formatErrorInfo, Icons.error);
 
-      Clipboard.setData(ClipboardData(text: '$e\n$stack'));
+      dartObject = extendedObject;
+
+      final String? formatJsonString =
+          await compute<dynamic, String?>(formatJson, jsonData)
+              .onError((Object? error, StackTrace stackTrace) {
+        handleError(error, stackTrace);
+      });
+      if (formatJsonString != null) {
+        _textEditingController.text = formatJsonString;
+      }
+
+      update();
+    } catch (error, stackTrace) {
+      handleError(error, stackTrace);
     }
+    SmartDialog.dismiss();
   }
 
   void generateDart() {
     // allProperties.clear();
     // allObjects.clear();
     printedObjects.clear();
+
     if (dartObject != null) {
       final DartObject? errorObject = allObjects.firstOrNullWhere(
           (DartObject element) =>
@@ -231,4 +233,51 @@ class MainController extends GetxController {
       dartObject!.updatePropertyAccessorType();
     }
   }
+}
+
+DartObject? createDartObject(dynamic jsonData) {
+  DartObject? extendedObject;
+
+  if (jsonData is Map) {
+    extendedObject = DartObject(
+      depth: 0,
+      keyValuePair:
+          MapEntry<String, dynamic>('Root', jsonData as Map<String, dynamic>),
+      nullable: false,
+      uid: 'Root',
+    );
+  } else if (jsonData is List) {
+    final Map<String, List<dynamic>> root = <String, List<dynamic>>{
+      'Root': jsonData
+    };
+    extendedObject = DartObject(
+      depth: 0,
+      keyValuePair: MapEntry<String, dynamic>('Root', root),
+      nullable: false,
+      uid: 'Root',
+    ).objectKeys['Root']!
+      ..decDepth();
+  }
+  return extendedObject;
+}
+
+String? formatJson(dynamic jsonData) {
+  Map<String, dynamic>? jsonObject;
+  if (jsonData is Map) {
+    jsonObject = jsonData as Map<String, dynamic>;
+  } else if (jsonData is List) {
+    jsonObject = jsonData.first as Map<String, dynamic>;
+  }
+  if (jsonObject != null) {
+    return const JsonEncoder.withIndent('  ').convert(jsonObject);
+  }
+  return null;
+}
+
+void handleError(Object? e, StackTrace stack) {
+  print('$e');
+  print('$stack');
+  showAlertDialog(appLocalizations.formatErrorInfo, Icons.error);
+
+  Clipboard.setData(ClipboardData(text: '$e\n$stack'));
 }

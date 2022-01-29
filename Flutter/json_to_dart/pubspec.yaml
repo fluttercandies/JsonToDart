@@ -29,13 +29,13 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter   
-  flutter_smart_dialog: any      
+  flutter_smart_dialog: any     
+  flutter_spinkit: ^5.1.0   
   get: any
   hive: any
   hive_flutter: any  
   intl: any
   nested: any
-
 
 
 dependency_overrides:
@@ -45,10 +45,14 @@ dev_dependencies:
   flutter_native_splash: ^1.1.7+1  
   flutter_test:
     sdk: flutter
-  hive_generator: any  
+  #hive_generator: any  
+  hive_generator: 
+    git:
+      url: https://github.com/zmtzawqlp/hive.git
+      path: hive_generator
   # hive_generator: 
   #   git:
-  #     url: https://github.com/zmtzawqlp/hive.git
+  #     url: https://gitee.com/zmtzawqlp/hive.git
   #     path: hive_generator
 
 # For information on the generic Dart part of this file, see the

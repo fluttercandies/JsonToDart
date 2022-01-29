@@ -24,7 +24,7 @@ class SettingWidget extends StatelessWidget {
           title: appLocalizations.formatButtonLabel,
           icon: Icons.format_align_left,
           onPressed: () {
-            controller.formatJson();
+            controller.formatJsonAndCreateDartObject();
           },
         ),
         TapButton(
@@ -66,7 +66,7 @@ class SettingWidget extends StatelessWidget {
               onChanged: (Locale? value) {
                 ConfigSetting().locale.value = value!;
                 Get.updateLocale(ConfigSetting().locale.value);
-                controller.formatJson();
+                controller.formatJsonAndCreateDartObject();
               },
             ),
           );
@@ -138,7 +138,7 @@ class MoreSetting extends StatelessWidget {
                   ConfigSetting().traverseArrayCount.value = value!;
 
                   if (controller.dartObject != null) {
-                    controller.formatJson();
+                    controller.formatJsonAndCreateDartObject();
                   }
                 }
               },
@@ -262,6 +262,15 @@ class MoreSetting extends StatelessWidget {
               if (ConfigSetting().addCopyMethod.value != value) {
                 ConfigSetting().addCopyMethod.value = value;
               }
+            },
+          );
+        }),
+        Obx(() {
+          return StCheckBox(
+            title: appLocalizations.automaticCheck,
+            value: ConfigSetting().automaticCheck.value,
+            onChanged: (bool value) {
+              ConfigSetting().automaticCheck.value = value;
             },
           );
         }),

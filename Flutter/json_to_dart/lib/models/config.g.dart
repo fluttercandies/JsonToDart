@@ -66,13 +66,16 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
     if (fields[14] != null) {
       result.addCopyMethod = fields[14] as RxBool;
     }
+    if (fields[15] != null) {
+      result.automaticCheck = fields[15] as RxBool;
+    }
     return result;
   }
 
   @override
   void write(BinaryWriter writer, ConfigSetting obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.addMethod)
       ..writeByte(1)
@@ -102,7 +105,9 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..writeByte(13)
       ..write(obj.smartNullable)
       ..writeByte(14)
-      ..write(obj.addCopyMethod);
+      ..write(obj.addCopyMethod)
+      ..writeByte(15)
+      ..write(obj.automaticCheck);
   }
 
   @override

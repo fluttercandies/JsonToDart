@@ -12,8 +12,6 @@ import 'package:json_to_dart/utils/string_helper.dart';
 import 'config.dart';
 import 'dart_property.dart';
 
-List<DartObject> printedObjects = <DartObject>[];
-
 // ignore: must_be_immutable
 class DartObject extends DartProperty {
   DartObject({
@@ -295,10 +293,11 @@ class DartObject extends DartProperty {
 
   @override
   String toString() {
-    if (printedObjects.contains(this)) {
+    final MainController controller = Get.find();
+    if (controller.printedObjects.contains(this)) {
       return '';
     }
-    printedObjects.add(this);
+    controller.printedObjects.add(this);
 
     orderPropeties();
 
@@ -353,7 +352,7 @@ class DartObject extends DartProperty {
             item.key,
             className,
             if (ConfigSetting().nullsafety && item.nullable)
-              'jsonRes[\'${item.key}\']==null?null:'
+              '${DartHelper.jsonRes}[\'${item.key}\']==null?null:'
             else
               '',
             if (ConfigSetting().nullsafety) '!' else ''
@@ -506,74 +505,9 @@ class DartObject extends DartProperty {
     return sb.toString();
   }
 
-  void checkError(List<DartObject> dartObjects) {
-    // for (final DartObject dartObject in dartObjects) {
-    //   if (dartObject.className.value == className.value) {
-    //     dartObject.classError.value =
-    //         classError.value = appLocalizations.duplicateClasses;
-    //     dartObject.duplicateClass = this;
-    //     duplicateClass = dartObject;
-    //     throw CheckError(
-    //       dartObject.uid +
-    //           '\n' +
-    //           uid +
-    //           '\n' +
-    //           appLocalizations.duplicateClasses,
-    //     );
-    //   }
-    // }
-
-    // if (className.value.isNullOrEmpty) {
-    //   classError.value = appLocalizations.classNameAssert(uid);
-    //   throw CheckError(appLocalizations.classNameAssert(uid));
-    // }
-
-    // for (final DartProperty item in properties) {
-    //   if (item.name.value.isNullOrEmpty) {
-    //     propertyError.value = appLocalizations.propertyNameAssert(item.uid);
-    //     throw CheckError(propertyError.value);
-    //   } else if (item.name.value == className.value) {
-    //     sameName = item;
-    //     item.sameName = this;
-    //     classError.value = item.propertyError.value =
-    //         appLocalizations.properyNameClassNameError;
-
-    //     throw CheckError(uid + classError.value);
-    //   } else if (item is DartObject) {
-    //     if (depth > 0 &&
-    //         !item.uid.endsWith('_Array') &&
-    //         item.name.value.isNullOrEmpty) {
-    //       propertyError.value = appLocalizations.propertyNameAssert(item.uid);
-    //       throw CheckError(propertyError.value);
-    //     } else if (item.name.value == item.className.value) {
-    //       item.classError.value = item.propertyError.value =
-    //           appLocalizations.properyNameClassNameError;
-    //       item.sameName = item;
-    //       throw CheckError(item.uid + item.classError.value);
-    //     }
-    //   } else {
-    //     for (final DartObject dartObject in dartObjects) {
-    //       if (item.name.value == dartObject.className.value) {
-    //         dartObject.sameName = item;
-    //         item.sameName = dartObject;
-    //         dartObject.classError.value = item.propertyError.value =
-    //             appLocalizations.properyNameClassNameError;
-    //         throw CheckError(dartObject.classError.value);
-    //       }
-    //     }
-    //   }
-    // }
-    // dartObjects.add(this);
-
-    // for (final MapEntry<String, DartObject> item in objectKeys.entries) {
-    //   item.value.checkError(dartObjects);
-    // }
-  }
-
   @override
   List<Object?> get props => <Object?>[
-        className,
-        // properties,
+        key,
         uid,
       ];
 

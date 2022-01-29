@@ -8,15 +8,16 @@ class DartHelper {
   const DartHelper._();
   static const String classHeader = 'class {0} {';
   static const String classFooter = '}';
+  static const String jsonRes = 'json';
 
   static const String fromJsonHeader =
-      '  factory {0}.fromJson(Map<String, dynamic> jsonRes)=>jsonRes == null? null:{0}(';
+      '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes})=>${DartHelper.jsonRes} == null? null:{0}(';
   static const String fromJsonHeader1 =
-      '  factory {0}.fromJson(Map<String, dynamic> jsonRes){ if(jsonRes == null) {return null;}\n';
+      '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes}){ if(${DartHelper.jsonRes} == null) {return null;}\n';
   static const String fromJsonHeaderNullSafety =
-      '  factory {0}.fromJson(Map<String, dynamic> jsonRes)=>{0}(';
+      '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes})=>{0}(';
   static const String fromJsonHeader1NullSafety =
-      '  factory {0}.fromJson(Map<String, dynamic> jsonRes){\n';
+      '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes}){\n';
   static const String fromJsonFooter = ');';
   static const String fromJsonFooter1 = 'return {0}({1});}';
   static const String toJsonHeader =
@@ -38,16 +39,16 @@ import 'dart:convert';''';
 
   static String setProperty(
       String setName, DartProperty item, String? className) {
-    return '    $setName : ${getUseAsT(getDartTypeString(item.type.value, item), "jsonRes['${item.key}']")},';
+    return '    $setName : ${getUseAsT(getDartTypeString(item.type.value, item), "${DartHelper.jsonRes}['${item.key}']")},';
     // if (appConfig.enableDataProtection) {
-    //   return "    $setName : convertValueByType(jsonRes['${item.key}'],${item.value.runtimeType.toString()},stack:\"$className-${item.key}\"),";
+    //   return "    $setName : convertValueByType(${DartHelper.jsonRes}['${item.key}'],${item.value.runtimeType.toString()},stack:\"$className-${item.key}\"),";
     // } else {
-    //   return "    $setName : jsonRes['${item.key}'],";
+    //   return "    $setName : ${DartHelper.jsonRes}['${item.key}'],";
     // }
   }
 
   static const String setObjectProperty =
-      "    {0} :{3} {2}.fromJson(asT<Map<String, dynamic>>(jsonRes['{1}']){4}),";
+      "    {0} :{3} {2}.fromJson(asT<Map<String, dynamic>>(${DartHelper.jsonRes}['{1}']){4}),";
 
   static String propertyS(PropertyAccessorType type) {
     switch (type) {

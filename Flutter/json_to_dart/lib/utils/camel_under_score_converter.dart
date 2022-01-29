@@ -248,5 +248,7 @@ List<String> classNameKeyWord = <String>[
   'return',
   'dynamic',
   'implements',
-  'set'
+  'set',
+  'List',
+  'Map'
 ];

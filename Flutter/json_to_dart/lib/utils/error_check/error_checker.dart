@@ -65,10 +65,13 @@ class ValidityChecker extends DartErrorChecker {
     if (identical(input, property.name)) {
       if (propertyKeyWord.contains(value)) {
         errorInfo = appLocalizations.keywordCheckFailed(value);
-      } else if (property is DartObject &&
-          (property as DartObject).className.value == value) {
-        errorInfo = appLocalizations.propertyCantSameAsClassName;
-      } else if (property.value is List) {
+      }
+      // PropertyAndClassNameSameChecker has do this
+      // else if (property is DartObject &&
+      //     (property as DartObject).className.value == value) {
+      //   errorInfo = appLocalizations.propertyCantSameAsClassName;
+      // }
+      else if (property.value is List) {
         if (value == 'List') {
           errorInfo = appLocalizations.propertyCantSameAsType;
         } else if (property.getTypeString().contains('<$value>')) {
@@ -115,48 +118,26 @@ class DuplicateClassChecker extends DartErrorChecker {
 
   DartObject get dartObject => property as DartObject;
 
-  Map<String, DartObject> duplicateClass = <String, DartObject>{};
-
   @override
   void checkError(RxString input) {
     if (!identical(input, dartObject.className)) {
       return;
     }
+
     final MainController controller = Get.find<MainController>();
+
+    final Map<String, List<DartObject>> groupObjects = controller.allObjects
+        .groupBy((DartObject element) => element.className.value);
     final String errorInfo = appLocalizations.duplicateClasses;
-    for (final DartObject oj in controller.allObjects) {
-      if (oj == dartObject) {
-        continue;
-      }
-
-      if (!duplicateClass.containsKey(oj.uid) &&
-          oj.className.value == dartObject.className.value) {
-        duplicateClass[oj.uid] = oj;
-      } else if (oj.className.value != dartObject.className.value &&
-          duplicateClass.remove(oj.uid) != null) {
-        oj.duplicateClassChecker.duplicateClass.remove(dartObject.uid);
-        if (oj.duplicateClassChecker.duplicateClass.isEmpty) {
-          oj.classError.remove(errorInfo);
+    for (final MapEntry<String, List<DartObject>> item
+        in groupObjects.entries) {
+      for (final DartObject element in item.value) {
+        if (item.value.length > 1) {
+          element.classError.add(errorInfo);
+        } else {
+          element.classError.remove(errorInfo);
         }
       }
-    }
-
-    if (duplicateClass.isEmpty) {
-      dartObject.classError.remove(errorInfo);
-    } else {
-      for (final MapEntry<String, DartObject> entry in duplicateClass.entries) {
-        entry.value.duplicateClassChecker.duplicateClass[dartObject.uid] =
-            dartObject;
-        for (final MapEntry<String, DartObject> entry1
-            in duplicateClass.entries) {
-          if (entry1.key != entry.key) {
-            entry.value.duplicateClassChecker.duplicateClass[entry1.key] =
-                entry1.value;
-          }
-        }
-        entry.value.classError.add(errorInfo);
-      }
-      dartObject.classError.add(errorInfo);
     }
   }
 }
@@ -170,7 +151,7 @@ class DuplicatePropertyNameChecker extends DartErrorChecker {
     }
 
     final DartObject dartObject = property.dartObject!;
-
+    final String errorInfo = appLocalizations.duplicateProperties;
     final Map<String, List<DartProperty>> groupProperies = dartObject.properties
         .groupBy((DartProperty element) => element.name.value);
 
@@ -178,10 +159,43 @@ class DuplicatePropertyNameChecker extends DartErrorChecker {
         in groupProperies.entries) {
       for (final DartProperty element in item.value) {
         if (item.value.length > 1) {
-          element.propertyError.add(appLocalizations.duplicateProperties);
+          element.propertyError.add(errorInfo);
         } else {
-          element.propertyError.remove(appLocalizations.duplicateProperties);
+          element.propertyError.remove(errorInfo);
         }
+      }
+    }
+  }
+}
+
+class PropertyAndClassNameSameChecker extends DartErrorChecker {
+  PropertyAndClassNameSameChecker(DartProperty property) : super(property);
+  @override
+  void checkError(RxString input) {
+    final String errorInfo = appLocalizations.propertyCantSameAsClassName;
+    final MainController controller = Get.find<MainController>();
+    final Set<DartProperty> hasErrorProperites = <DartProperty>{};
+    for (final DartObject dartObject in controller.allObjects) {
+      final Iterable<DartProperty> list =
+          controller.allProperties.where((DartProperty element) {
+        final bool same = element.name.value == dartObject.className.value;
+        if (same) {
+          hasErrorProperites.add(element);
+          element.propertyError.add(errorInfo);
+        }
+        return same;
+      });
+
+      if (list.isNotEmpty) {
+        dartObject.classError.add(errorInfo);
+      } else {
+        dartObject.classError.remove(errorInfo);
+      }
+    }
+
+    for (final DartProperty item in controller.allProperties) {
+      if (!hasErrorProperites.contains(item)) {
+        item.propertyError.remove(errorInfo);
       }
     }
   }

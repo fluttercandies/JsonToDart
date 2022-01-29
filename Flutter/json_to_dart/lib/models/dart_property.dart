@@ -33,13 +33,13 @@ class DartProperty extends Equatable {
     nameTextEditingController = PropertyNameCheckerTextEditingController(this);
     nameTextEditingController.text = name.value;
     value = keyValuePair.value;
-    if (this is! DartObject) {
-      Get.find<MainController>().allProperties.add(this);
-    }
 
-    errors.add(EmptyErrorChecker(this));
+    Get.find<MainController>().allProperties.add(this);
+    emptyErrorChecker = EmptyErrorChecker(this);
+    errors.add(emptyErrorChecker);
     errors.add(ValidityChecker(this));
     errors.add(DuplicatePropertyNameChecker(this));
+    errors.add(PropertyAndClassNameSameChecker(this));
   }
 
   final DartObject? dartObject;
@@ -61,8 +61,12 @@ class DartProperty extends Equatable {
   List<DartErrorChecker> errors = <DartErrorChecker>[];
 
   bool get hasPropertyError => propertyError.isNotEmpty;
-
+  late EmptyErrorChecker emptyErrorChecker;
   void updateError(RxString input) {
+    if (!ConfigSetting().automaticCheck.value) {
+      emptyErrorChecker.checkError(input);
+      return;
+    }
     for (final DartErrorChecker error in errors) {
       error.checkError(input);
     }
@@ -195,7 +199,7 @@ class DartProperty extends Equatable {
     dynamic temp = value;
     final MyStringBuffer sb = MyStringBuffer();
     sb.writeLine(
-        " final  ${ConfigSetting().nullsafety ? typeString + '?' : typeString} $setName = jsonRes['$key'] is List ? ${typeString.substring('List'.length).replaceAll('?', '')}[]: null; ");
+        " final  ${ConfigSetting().nullsafety ? typeString + '?' : typeString} $setName = ${DartHelper.jsonRes}['$key'] is List ? ${typeString.substring('List'.length).replaceAll('?', '')}[]: null; ");
     sb.writeLine('    if($setName!=null) {');
     final bool enableTryCatch = ConfigSetting().enableArrayProtection.value;
     final String nonNullable = ConfigSetting().nullsafety ? '!' : '';
@@ -216,7 +220,7 @@ class DartProperty extends Equatable {
       if (temp != null && temp is List) {
         if (count == 0) {
           result =
-              " for (final dynamic item$count in asT<List<dynamic>>(jsonRes['$key'])$nonNullable) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} $setName.add(items${count + 1}); }}";
+              " for (final dynamic item$count in asT<List<dynamic>>(${DartHelper.jsonRes}['$key'])$nonNullable) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} $setName.add(items${count + 1}); }}";
         } else {
           result = result!.replaceAll('{}',
               " for (final dynamic item$count in asT<List<dynamic>>(item${count - 1})$nonNullable) { if (item$count != null) {final $typeString items${count + 1} = ${typeString.substring('List'.length)}[]; {} items$count.add(items${count + 1}); }}");
@@ -241,7 +245,7 @@ class DartProperty extends Equatable {
           }
 
           result =
-              " for (final dynamic item in jsonRes['$key']$nonNullable) { if (item != null) { $addString }}";
+              " for (final dynamic item in ${DartHelper.jsonRes}['$key']$nonNullable) { if (item != null) { $addString }}";
         } else {
           addString = 'items$count.add($item); ';
 
@@ -265,7 +269,7 @@ class DartProperty extends Equatable {
 
   @override
   List<Object?> get props => <Object?>[
-        name,
+        key,
         nullable,
         propertyAccessorType,
         type,
