@@ -79639,7 +79639,7 @@ C_(a){return"'"+a+"' is a key word!"},
 gvq(){return"property can't the same as Type"},
 gJb(){return"contains illegal characters"},
 gJU(){return"There are duplicate properties"},
-gHK(){return"automatic check"}}
+gHK(){return"Automatic Check"}}
 A.vZ.prototype={
 gKl(){return"\u683c\u5f0f\u5316"},
 gD5(){return"\u751f\u6210"},
