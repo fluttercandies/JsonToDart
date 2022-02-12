@@ -85,6 +85,7 @@ class MainController extends GetxController {
       //   handleError(error, stackTrace);
       // });
       if (extendedObject == null) {
+        SmartDialog.dismiss();
         showAlertDialog(appLocalizations.illegalJson, Icons.error);
         return;
       }
