@@ -326,7 +326,7 @@ class NullableCheckBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(() {
       return StCheckBox(
-        title: appLocalizations.nullable,
+        title: "nullable".tr,
         value: property.nullableObs.value,
         onChanged: (bool value) {
           property.nullable = value;

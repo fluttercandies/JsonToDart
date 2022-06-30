@@ -16,6 +16,7 @@ import 'package:json_to_dart/utils/my_string_buffer.dart';
 
 import 'models/config.dart';
 import 'models/dart_object.dart';
+import 'package:get/get.dart';
 
 void showAlertDialog(String msg, [IconData data = Icons.warning]) {
   SmartDialog.show(
@@ -24,7 +25,7 @@ void showAlertDialog(String msg, [IconData data = Icons.warning]) {
     content: Text(msg),
     actions: <Widget>[
       TextButton(
-        child: Text(appLocalizations.ok),
+        child: Text("ok".tr),
         onPressed: () {
           SmartDialog.dismiss();
         },
@@ -86,7 +87,7 @@ class MainController extends GetxController {
       // });
       if (extendedObject == null) {
         SmartDialog.dismiss();
-        showAlertDialog(appLocalizations.illegalJson, Icons.error);
+        showAlertDialog("illegalJson".tr, Icons.error);
         return;
       }
 
@@ -158,7 +159,7 @@ class MainController extends GetxController {
               }
             }
           } catch (e) {
-            showAlertDialog(appLocalizations.timeFormatError, Icons.error);
+            showAlertDialog("timeFormatError".tr, Icons.error);
           }
 
           sb.writeLine(info);
@@ -192,12 +193,12 @@ class MainController extends GetxController {
 
         _textEditingController.text = result;
         Clipboard.setData(ClipboardData(text: result));
-        SmartDialog.showToast(appLocalizations.generateSucceed);
+        SmartDialog.showToast("generateSucceed".tr);
       } catch (e, stack) {
         print('$e');
         print('$stack');
         _textEditingController.text = sb.toString();
-        showAlertDialog(appLocalizations.generateFailed, Icons.error);
+        showAlertDialog("generateFailed".tr, Icons.error);
         Clipboard.setData(ClipboardData(text: '$e\n$stack'));
       }
     }
@@ -278,7 +279,7 @@ String? formatJson(dynamic jsonData) {
 void handleError(Object? e, StackTrace stack) {
   print('$e');
   print('$stack');
-  showAlertDialog(appLocalizations.formatErrorInfo, Icons.error);
+  showAlertDialog("formatErrorInfo".tr, Icons.error);
 
   Clipboard.setData(ClipboardData(text: '$e\n$stack'));
 }

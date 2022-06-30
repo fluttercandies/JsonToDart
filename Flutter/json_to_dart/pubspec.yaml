@@ -27,8 +27,8 @@ dependencies:
   equatable: ^2.0.0
   flutter:
     sdk: flutter
-  flutter_localizations:
-    sdk: flutter   
+#  flutter_localizations:
+#    sdk: flutter
   flutter_smart_dialog: any     
   flutter_spinkit: ^5.1.0   
   get: any

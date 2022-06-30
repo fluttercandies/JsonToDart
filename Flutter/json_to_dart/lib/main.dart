@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:json_to_dart/l10n/message.dart';
 import 'main_controller.dart';
 import 'models/config.dart';
 import 'pages/json_text_field.dart';
@@ -24,7 +25,9 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print('hello'.tr);
     return GetMaterialApp(
+      translations: Messages(),
       debugShowCheckedModeBanner: false,
       title: 'Json To Dart',
       theme: ThemeData(
@@ -32,9 +35,12 @@ class MyApp extends StatelessWidget {
       ),
       builder: FlutterSmartDialog.init(),
       home: const MyHomePage(title: 'Json To Dart'),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      locale: ConfigSetting().locale.value,
+      // home: Container(color: Colors.indigo,),
+      // localizationsDelegates: AppLocalizations.localizationsDelegates,
+      // supportedLocales: AppLocalizations.supportedLocales,
+      // locale: ConfigSetting().locale.value,
+      locale: Locale('zh', 'CN'), // 将会按照此处指定的语言翻译
+      fallbackLocale: Locale('en', 'US'),
     );
   }
 }

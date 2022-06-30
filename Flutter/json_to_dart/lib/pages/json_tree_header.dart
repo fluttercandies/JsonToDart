@@ -35,7 +35,7 @@ class JsonTreeHeader extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: StText.normal(
-              appLocalizations.type,
+              "type".tr,
               style: const TextStyle(
                 color: ColorPlate.gray,
                 fontWeight: FontWeight.w600,
@@ -48,7 +48,7 @@ class JsonTreeHeader extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.only(left: 8.0),
             child: StText.normal(
-              appLocalizations.name,
+              "name".tr,
               style: const TextStyle(
                 color: ColorPlate.gray,
                 fontWeight: FontWeight.w600,
@@ -95,7 +95,7 @@ class JsonTreeHeader extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: StCheckBox(
-                  title: appLocalizations.nullable,
+                  title: "nullable".tr,
                   value: ConfigSetting().nullableObs.value,
                   onChanged: (bool value) {
                     ConfigSetting().nullable = value;

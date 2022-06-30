@@ -21,7 +21,7 @@ class JsonTextField extends StatelessWidget {
         maxLines: null,
         decoration: InputDecoration(
           border: InputBorder.none,
-          hintText: appLocalizations.inputHelp,
+          hintText: "inputHelp".tr,
           hintStyle: const TextStyle(
             color: ColorPlate.gray,
           ),

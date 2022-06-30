@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/config.dart';
@@ -16,26 +16,27 @@ class SettingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String _language = '中文';
     final MainController controller = Get.find();
     final Wrap settingRow = Wrap(
       direction: Axis.horizontal,
       children: <Widget>[
         TapButton(
-          title: appLocalizations.formatButtonLabel,
+          title: "formatButtonLabel".tr,
           icon: Icons.format_align_left,
           onPressed: () {
             controller.formatJsonAndCreateDartObject();
           },
         ),
         TapButton(
-          title: appLocalizations.generateButtonLabel,
+          title: "generateButtonLabel".tr,
           icon: Icons.flag,
           onPressed: () {
             controller.generateDart();
           },
         ),
         TapButton(
-          title: appLocalizations.settingButtonLabel,
+          title: "settingButtonLabel".tr,
           icon: Icons.more_horiz,
           onPressed: () {
             showModalBottomSheet<void>(
@@ -49,28 +50,49 @@ class SettingWidget extends StatelessWidget {
             ).whenComplete(() {});
           },
         ),
-        Obx(() {
-          return StPicker(
-            title: 'Language',
-            child: DropdownButton<Locale>(
-              value: ConfigSetting().locale.value,
-              iconEnabledColor: ColorPlate.blue,
-              elevation: 1,
-              style: StandardTextStyle.normal.apply(color: ColorPlate.blue),
-              items: AppLocalizations.supportedLocales
-                  .map((Locale locale) => DropdownMenuItem<Locale>(
-                        value: locale,
-                        child: StText.normal(locale.toString()),
-                      ))
-                  .toList(),
-              onChanged: (Locale? value) {
-                ConfigSetting().locale.value = value!;
-                Get.updateLocale(ConfigSetting().locale.value);
-                controller.formatJsonAndCreateDartObject();
-              },
-            ),
-          );
-        }),
+
+        DropdownButton(
+          value: _language,
+          items: [
+            DropdownMenuItem(child: Text('中文'),value: '中文',),
+            DropdownMenuItem(child: Text('english'),value: 'english'),
+          ],
+          onChanged: (value){
+            _language=value as String;
+            if (value=='中文'){
+              var locale = Locale('zh', 'CN');
+              Get.updateLocale(locale);
+            }
+            if (value=='english') {
+              var locale = Locale('en', 'US');
+              Get.updateLocale(locale);
+            }
+          },
+        )
+
+        // Obx(() {
+        //   return StPicker(
+        //     title: 'Language',
+        //     child: DropdownButton<Locale>(
+        //       value: ConfigSetting().locale.value,
+        //       iconEnabledColor: ColorPlate.blue,
+        //       elevation: 1,
+        //       style: StandardTextStyle.normal.apply(color: ColorPlate.blue),
+        //       items: [DropdownMenuItem(child: Text('中文'),),DropdownMenuItem(child: Text('english'),)],
+        //       // items: AppLocalizations.supportedLocales
+        //       //     .map((Locale locale) => DropdownMenuItem<Locale>(
+        //       //           value: locale,
+        //       //           child: StText.normal(locale.toString()),
+        //       //         ))
+        //       //     .toList(),
+        //       onChanged: (Locale? value) {
+        //         ConfigSetting().locale.value = value!;
+        //         Get.updateLocale(ConfigSetting().locale.value);
+        //         controller.formatJsonAndCreateDartObject();
+        //       },
+        //     ),
+        //   );
+        // }),
       ],
     );
     return Padding(
@@ -91,7 +113,7 @@ class MoreSetting extends StatelessWidget {
       children: <Widget>[
         Obx(() {
           return StCheckBox(
-            title: appLocalizations.dataProtection,
+            title: "dataProtection".tr,
             value: ConfigSetting().enableDataProtection.value,
             onChanged: (bool value) {
               if (ConfigSetting().enableDataProtection.value != value) {
@@ -102,7 +124,7 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StCheckBox(
-            title: appLocalizations.arrayProtection,
+            title: "arrayProtection".tr,
             value: ConfigSetting().enableArrayProtection.value,
             onChanged: (bool value) {
               if (value != ConfigSetting().enableArrayProtection.value) {
@@ -113,7 +135,7 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StPicker(
-            title: appLocalizations.traverseArrayCount,
+            title: "traverseArrayCount".tr,
             child: DropdownButton<int>(
               value: ConfigSetting().traverseArrayCount.value,
               iconEnabledColor: ColorPlate.blue,
@@ -147,26 +169,26 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StPicker(
-            title: appLocalizations.nameRule,
+            title: "nameRule".tr,
             child: DropdownButton<PropertyNamingConventionsType>(
               iconEnabledColor: ColorPlate.blue,
               value: ConfigSetting().propertyNamingConventionsType.value,
               items: <DropdownMenuItem<PropertyNamingConventionsType>>[
                 DropdownMenuItem<PropertyNamingConventionsType>(
                   value: PropertyNamingConventionsType.none,
-                  child: StText.normal(appLocalizations.original),
+                  child: StText.normal("original".tr),
                 ),
                 DropdownMenuItem<PropertyNamingConventionsType>(
                   value: PropertyNamingConventionsType.camelCase,
-                  child: StText.normal(appLocalizations.camelCase),
+                  child: StText.normal("camelCase".tr),
                 ),
                 DropdownMenuItem<PropertyNamingConventionsType>(
                   value: PropertyNamingConventionsType.pascal,
-                  child: StText.normal(appLocalizations.pascal),
+                  child: StText.normal("pascal".tr),
                 ),
                 DropdownMenuItem<PropertyNamingConventionsType>(
                   value: PropertyNamingConventionsType.hungarianNotation,
-                  child: StText.normal(appLocalizations.hungarianNotation),
+                  child: StText.normal("hungarianNotation".tr),
                 )
               ],
               onChanged: (PropertyNamingConventionsType? value) {
@@ -182,22 +204,22 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StPicker(
-            title: appLocalizations.propertyOrder,
+            title: "propertyOrder".tr,
             child: DropdownButton<PropertyNameSortingType>(
               iconEnabledColor: ColorPlate.blue,
               value: ConfigSetting().propertyNameSortingType.value,
               items: <DropdownMenuItem<PropertyNameSortingType>>[
                 DropdownMenuItem<PropertyNameSortingType>(
                   value: PropertyNameSortingType.none,
-                  child: StText.normal(appLocalizations.original),
+                  child: StText.normal("original".tr),
                 ),
                 DropdownMenuItem<PropertyNameSortingType>(
                   value: PropertyNameSortingType.ascending,
-                  child: StText.normal(appLocalizations.ascending),
+                  child: StText.normal("ascending".tr),
                 ),
                 DropdownMenuItem<PropertyNameSortingType>(
                   value: PropertyNameSortingType.descending,
-                  child: StText.normal(appLocalizations.descending),
+                  child: StText.normal("descending".tr),
                 ),
               ],
               onChanged: (PropertyNameSortingType? value) {
@@ -212,7 +234,7 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StCheckBox(
-            title: appLocalizations.addMethod,
+            title: "addMethod".tr,
             value: ConfigSetting().addMethod.value,
             onChanged: (bool value) {
               if (ConfigSetting().addMethod.value != value) {
@@ -223,7 +245,7 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StCheckBox(
-            title: appLocalizations.nullsafety,
+            title: "nullsafety".tr,
             value: ConfigSetting().nullsafetyObs.value,
             onChanged: (bool value) {
               ConfigSetting().nullsafety = value;
@@ -238,7 +260,7 @@ class MoreSetting extends StatelessWidget {
         Obx(() {
           if (ConfigSetting().nullsafetyObs.value) {
             return StCheckBox(
-              title: appLocalizations.smartNullable,
+              title: "smartNullable".tr,
               value: ConfigSetting().smartNullableObs.value,
               onChanged: (bool value) {
                 ConfigSetting().smartNullable = value;
@@ -256,7 +278,7 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StCheckBox(
-            title: appLocalizations.addCopyMethod,
+            title: "addCopyMethod".tr,
             value: ConfigSetting().addCopyMethod.value,
             onChanged: (bool value) {
               if (ConfigSetting().addCopyMethod.value != value) {
@@ -267,7 +289,7 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StCheckBox(
-            title: appLocalizations.automaticCheck,
+            title: "automaticCheck".tr,
             value: ConfigSetting().automaticCheck.value,
             onChanged: (bool value) {
               ConfigSetting().automaticCheck.value = value;
@@ -287,7 +309,7 @@ class MoreSetting extends StatelessWidget {
           buttonGroup,
           Align(
             child: StText.small(
-              appLocalizations.fileHeader,
+              "fileHeader".tr,
             ),
             alignment: Alignment.centerLeft,
           ),
@@ -309,7 +331,7 @@ class MoreSetting extends StatelessWidget {
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12),
                 border: InputBorder.none,
                 hintStyle: const TextStyle(color: Colors.grey),
-                hintText: appLocalizations.fileHeaderHelp,
+                hintText: "fileHeaderHelp".tr,
               ),
             ),
             height: 200.0,
