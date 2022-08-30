@@ -29,9 +29,7 @@ Language: English | [中文简体](README-ZH.md)
 
 [Flutter for Macos](https://github.com/fluttercandies/JsonToDart/releases/)
 
-[Flutter for Web](https://fluttercandies.github.io/JsonToDartFlutterWeb/)
-
-[Flutter for Web(Gitee)](https://zmtzawqlp.gitee.io/jsontodartflutterweb)
+[Flutter for Web](https://fluttercandies.github.io/JsonToDart/)
 
 [Microsoft Store](https://www.microsoft.com/store/apps/9NBRW9451QSR) The function is not ，it will replace with  [Flutter for UWP](https://github.com/flutter/flutter/issues/14967) in the future.
 
