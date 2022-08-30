@@ -53,5 +53,8 @@
     "propertyCantSameAsType": "property can't the same as Type",
     "containsIllegalCharacters": "contains illegal characters",
     "duplicateProperties":"There are duplicate properties",
-    "automaticCheck":"Automatic Check"      
+    "automaticCheck":"Automatic Check",
+    "buttonCopyText":"Copy",
+    "buttonCopySuccess":"Copy Success",
+    "resultDialogTitle":"Result"
 }

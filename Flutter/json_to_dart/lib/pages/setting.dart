@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/config.dart';
+import 'package:json_to_dart/pages/result.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/text.dart';
 import 'package:json_to_dart/utils/enums.dart';
@@ -31,7 +33,15 @@ class SettingWidget extends StatelessWidget {
           title: appLocalizations.generateButtonLabel,
           icon: Icons.flag,
           onPressed: () {
-            controller.generateDart();
+            final String? dartText = controller.generateDart();
+            if (dartText == null) {
+              return;
+            }
+            SmartDialog.show(
+              widget: ResultDialog(
+                text: dartText,
+              ),
+            );
           },
         ),
         TapButton(

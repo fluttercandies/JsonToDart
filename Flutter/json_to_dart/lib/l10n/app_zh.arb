@@ -53,5 +53,8 @@
     "propertyCantSameAsType": "属性名不能跟类型相同",
     "containsIllegalCharacters": "包含非法字符",
     "duplicateProperties":"属性名重复",
-    "automaticCheck":"自动校验"                      
+    "automaticCheck":"自动校验",
+    "buttonCopyText":"复制",
+    "buttonCopySuccess":"复制成功",
+    "resultDialogTitle":"结果"
 }
