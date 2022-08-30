@@ -23,12 +23,14 @@ class ResultDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            TextField(
-              controller: controller,
-              maxLines: null,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                labelText: appLocalizations.resultDialogTitle,
+            Expanded(
+              child: TextField(
+                controller: controller,
+                maxLines: null,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: appLocalizations.resultDialogTitle,
+                ),
               ),
             ),
             Row(
