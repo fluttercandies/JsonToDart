@@ -31,6 +31,8 @@ Language: English | [中文简体](README-ZH.md)
 
 [Flutter for Web](https://fluttercandies.github.io/JsonToDart/)
 
+[Flutter for Web(Gitee)](https://zmtzawqlp.gitee.io/jsontodartflutterweb)
+
 [Microsoft Store](https://www.microsoft.com/store/apps/9NBRW9451QSR) The function is not ，it will replace with  [Flutter for UWP](https://github.com/flutter/flutter/issues/14967) in the future.
 
 # Use
