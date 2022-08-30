@@ -108,7 +108,7 @@ class MainController extends GetxController {
     SmartDialog.dismiss();
   }
 
-  void generateDart() {
+  String? generateDart() {
     // allProperties.clear();
     // allObjects.clear();
     printedObjects.clear();
@@ -122,7 +122,7 @@ class MainController extends GetxController {
         showAlertDialog(errorObject.classError.join('\n') +
             '\n' +
             errorObject.propertyError.join('\n'));
-        return;
+        return null;
       }
 
       final DartProperty? errorProperty = allProperties.firstOrNullWhere(
@@ -130,7 +130,7 @@ class MainController extends GetxController {
 
       if (errorProperty != null) {
         showAlertDialog(errorProperty.propertyError.join('\n'));
-        return;
+        return null;
       }
 
       final MyStringBuffer sb = MyStringBuffer();
@@ -190,17 +190,21 @@ class MainController extends GetxController {
 
         result = formatter.format(result);
 
-        _textEditingController.text = result;
+        // _textEditingController.text = result;
         Clipboard.setData(ClipboardData(text: result));
         SmartDialog.showToast(appLocalizations.generateSucceed);
+
+        return result;
       } catch (e, stack) {
         print('$e');
         print('$stack');
-        _textEditingController.text = sb.toString();
+        // _textEditingController.text = sb.toString();
         showAlertDialog(appLocalizations.generateFailed, Icons.error);
         Clipboard.setData(ClipboardData(text: '$e\n$stack'));
+        return null;
       }
     }
+    return null;
   }
 
   void orderPropeties() {

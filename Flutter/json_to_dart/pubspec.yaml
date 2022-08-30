@@ -38,7 +38,7 @@ dependencies:
   nested: any
 
 
-dependency_overrides:
+# dependency_overrides:
   #dart_style: ^2.0.0
 dev_dependencies:
   build_runner: any
