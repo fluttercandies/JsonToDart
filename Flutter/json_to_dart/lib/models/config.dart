@@ -40,25 +40,26 @@ class ConfigSetting extends Setting<ConfigSetting> {
   Rx<PropertyNameSortingType> propertyNameSortingType =
       PropertyNameSortingType.none.obs;
 
-  @HiveField(10, defaultValue: false)
-  bool nullsafety = false;
-  RxBool nullsafetyObs = false.obs;
+  @HiveField(16)
+  RxBool nullsafety = false.obs;
 
-  @HiveField(11, defaultValue: true)
-  bool nullable = true;
-  RxBool nullableObs = true.obs;
+  @HiveField(17)
+  RxBool nullable = true.obs;
 
   @HiveField(12)
   Rx<Locale> locale = const Locale.fromSubtags(languageCode: 'en').obs;
 
-  @HiveField(13, defaultValue: false)
-  bool smartNullable = false;
-  RxBool smartNullableObs = false.obs;
+  @HiveField(18)
+  RxBool smartNullable = false.obs;
+
   @HiveField(14)
   RxBool addCopyMethod = false.obs;
 
   @HiveField(15)
   RxBool automaticCheck = true.obs;
+
+  @HiveField(19)
+  RxBool showResultDialog = true.obs;
 
   @override
   Future<void> init({

@@ -78,7 +78,7 @@ import 'dart:convert';''';
   }
 
   static String getDartTypeString(DartType dartType, DartProperty item) {
-    final bool nullable = ConfigSetting().nullsafety && item.nullable;
+    final bool nullable = ConfigSetting().nullsafety.value && item.nullable;
     final String type = dartType.text;
     return nullable ? type + '?' : type;
   }
@@ -246,7 +246,9 @@ T? asT<T extends Object?>(dynamic value, [T? defaultValue]) {
 
   static String getUseAsT(String? par1, String par2) {
     String asTString = 'asT<$par1>($par2)';
-    if (ConfigSetting().nullsafety && par1 != null && !par1.contains('?')) {
+    if (ConfigSetting().nullsafety.value &&
+        par1 != null &&
+        !par1.contains('?')) {
       asTString += '!';
     }
     return asTString;

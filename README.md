@@ -15,10 +15,10 @@ Language: English | [中文简体](README-ZH.md)
     - [Order Property](#order-property)
     - [Add Method](#add-method)
     - [NullSafety](#nullsafety)
-    - [Smart NullAble](#smart-nullable)
     - [File Header](#file-header)
     - [Property Readonly](#property-readonly)
     - [Nullable](#nullable)
+    - [Smart Nullable](#smart-nullable)
   - [Localizations](#localizations)
   - [Edit Class Info](#edit-class-info)
   - [Generate](#generate)
@@ -29,7 +29,7 @@ Language: English | [中文简体](README-ZH.md)
 
 [Flutter for Macos](https://github.com/fluttercandies/JsonToDart/releases/)
 
-[Flutter for Web](https://fluttercandies.github.io/JsonToDart/)
+[Flutter for Web](https://fluttercandies.github.io/JsonToDartFlutterWeb/)
 
 [Flutter for Web(Gitee)](https://zmtzawqlp.gitee.io/jsontodartflutterweb)
 

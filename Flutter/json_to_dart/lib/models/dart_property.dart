@@ -167,10 +167,10 @@ class DartProperty extends Equatable {
     ]);
     copy = copy.replaceFirst(
       'e',
-      ConfigSetting().nullsafety && !nullable ? name.value : name + '?',
+      ConfigSetting().nullsafety.value && !nullable ? name.value : name + '?',
     );
 
-    if (!ConfigSetting().nullsafety) {
+    if (!ConfigSetting().nullsafety.value) {
       copy = copy.replaceRange(
           copy.length - '.toList()'.length, null, '?.toList()');
     }
@@ -199,10 +199,10 @@ class DartProperty extends Equatable {
     dynamic temp = value;
     final MyStringBuffer sb = MyStringBuffer();
     sb.writeLine(
-        " final  ${ConfigSetting().nullsafety ? typeString + '?' : typeString} $setName = ${DartHelper.jsonRes}['$key'] is List ? ${typeString.substring('List'.length).replaceAll('?', '')}[]: null; ");
+        " final  ${ConfigSetting().nullsafety.value ? typeString + '?' : typeString} $setName = ${DartHelper.jsonRes}['$key'] is List ? ${typeString.substring('List'.length).replaceAll('?', '')}[]: null; ");
     sb.writeLine('    if($setName!=null) {');
     final bool enableTryCatch = ConfigSetting().enableArrayProtection.value;
-    final String nonNullable = ConfigSetting().nullsafety ? '!' : '';
+    final String nonNullable = ConfigSetting().nullsafety.value ? '!' : '';
     int count = 0;
     String? result;
     while (temp is List) {

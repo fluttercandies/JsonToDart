@@ -37,11 +37,13 @@ class SettingWidget extends StatelessWidget {
             if (dartText == null) {
               return;
             }
-            SmartDialog.show(
-              widget: ResultDialog(
-                text: dartText,
-              ),
-            );
+            if (ConfigSetting().showResultDialog.value) {
+              SmartDialog.compatible.show(
+                widget: ResultDialog(
+                  text: dartText,
+                ),
+              );
+            }
           },
         ),
         TapButton(
@@ -234,25 +236,22 @@ class MoreSetting extends StatelessWidget {
         Obx(() {
           return StCheckBox(
             title: appLocalizations.nullsafety,
-            value: ConfigSetting().nullsafetyObs.value,
+            value: ConfigSetting().nullsafety.value,
             onChanged: (bool value) {
-              ConfigSetting().nullsafety = value;
-              //ConfigSetting().nullable = true;
+              ConfigSetting().nullsafety.value = value;
               if (!value) {
-                ConfigSetting().smartNullable = false;
+                ConfigSetting().smartNullable.value = false;
               }
-              ConfigSetting().nullsafetyObs.value = value;
             },
           );
         }),
         Obx(() {
-          if (ConfigSetting().nullsafetyObs.value) {
+          if (ConfigSetting().nullsafety.value) {
             return StCheckBox(
               title: appLocalizations.smartNullable,
-              value: ConfigSetting().smartNullableObs.value,
+              value: ConfigSetting().smartNullable.value,
               onChanged: (bool value) {
-                ConfigSetting().smartNullable = value;
-                ConfigSetting().smartNullableObs.value = value;
+                ConfigSetting().smartNullable.value = value;
                 // if (!value) {
                 //   controller.updateNullable(true);
                 // }
@@ -281,6 +280,17 @@ class MoreSetting extends StatelessWidget {
             value: ConfigSetting().automaticCheck.value,
             onChanged: (bool value) {
               ConfigSetting().automaticCheck.value = value;
+            },
+          );
+        }),
+        Obx(() {
+          return StCheckBox(
+            title: appLocalizations.showResultDialog,
+            value: ConfigSetting().showResultDialog.value,
+            onChanged: (bool value) {
+              if (value != ConfigSetting().showResultDialog.value) {
+                ConfigSetting().showResultDialog.value = value;
+              }
             },
           );
         }),

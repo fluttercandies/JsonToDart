@@ -30,7 +30,9 @@ Github下载速度太慢，为了方便大家下载，特意在gitee也创建了
 
 [Flutter for Macos](https://gitee.com/zmtzawqlp/JsonToDart/releases/)
 
-[Flutter for Web](https://zmtzawqlp.gitee.io/jsontodart/)
+[Flutter for Web](https://fluttercandies.github.io/JsonToDartFlutterWeb/)
+
+[Flutter for Web(Gitee)](https://zmtzawqlp.gitee.io/jsontodartflutterweb)
 
 [UWP 微软商店](https://www.microsoft.com/store/apps/9NBRW9451QSR) 功能未同步，以后会替换成 [Flutter for UWP](https://github.com/flutter/flutter/issues/14967)
 

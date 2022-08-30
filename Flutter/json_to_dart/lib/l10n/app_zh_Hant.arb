@@ -56,5 +56,6 @@
     "automaticCheck":"自動校驗",
     "buttonCopyText":"複製",
     "buttonCopySuccess":"複製成功",
-    "resultDialogTitle":"結果"
+    "resultDialogTitle":"結果",
+    "showResultDialog":"顯示結果彈框"
 }

@@ -23,13 +23,25 @@ class ResultDialog extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  appLocalizations.resultDialogTitle,
+                ),
+                CloseButton(
+                  onPressed: () {
+                    SmartDialog.compatible.dismiss();
+                  },
+                ),
+              ],
+            ),
             Expanded(
               child: TextField(
                 controller: controller,
                 maxLines: null,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: appLocalizations.resultDialogTitle,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
                 ),
               ),
             ),

@@ -56,5 +56,6 @@
     "automaticCheck":"Automatic Check",
     "buttonCopyText":"Copy",
     "buttonCopySuccess":"Copy Success",
-    "resultDialogTitle":"Result"
+    "resultDialogTitle":"Result",
+    "showResultDialog":"show result dialog"
 }

@@ -90,17 +90,16 @@ class JsonTreeHeader extends StatelessWidget {
           flex: 1,
         ),
         Obx(() {
-          if (ConfigSetting().nullsafetyObs.value) {
+          if (ConfigSetting().nullsafety.value) {
             return Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0),
                 child: StCheckBox(
                   title: appLocalizations.nullable,
-                  value: ConfigSetting().nullableObs.value,
+                  value: ConfigSetting().nullable.value,
                   onChanged: (bool value) {
-                    ConfigSetting().nullable = value;
+                    ConfigSetting().nullable.value = value;
                     ConfigSetting().save();
-                    ConfigSetting().nullableObs.value = value;
                     Get.find<MainController>().updateNullable(value);
                   },
                 ),

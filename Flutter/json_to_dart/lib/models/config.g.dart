@@ -48,26 +48,26 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
     if (fields[9] != null) {
       result.propertyNameSortingType = fields[9] as Rx<PropertyNameSortingType>;
     }
-    if ((fields[10] ?? false) != null) {
-      result.nullsafety = fields[10] ?? false;
+    if (fields[16] != null) {
+      result.nullsafety = fields[16] as RxBool;
     }
-
-    if ((fields[11] ?? true) != null) {
-      result.nullable = fields[11] ?? true;
+    if (fields[17] != null) {
+      result.nullable = fields[17] as RxBool;
     }
-
     if (fields[12] != null) {
       result.locale = fields[12] as Rx<Locale>;
     }
-    if ((fields[13] ?? false) != null) {
-      result.smartNullable = fields[13] ?? false;
+    if (fields[18] != null) {
+      result.smartNullable = fields[18] as RxBool;
     }
-
     if (fields[14] != null) {
       result.addCopyMethod = fields[14] as RxBool;
     }
     if (fields[15] != null) {
       result.automaticCheck = fields[15] as RxBool;
+    }
+    if (fields[19] != null) {
+      result.showResultDialog = fields[19] as RxBool;
     }
     return result;
   }
@@ -75,7 +75,7 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
   @override
   void write(BinaryWriter writer, ConfigSetting obj) {
     writer
-      ..writeByte(16)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.addMethod)
       ..writeByte(1)
@@ -96,18 +96,20 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..write(obj.propertyAccessorType)
       ..writeByte(9)
       ..write(obj.propertyNameSortingType)
-      ..writeByte(10)
+      ..writeByte(16)
       ..write(obj.nullsafety)
-      ..writeByte(11)
+      ..writeByte(17)
       ..write(obj.nullable)
       ..writeByte(12)
       ..write(obj.locale)
-      ..writeByte(13)
+      ..writeByte(18)
       ..write(obj.smartNullable)
       ..writeByte(14)
       ..write(obj.addCopyMethod)
       ..writeByte(15)
-      ..write(obj.automaticCheck);
+      ..write(obj.automaticCheck)
+      ..writeByte(19)
+      ..write(obj.showResultDialog);
   }
 
   @override

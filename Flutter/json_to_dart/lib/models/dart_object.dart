@@ -139,7 +139,7 @@ class DartObject extends DartProperty {
                       data: arrayItem,
                       type: DartHelper.converDartType(arrayItem.runtimeType),
                       nullable: DartHelper.converNullable(value) &&
-                          ConfigSetting().smartNullable)),
+                          ConfigSetting().smartNullable.value)),
               depth,
               addProperty: false);
         }
@@ -172,7 +172,7 @@ class DartObject extends DartProperty {
       if (other != null) {
         _mergeObject ??= <String, _InnerObject>{};
 
-        if (ConfigSetting().smartNullable) {
+        if (ConfigSetting().smartNullable.value) {
           for (final MapEntry<String, _InnerObject> existObject
               in _mergeObject!.entries) {
             if (!other.containsKey(existObject.key)) {
@@ -202,7 +202,7 @@ class DartObject extends DartProperty {
                       ? item.value.type
                       : existObject.type,
                   nullable: (existObject.nullable || item.value.nullable) &&
-                      ConfigSetting().smartNullable);
+                      ConfigSetting().smartNullable.value);
               _mergeObject![item.key] = existObject;
               needInitialize = true;
             } else if (existObject.isList &&
@@ -338,8 +338,8 @@ class DartObject extends DartProperty {
         String setString = '';
         final String fss = DartHelper.factorySetString(
           item.propertyAccessorType.value,
-          (!ConfigSetting().nullsafety) ||
-              (ConfigSetting().nullsafety && item.nullable),
+          (!ConfigSetting().nullsafety.value) ||
+              (ConfigSetting().nullsafety.value && item.nullable),
         );
         final bool isGetSet = fss.startsWith('{');
         String copyProperty = item.name.value;
@@ -351,19 +351,19 @@ class DartObject extends DartProperty {
             item.name.value,
             item.key,
             className,
-            if (ConfigSetting().nullsafety && item.nullable)
+            if (ConfigSetting().nullsafety.value && item.nullable)
               '${DartHelper.jsonRes}[\'${item.key}\']==null?null:'
             else
               '',
-            if (ConfigSetting().nullsafety) '!' else ''
+            if (ConfigSetting().nullsafety.value) '!' else ''
           ]);
           typeString = className;
-          if (ConfigSetting().nullsafety && item.nullable) {
+          if (ConfigSetting().nullsafety.value && item.nullable) {
             typeString += '?';
           }
 
           if (ConfigSetting().addCopyMethod.value) {
-            if (!ConfigSetting().nullsafety || item.nullable) {
+            if (!ConfigSetting().nullsafety.value || item.nullable) {
               copyProperty += '?';
             }
             copyProperty += '.copy()';
@@ -387,7 +387,7 @@ class DartObject extends DartProperty {
 
           setString = ' ${item.name}:$lowName';
 
-          if (ConfigSetting().nullsafety) {
+          if (ConfigSetting().nullsafety.value) {
             if (item.nullable) {
               typeString += '?';
             } else {
@@ -461,7 +461,7 @@ class DartObject extends DartProperty {
       String fromJson = '';
       if (fromJsonSb1.length != 0) {
         fromJson = stringFormat(
-                ConfigSetting().nullsafety
+                ConfigSetting().nullsafety.value
                     ? DartHelper.fromJsonHeader1NullSafety
                     : DartHelper.fromJsonHeader1,
                 <String>[className.value]) +
@@ -470,7 +470,7 @@ class DartObject extends DartProperty {
                 <String>[className.value, fromJsonSb.toString()]);
       } else {
         fromJson = stringFormat(
-                ConfigSetting().nullsafety
+                ConfigSetting().nullsafety.value
                     ? DartHelper.fromJsonHeaderNullSafety
                     : DartHelper.fromJsonHeader,
                 <String>[className.value]) +
@@ -524,6 +524,7 @@ class _InnerObject {
   });
   final dynamic data;
   final DartType type;
+  // data is null ?
   final bool nullable;
 
   bool get isList => data is List;

@@ -189,7 +189,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
     ));
 
     rowItems.add(Obx(() {
-      if (ConfigSetting().nullsafetyObs.value) {
+      if (ConfigSetting().nullsafety.value) {
         return Expanded(
           flex: 1,
           child: finalDepth > 0 && !widget.isArrayOject
