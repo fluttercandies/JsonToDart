@@ -1,31 +1,26 @@
 import 'package:json_to_dart/models/dart_property.dart';
 
 import '../models/config.dart';
-import '../models/dart_property.dart';
 import 'enums.dart';
 
 class DartHelper {
   const DartHelper._();
+
   static const String classHeader = 'class {0} {';
   static const String classFooter = '}';
   static const String jsonRes = 'json';
 
-  static const String fromJsonHeader =
-      '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes})=>${DartHelper.jsonRes} == null? null:{0}(';
+  static const String fromJsonHeader = '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes})=>${DartHelper.jsonRes} == null? null:{0}(';
   static const String fromJsonHeader1 =
       '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes}){ if(${DartHelper.jsonRes} == null) {return null;}\n';
-  static const String fromJsonHeaderNullSafety =
-      '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes})=>{0}(';
-  static const String fromJsonHeader1NullSafety =
-      '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes}){\n';
+  static const String fromJsonHeaderNullSafety = '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes})=>{0}(';
+  static const String fromJsonHeader1NullSafety = '  factory {0}.fromJson(Map<String, dynamic> ${DartHelper.jsonRes}){\n';
   static const String fromJsonFooter = ');';
   static const String fromJsonFooter1 = 'return {0}({1});}';
-  static const String toJsonHeader =
-      '  Map<String, dynamic> toJson() => <String, dynamic>{';
+  static const String toJsonHeader = '  Map<String, dynamic> toJson() => <String, dynamic>{';
   static const String toJsonFooter = '};';
 
-  static const String copyWithHeader =
-      '  Map<String, dynamic> toJson() => <String, dynamic>{';
+  static const String copyWithHeader = '  Map<String, dynamic> toJson() => <String, dynamic>{';
   static const String copyWithFooter = '};';
 
   static const String toJsonSetString = "        '{0}': {1},";
@@ -34,11 +29,9 @@ import 'dart:convert';''';
   static const String propertyString = '  {0} {1};';
   static const String propertyStringFinal = '  final {0} {1};';
   static const String propertyStringGet = '  {0} _{2};\n  {0} get {1} => _{2};';
-  static const String propertyStringGetSet =
-      '  {0} _{2};\n  {0} get {1} => _{2};\n  set {1}(value)  {\n    _{2} = value;\n  }\n';
+  static const String propertyStringGetSet = '  {0} _{2};\n  {0} get {1} => _{2};\n  set {1}(value)  {\n    _{2} = value;\n  }\n';
 
-  static String setProperty(
-      String setName, DartProperty item, String? className) {
+  static String setProperty(String setName, DartProperty item, String? className) {
     return '    $setName : ${getUseAsT(getDartTypeString(item.type.value, item), "${DartHelper.jsonRes}['${item.key}']")},';
     // if (appConfig.enableDataProtection) {
     //   return "    $setName : convertValueByType(${DartHelper.jsonRes}['${item.key}'],${item.value.runtimeType.toString()},stack:\"$className-${item.key}\"),";
@@ -47,8 +40,7 @@ import 'dart:convert';''';
     // }
   }
 
-  static const String setObjectProperty =
-      "    {0} :{3} {2}.fromJson(asT<Map<String, dynamic>>(${DartHelper.jsonRes}['{1}']){4}),";
+  static const String setObjectProperty = "    {0} :{3} {2}.fromJson(asT<Map<String, dynamic>>(${DartHelper.jsonRes}['{1}']){4}),";
 
   static String propertyS(PropertyAccessorType type) {
     switch (type) {
@@ -100,11 +92,9 @@ import 'dart:convert';''';
     }
   }
 
-  static const String classToString =
-      '  \n@override\nString  toString() {\n    return jsonEncode(this);\n  }';
+  static const String classToString = '  \n@override\nString  toString() {\n    return jsonEncode(this);\n  }';
 
-  static const String classToClone =
-      '\n{0} clone() => {0}.fromJson(asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))){1});\n';
+  static const String classToClone = '\n{0} clone() => {0}.fromJson(asT<Map<String, dynamic>>(jsonDecode(jsonEncode(this))){1});\n';
 
   static DartType converDartType(Type type) {
     if (type == int) {
@@ -245,10 +235,12 @@ T? asT<T extends Object?>(dynamic value, [T? defaultValue]) {
  ''';
 
   static String getUseAsT(String? par1, String par2) {
+    //如果没勾选就不添加asT了
+    if (!ConfigSetting().addMethod.value) {
+      return par2;
+    }
     String asTString = 'asT<$par1>($par2)';
-    if (ConfigSetting().nullsafety.value &&
-        par1 != null &&
-        !par1.contains('?')) {
+    if (ConfigSetting().nullsafety.value && par1 != null && !par1.contains('?')) {
       asTString += '!';
     }
     return asTString;
