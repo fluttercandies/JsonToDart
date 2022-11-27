@@ -1,3 +1,6 @@
+## 1.4.2
+
+* fix camelName error
 
 ## 1.4.1
 

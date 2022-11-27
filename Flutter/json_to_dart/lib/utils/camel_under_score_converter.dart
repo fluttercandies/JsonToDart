@@ -44,18 +44,27 @@ String camelName(String name, {bool firstCharLowerCase = true}) {
   if (name.isNullOrEmpty) {
     return '';
   }
+
   for (final String symbol in symbolSet) {
     name = name.replaceAll(symbol, '_');
   }
 
   final List<String> camels = name.split('_');
-  for (final String camel in camels) {
-    if (result.length == 0 && firstCharLowerCase) {
-      result.write(camel.toLowerCase());
+  if (camels.length == 1) {
+    if (firstCharLowerCase) {
+      return name.substring(0, 1).toLowerCase() + name.substring(1);
     } else {
-      if (!name.isNullOrEmpty) {
-        result.write(camel.substring(0, 1).toUpperCase());
-        result.write(camel.substring(1).toLowerCase());
+      return name.substring(0, 1).toUpperCase() + name.substring(1);
+    }
+  } else {
+    for (final String camel in camels) {
+      if (result.length == 0 && firstCharLowerCase) {
+        result.write(camel.toLowerCase());
+      } else {
+        if (!name.isNullOrEmpty) {
+          result.write(camel.substring(0, 1).toUpperCase());
+          result.write(camel.substring(1).toLowerCase());
+        }
       }
     }
   }
