@@ -6,6 +6,8 @@ import 'package:json_to_dart/utils/enums.dart';
 
 part 'config.g.dart';
 
+const Locale _emptyLocale = Locale('_');
+
 /// flutter packages pub run build_runner build --delete-conflicting-outputs
 @HiveType(typeId: TypeIds.appSetting)
 class ConfigSetting extends Setting<ConfigSetting> {
@@ -96,7 +98,7 @@ class RxTypeAdapter<T> extends TypeAdapter<Rx<T>> {
           as Rx<T>;
     } else if (PropertyNameSortingType.none is T) {
       return PropertyNameSortingType.values[reader.readInt()].obs as Rx<T>;
-    } else if (T == Locale) {
+    } else if (_emptyLocale is T) {
       final Map<String, dynamic> map =
           jsonDecode(reader.readString()) as Map<String, dynamic>;
       return Locale.fromSubtags(
