@@ -96,7 +96,7 @@ class RxTypeAdapter<T> extends TypeAdapter<Rx<T>> {
           as Rx<T>;
     } else if (PropertyNameSortingType.none is T) {
       return PropertyNameSortingType.values[reader.readInt()].obs as Rx<T>;
-    } else if (T.toString() == 'Locale') {
+    } else if (T == Locale) {
       final Map<String, dynamic> map =
           jsonDecode(reader.readString()) as Map<String, dynamic>;
       return Locale.fromSubtags(
