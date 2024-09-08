@@ -9,7 +9,6 @@ import 'package:json_to_dart/utils/error_check/text_editing_controller.dart';
 import 'package:json_to_dart/utils/my_string_buffer.dart';
 import 'package:json_to_dart/utils/string_helper.dart';
 
-import 'config.dart';
 import 'dart_property.dart';
 
 // ignore: must_be_immutable

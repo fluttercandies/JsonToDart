@@ -18,19 +18,20 @@ import 'models/config.dart';
 import 'models/dart_object.dart';
 
 void showAlertDialog(String msg, [IconData data = Icons.warning]) {
-  SmartDialog.compatible.show(
-      widget: AlertDialog(
-    title: Icon(data),
-    content: Text(msg),
-    actions: <Widget>[
-      TextButton(
-        child: Text(appLocalizations.ok),
-        onPressed: () {
-          SmartDialog.compatible.dismiss();
-        },
-      ),
-    ],
-  ));
+  SmartDialog.show(
+    builder: (BuildContext b) => AlertDialog(
+      title: Icon(data),
+      content: Text(msg),
+      actions: <Widget>[
+        TextButton(
+          child: Text(appLocalizations.ok),
+          onPressed: () {
+            SmartDialog.dismiss();
+          },
+        ),
+      ],
+    ),
+  );
 }
 
 class MainController extends GetxController {
@@ -60,10 +61,11 @@ class MainController extends GetxController {
       return;
     }
 
-    SmartDialog.compatible.showLoading(
-        widget: const Center(
-      child: SpinKitCubeGrid(color: Colors.orange),
-    ));
+    SmartDialog.showLoading(
+      builder: (BuildContext context) => const Center(
+        child: SpinKitCubeGrid(color: Colors.orange),
+      ),
+    );
 
     String inputText = text;
     try {
@@ -85,7 +87,7 @@ class MainController extends GetxController {
       //   handleError(error, stackTrace);
       // });
       if (extendedObject == null) {
-        SmartDialog.compatible.dismiss();
+        SmartDialog.dismiss();
         showAlertDialog(appLocalizations.illegalJson, Icons.error);
         return;
       }
@@ -111,7 +113,7 @@ class MainController extends GetxController {
     } catch (error, stackTrace) {
       handleError(error, stackTrace);
     }
-    SmartDialog.compatible.dismiss();
+    SmartDialog.dismiss();
   }
 
   String? generateDart() {

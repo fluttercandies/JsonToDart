@@ -1,3 +1,7 @@
+## 1.4.3
+
+* fix config not save
+
 ## 1.4.2
 
 * fix camelName error

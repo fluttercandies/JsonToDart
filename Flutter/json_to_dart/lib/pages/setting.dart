@@ -38,8 +38,8 @@ class SettingWidget extends StatelessWidget {
               return;
             }
             if (ConfigSetting().showResultDialog.value) {
-              SmartDialog.compatible.show(
-                widget: ResultDialog(
+              SmartDialog.show(
+                builder: (BuildContext b) => ResultDialog(
                   text: dartText,
                 ),
               );
@@ -52,13 +52,13 @@ class SettingWidget extends StatelessWidget {
           onPressed: () {
             showModalBottomSheet<void>(
               context: context,
+              constraints: const BoxConstraints.expand(),
               builder: (BuildContext ctx) {
-                return Container(
-                  height: double.infinity,
-                  child: const MoreSetting(),
-                );
+                return const MoreSetting();
               },
-            ).whenComplete(() {});
+            ).whenComplete(() {
+              ConfigSetting().save();
+            });
           },
         ),
         Obx(() {
@@ -77,6 +77,7 @@ class SettingWidget extends StatelessWidget {
                   .toList(),
               onChanged: (Locale? value) {
                 ConfigSetting().locale.value = value!;
+                ConfigSetting().save();
                 Get.updateLocale(ConfigSetting().locale.value);
                 controller.formatJsonAndCreateDartObject();
               },
@@ -108,6 +109,7 @@ class MoreSetting extends StatelessWidget {
             onChanged: (bool value) {
               if (ConfigSetting().enableDataProtection.value != value) {
                 ConfigSetting().enableDataProtection.value = value;
+                ConfigSetting().save();
               }
             },
           );
@@ -119,6 +121,7 @@ class MoreSetting extends StatelessWidget {
             onChanged: (bool value) {
               if (value != ConfigSetting().enableArrayProtection.value) {
                 ConfigSetting().enableArrayProtection.value = value;
+                ConfigSetting().save();
               }
             },
           );
@@ -148,7 +151,7 @@ class MoreSetting extends StatelessWidget {
               onChanged: (int? value) {
                 if (ConfigSetting().traverseArrayCount.value != value) {
                   ConfigSetting().traverseArrayCount.value = value!;
-
+                  ConfigSetting().save();
                   if (controller.dartObject != null) {
                     controller.formatJsonAndCreateDartObject();
                   }
@@ -185,7 +188,7 @@ class MoreSetting extends StatelessWidget {
                 if (ConfigSetting().propertyNamingConventionsType.value !=
                     value) {
                   ConfigSetting().propertyNamingConventionsType.value = value!;
-
+                  ConfigSetting().save();
                   controller.updateNameByNamingConventionsType();
                 }
               },
@@ -215,7 +218,7 @@ class MoreSetting extends StatelessWidget {
               onChanged: (PropertyNameSortingType? value) {
                 if (ConfigSetting().propertyNameSortingType.value != value) {
                   ConfigSetting().propertyNameSortingType.value = value!;
-
+                  ConfigSetting().save();
                   controller.orderPropeties();
                 }
               },
@@ -229,6 +232,7 @@ class MoreSetting extends StatelessWidget {
             onChanged: (bool value) {
               if (ConfigSetting().addMethod.value != value) {
                 ConfigSetting().addMethod.value = value;
+                ConfigSetting().save();
               }
             },
           );
@@ -242,6 +246,7 @@ class MoreSetting extends StatelessWidget {
               if (!value) {
                 ConfigSetting().smartNullable.value = false;
               }
+              ConfigSetting().save();
             },
           );
         }),
@@ -255,6 +260,7 @@ class MoreSetting extends StatelessWidget {
                 // if (!value) {
                 //   controller.updateNullable(true);
                 // }
+                ConfigSetting().save();
               },
             );
           }
@@ -270,6 +276,7 @@ class MoreSetting extends StatelessWidget {
             onChanged: (bool value) {
               if (ConfigSetting().addCopyMethod.value != value) {
                 ConfigSetting().addCopyMethod.value = value;
+                ConfigSetting().save();
               }
             },
           );
@@ -280,6 +287,7 @@ class MoreSetting extends StatelessWidget {
             value: ConfigSetting().automaticCheck.value,
             onChanged: (bool value) {
               ConfigSetting().automaticCheck.value = value;
+              ConfigSetting().save();
             },
           );
         }),
@@ -290,6 +298,7 @@ class MoreSetting extends StatelessWidget {
             onChanged: (bool value) {
               if (value != ConfigSetting().showResultDialog.value) {
                 ConfigSetting().showResultDialog.value = value;
+                ConfigSetting().save();
               }
             },
           );
@@ -324,6 +333,7 @@ class MoreSetting extends StatelessWidget {
               controller: controller.fileHeaderHelpController,
               onChanged: (String value) {
                 ConfigSetting().fileHeaderInfo = value;
+                ConfigSetting().save();
               },
               decoration: InputDecoration(
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12),

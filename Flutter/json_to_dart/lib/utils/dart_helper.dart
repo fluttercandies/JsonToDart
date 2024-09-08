@@ -1,7 +1,6 @@
 import 'package:json_to_dart/models/dart_property.dart';
 
 import '../models/config.dart';
-import '../models/dart_property.dart';
 import 'enums.dart';
 
 class DartHelper {

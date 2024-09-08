@@ -9,8 +9,6 @@ import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/extension.dart';
 
 import '../models/config.dart';
-import '../models/dart_object.dart';
-import '../utils/enums.dart';
 import '../widget/checkBox.dart';
 
 Widget _emptyWidget = Expanded(

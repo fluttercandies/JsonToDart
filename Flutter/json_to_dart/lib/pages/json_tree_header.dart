@@ -8,7 +8,6 @@ import 'package:json_to_dart/style/text.dart';
 import 'package:json_to_dart/utils/enums.dart';
 import 'package:json_to_dart/utils/extension.dart';
 
-import '../models/config.dart';
 import '../widget/checkBox.dart';
 
 class JsonTreeHeader extends StatelessWidget {

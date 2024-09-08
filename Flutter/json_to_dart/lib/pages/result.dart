@@ -31,7 +31,7 @@ class ResultDialog extends StatelessWidget {
                 ),
                 CloseButton(
                   onPressed: () {
-                    SmartDialog.compatible.dismiss();
+                    SmartDialog.dismiss();
                   },
                 ),
               ],
