@@ -57,5 +57,9 @@
     "buttonCopyText":"複製",
     "buttonCopySuccess":"複製成功",
     "resultDialogTitle":"結果",
-    "showResultDialog":"顯示結果彈框"
+    "showResultDialog":"顯示結果彈框",
+    "equalityMethodType":"對比相等方法類型",
+    "none":"不生成",
+    "official":"官方方式", 
+    "equatable":"Equatable 的方式"
 }

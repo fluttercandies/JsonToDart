@@ -57,6 +57,12 @@ enum PropertyNameSortingType {
   descending,
 }
 
+enum EqualityMethodType {
+  none,
+  official,
+  equatable,
+}
+
 extension DartTypeE on DartType {
   String get text =>
       this == DartType.Null ? 'Object' : toString().replaceAll('DartType.', '');

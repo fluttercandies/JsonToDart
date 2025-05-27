@@ -8,7 +8,7 @@ part 'config.g.dart';
 
 const Locale _emptyLocale = Locale('_');
 
-/// flutter packages pub run build_runner build --delete-conflicting-outputs
+/// dart run build_runner build --delete-conflicting-outputs
 @HiveType(typeId: TypeIds.appSetting)
 class ConfigSetting extends Setting<ConfigSetting> {
   factory ConfigSetting() => _appSetting;
@@ -63,6 +63,9 @@ class ConfigSetting extends Setting<ConfigSetting> {
   @HiveField(19)
   RxBool showResultDialog = true.obs;
 
+  @HiveField(20)
+  Rx<EqualityMethodType> equalityMethodType = EqualityMethodType.official.obs;
+
   @override
   Future<void> init({
     TypeAdapter<ConfigSetting>? adapter,
@@ -75,6 +78,7 @@ class ConfigSetting extends Setting<ConfigSetting> {
     Hive.registerAdapter(RxTypeAdapter<int>(9));
     Hive.registerAdapter(RxTypeAdapter<String>(10));
     Hive.registerAdapter(RxTypeAdapter<bool>(11));
+    Hive.registerAdapter(RxTypeAdapter<EqualityMethodType>(12));
     await super.init(adapter: ConfigSettingAdapter(), defaultValue: this);
   }
 }
@@ -98,6 +102,8 @@ class RxTypeAdapter<T> extends TypeAdapter<Rx<T>> {
           as Rx<T>;
     } else if (PropertyNameSortingType.none is T) {
       return PropertyNameSortingType.values[reader.readInt()].obs as Rx<T>;
+    } else if (EqualityMethodType.none is T) {
+      return EqualityMethodType.values[reader.readInt()].obs as Rx<T>;
     } else if (_emptyLocale is T) {
       final Map<String, dynamic> map =
           jsonDecode(reader.readString()) as Map<String, dynamic>;
@@ -122,6 +128,9 @@ class RxTypeAdapter<T> extends TypeAdapter<Rx<T>> {
     } else if (obj.value is PropertyNameSortingType) {
       writer.writeInt(PropertyNameSortingType.values
           .indexOf(obj.value as PropertyNameSortingType));
+    } else if (obj.value is EqualityMethodType) {
+      writer.writeInt(
+          EqualityMethodType.values.indexOf(obj.value as EqualityMethodType));
     } else if (obj.value is Locale) {
       final Locale locale = obj.value as Locale;
       writer.writeString(jsonEncode(
@@ -158,8 +167,4 @@ class Setting<T extends HiveObject> extends HiveObject {
 class TypeIds {
   const TypeIds._();
   static const int appSetting = 0;
-  static const int propertyNamingConventionsType = 1;
-  static const int propertyAccessorType = 2;
-  static const int propertyNameSortingType = 3;
-  static const int localeType = 4;
 }

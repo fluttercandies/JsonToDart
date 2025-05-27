@@ -57,5 +57,9 @@
     "buttonCopyText":"复制",
     "buttonCopySuccess":"复制成功",
     "resultDialogTitle":"结果",
-    "showResultDialog":"显示结果弹框"
+    "showResultDialog":"显示结果弹框",
+    "equalityMethodType":"对比相等方法类型",
+    "none":"不生成",
+    "official":"官方方式", 
+    "equatable":"Equatable 的方式"
 }

@@ -1,3 +1,8 @@
+## 1.5.0
+
+* add copyWith support
+* add object equality method (none, official, equatable)
+
 ## 1.4.3
 
 * fix config not save

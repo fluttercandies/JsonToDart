@@ -146,7 +146,7 @@ class DartProperty extends Equatable {
     while (temp is List && temp.isNotEmpty) {
       if (copy == '') {
         copy =
-            'e.map(($type e) => ${className != null ? 'e.copy()' : 'e'}).toList()';
+            'e.map(($type e) => ${className != null ? 'e.copyWith()' : 'e'}).toList()';
       } else {
         type = 'List<$type>';
         copy = 'e.map(($type e)=> $copy).toList()';

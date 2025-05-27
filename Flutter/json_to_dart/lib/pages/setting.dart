@@ -303,6 +303,36 @@ class MoreSetting extends StatelessWidget {
             },
           );
         }),
+        Obx(() {
+          return StPicker(
+            title: appLocalizations.equalityMethodType,
+            child: DropdownButton<EqualityMethodType>(
+              iconEnabledColor: ColorPlate.blue,
+              value: ConfigSetting().equalityMethodType.value,
+              items: <DropdownMenuItem<EqualityMethodType>>[
+                DropdownMenuItem<EqualityMethodType>(
+                  value: EqualityMethodType.none,
+                  child: StText.normal(appLocalizations.none),
+                ),
+                DropdownMenuItem<EqualityMethodType>(
+                  value: EqualityMethodType.official,
+                  child: StText.normal(appLocalizations.official),
+                ),
+                DropdownMenuItem<EqualityMethodType>(
+                  value: EqualityMethodType.equatable,
+                  child: StText.normal(appLocalizations.equatable),
+                ),
+              ],
+              onChanged: (EqualityMethodType? value) {
+                if (ConfigSetting().equalityMethodType.value != value) {
+                  ConfigSetting().equalityMethodType.value = value!;
+                  ConfigSetting().save();
+                  controller.orderPropeties();
+                }
+              },
+            ),
+          );
+        }),
       ],
     );
     return Container(

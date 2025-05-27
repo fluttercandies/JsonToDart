@@ -69,13 +69,16 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
     if (fields[19] != null) {
       result.showResultDialog = fields[19] as RxBool;
     }
+    if (fields[20] != null) {
+      result.equalityMethodType = fields[20] as Rx<EqualityMethodType>;
+    }
     return result;
   }
 
   @override
   void write(BinaryWriter writer, ConfigSetting obj) {
     writer
-      ..writeByte(17)
+      ..writeByte(18)
       ..writeByte(0)
       ..write(obj.addMethod)
       ..writeByte(1)
@@ -109,7 +112,9 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..writeByte(15)
       ..write(obj.automaticCheck)
       ..writeByte(19)
-      ..write(obj.showResultDialog);
+      ..write(obj.showResultDialog)
+      ..writeByte(20)
+      ..write(obj.equalityMethodType);
   }
 
   @override

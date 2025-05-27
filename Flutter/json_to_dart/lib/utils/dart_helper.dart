@@ -5,7 +5,7 @@ import 'enums.dart';
 
 class DartHelper {
   const DartHelper._();
-  static const String classHeader = 'class {0} {';
+  static const String classHeader = 'class {0} {1}{';
   static const String classFooter = '}';
   static const String jsonRes = 'json';
 
@@ -255,10 +255,26 @@ T? asT<T extends Object?>(dynamic value, [T? defaultValue]) {
 
   static const String copyMethodString = '''
 
-    {0} copy() {
+    {0} copyWith({2}) {
     return {0}(
       {1}
     );
   }
   ''';
+
+  static const String officialEqualityString = '''
+  @override
+  int get hashCode => runtimeType.hashCode ^ {0};
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is {1} && {2};
+  }
+''';
+
+  static const String equatableEqualityString = '''
+  @override
+  List<Object?> get props => <Object?>[{0}];
+''';
 }

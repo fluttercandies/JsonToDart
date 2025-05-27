@@ -302,8 +302,14 @@ class DartObject extends DartProperty {
 
     final MyStringBuffer sb = MyStringBuffer();
 
-    sb.writeLine(
-        stringFormat(DartHelper.classHeader, <String>[className.value]));
+    sb.writeLine(stringFormat(DartHelper.classHeader, <String>[
+      className.value,
+      if (ConfigSetting().equalityMethodType.value ==
+          EqualityMethodType.equatable)
+        'with EquatableMixin'
+      else
+        '',
+    ]));
 
     if (properties.isNotEmpty) {
       final MyStringBuffer factorySb = MyStringBuffer();
@@ -315,8 +321,11 @@ class DartObject extends DartProperty {
       final MyStringBuffer fromJsonSb1 = MyStringBuffer();
       final MyStringBuffer toJsonSb = MyStringBuffer();
 
-      final MyStringBuffer copySb = MyStringBuffer();
+      final MyStringBuffer copyWithParameterSb = MyStringBuffer();
+      final MyStringBuffer copyWithBodySb = MyStringBuffer();
 
+      final List<String> equalityStringSb = <String>[];
+      final List<String> equalityStringSb1 = <String>[];
       final bool isAllFinalProperties = !properties.any(
           (DartProperty element) =>
               element.propertyAccessorType.value !=
@@ -341,6 +350,7 @@ class DartObject extends DartProperty {
               (ConfigSetting().nullsafety.value && item.nullable),
         );
         final bool isGetSet = fss.startsWith('{');
+
         String copyProperty = item.name.value;
 
         if (item is DartObject) {
@@ -365,7 +375,7 @@ class DartObject extends DartProperty {
             if (!ConfigSetting().nullsafety.value || item.nullable) {
               copyProperty += '?';
             }
-            copyProperty += '.copy()';
+            copyProperty += '.copyWith()';
           }
         } else if (item.value is List) {
           if (objectKeys.containsKey(item.key)) {
@@ -446,8 +456,22 @@ class DartObject extends DartProperty {
           item.key,
           setName,
         ]));
-        if (ConfigSetting().addCopyMethod.value)
-          copySb.writeLine('${item.name}:$copyProperty,');
+
+        if (ConfigSetting().addCopyMethod.value) {
+          copyWithBodySb
+              .writeLine('${item.name}: ${item.name}?? $copyProperty,');
+          copyWithParameterSb.writeLine(
+              '$typeString${typeString.contains('?') ? '' : '?'}${item.name},');
+        }
+
+        if (ConfigSetting().equalityMethodType.value ==
+            EqualityMethodType.official) {
+          equalityStringSb.add('${item.name}.hashCode');
+          equalityStringSb1.add('${item.name} == other.${item.name}');
+        } else if (ConfigSetting().equalityMethodType.value ==
+            EqualityMethodType.equatable) {
+          equalityStringSb.add('${item.name}');
+        }
       }
 
       if (factorySb1.length == 0) {
@@ -485,11 +509,34 @@ class DartObject extends DartProperty {
       sb.writeLine(propertySb.toString());
       sb.writeLine(DartHelper.classToString);
       sb.writeLine(toJsonSb.toString());
+
       if (ConfigSetting().addCopyMethod.value) {
         sb.writeLine(stringFormat(DartHelper.copyMethodString, <String>[
           className.value,
-          copySb.toString(),
+          copyWithBodySb.toString(),
+          '{${copyWithParameterSb.toString()}}',
         ]));
+      }
+
+      if (ConfigSetting().equalityMethodType.value != EqualityMethodType.none) {
+        switch (ConfigSetting().equalityMethodType.value) {
+          case EqualityMethodType.none:
+            break;
+          case EqualityMethodType.official:
+            sb.writeLine(
+                stringFormat(DartHelper.officialEqualityString, <String>[
+              equalityStringSb.join('^'),
+              className.value,
+              equalityStringSb1.join('&&'),
+            ]));
+            break;
+          case EqualityMethodType.equatable:
+            sb.writeLine(
+                stringFormat(DartHelper.equatableEqualityString, <String>[
+              equalityStringSb.join(','),
+            ]));
+            break;
+        }
       }
       // sb.writeLine(stringFormat(DartHelper.classToClone,
       //     <String>[className, if (ConfigSetting().nullsafety) '!' else '']));

@@ -57,5 +57,9 @@
     "buttonCopyText":"Copy",
     "buttonCopySuccess":"Copy Success",
     "resultDialogTitle":"Result",
-    "showResultDialog":"show result dialog"
+    "showResultDialog":"show result dialog",
+    "equalityMethodType":"Equality Method Type",
+    "none":"non-generate",
+    "official":"official", 
+    "equatable":"equatable"
 }

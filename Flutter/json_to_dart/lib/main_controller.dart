@@ -194,7 +194,9 @@ class MainController extends GetxController {
         sb.writeLine(dartObject!.toString());
         String result = sb.toString();
 
-        final DartFormatter formatter = DartFormatter();
+        final DartFormatter formatter = DartFormatter(
+          languageVersion: DartFormatter.latestLanguageVersion,
+        );
 
         result = formatter.format(result);
 

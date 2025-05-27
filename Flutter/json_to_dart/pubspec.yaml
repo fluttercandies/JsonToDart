@@ -11,7 +11,7 @@ description: The tool to convert json to dart code.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.4.3
+version: 1.5.0
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
@@ -45,7 +45,7 @@ dev_dependencies:
   flutter_native_splash: any
   flutter_test:
     sdk: flutter
-  #hive_generator: any  
+  # hive_generator: any  
   # hive_generator: 
   #   git:
   #     url: https://github.com/zmtzawqlp/hive.git
