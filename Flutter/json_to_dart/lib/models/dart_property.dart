@@ -245,7 +245,7 @@ class DartProperty extends Equatable {
           }
 
           result =
-              " for (final dynamic item in ${DartHelper.jsonRes}['$key']$nonNullable) { if (item != null) { $addString }}";
+              " for (final dynamic item in ${DartHelper.jsonRes}['$key']$nonNullable as List<dynamic>) { if (item != null) { $addString }}";
         } else {
           addString = 'items$count.add($item); ';
 

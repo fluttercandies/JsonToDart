@@ -458,6 +458,9 @@ class DartObject extends DartProperty {
         ]));
 
         if (ConfigSetting().addCopyMethod.value) {
+          if (copyProperty.isEmpty) {
+            copyProperty = item.name.value;
+          }
           copyWithBodySb
               .writeLine('${item.name}: ${item.name}?? $copyProperty,');
           copyWithParameterSb.writeLine(

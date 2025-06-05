@@ -1,3 +1,7 @@
+## 1.5.1
+
+* Fix copyProperty isEmpty case
+
 ## 1.5.0
 
 * add copyWith support
