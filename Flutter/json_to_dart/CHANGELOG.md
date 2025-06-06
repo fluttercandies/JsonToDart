@@ -1,3 +1,7 @@
+## 1.5.2
+
+* Add deepCopy option
+
 ## 1.5.1
 
 * Fix copyProperty isEmpty case

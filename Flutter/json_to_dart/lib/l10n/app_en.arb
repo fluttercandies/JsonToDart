@@ -61,5 +61,6 @@
     "equalityMethodType":"Equality Method Type",
     "none":"non-generate",
     "official":"official", 
-    "equatable":"equatable"
+    "equatable":"equatable",
+    "deepCopy":"deepCopy"
 }

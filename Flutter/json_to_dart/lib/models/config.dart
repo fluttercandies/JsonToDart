@@ -66,6 +66,8 @@ class ConfigSetting extends Setting<ConfigSetting> {
   @HiveField(20)
   Rx<EqualityMethodType> equalityMethodType = EqualityMethodType.official.obs;
 
+  @HiveField(21)
+  RxBool deepCopy = false.obs;
   @override
   Future<void> init({
     TypeAdapter<ConfigSetting>? adapter,

@@ -61,5 +61,6 @@
     "equalityMethodType":"对比相等方法类型",
     "none":"不生成",
     "official":"官方方式", 
-    "equatable":"Equatable 的方式"
+    "equatable":"Equatable 的方式",
+    "deepCopy":"深复制"
 }

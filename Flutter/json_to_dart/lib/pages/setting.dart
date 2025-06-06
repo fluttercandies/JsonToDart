@@ -283,6 +283,18 @@ class MoreSetting extends StatelessWidget {
         }),
         Obx(() {
           return StCheckBox(
+            title: appLocalizations.deepCopy,
+            value: ConfigSetting().deepCopy.value,
+            onChanged: (bool value) {
+              if (ConfigSetting().deepCopy.value != value) {
+                ConfigSetting().deepCopy.value = value;
+                ConfigSetting().save();
+              }
+            },
+          );
+        }),
+        Obx(() {
+          return StCheckBox(
             title: appLocalizations.automaticCheck,
             value: ConfigSetting().automaticCheck.value,
             onChanged: (bool value) {

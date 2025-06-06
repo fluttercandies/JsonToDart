@@ -371,7 +371,8 @@ class DartObject extends DartProperty {
             typeString += '?';
           }
 
-          if (ConfigSetting().addCopyMethod.value) {
+          if (ConfigSetting().addCopyMethod.value &&
+              ConfigSetting().deepCopy.value) {
             if (!ConfigSetting().nullsafety.value || item.nullable) {
               copyProperty += '?';
             }
@@ -404,7 +405,8 @@ class DartObject extends DartProperty {
             }
           }
           setString += ',';
-          if (ConfigSetting().addCopyMethod.value)
+          if (ConfigSetting().addCopyMethod.value &&
+              ConfigSetting().deepCopy.value)
             copyProperty = item.getListCopy(className: className);
         } else {
           setString = DartHelper.setProperty(

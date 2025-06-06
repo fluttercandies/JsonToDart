@@ -72,13 +72,16 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
     if (fields[20] != null) {
       result.equalityMethodType = fields[20] as Rx<EqualityMethodType>;
     }
+    if (fields[21] != null) {
+      result.deepCopy = fields[21] as RxBool;
+    }
     return result;
   }
 
   @override
   void write(BinaryWriter writer, ConfigSetting obj) {
     writer
-      ..writeByte(18)
+      ..writeByte(19)
       ..writeByte(0)
       ..write(obj.addMethod)
       ..writeByte(1)
@@ -114,7 +117,9 @@ class ConfigSettingAdapter extends TypeAdapter<ConfigSetting> {
       ..writeByte(19)
       ..write(obj.showResultDialog)
       ..writeByte(20)
-      ..write(obj.equalityMethodType);
+      ..write(obj.equalityMethodType)
+      ..writeByte(21)
+      ..write(obj.deepCopy);
   }
 
   @override
