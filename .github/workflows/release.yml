@@ -3,12 +3,28 @@ name: Release Build
 on:
   release:
     types: [created]
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Release tag name (e.g., v1.0.0)'
+        required: true
+        type: string
+      release_id:
+        description: 'Release ID (optional, for existing releases)'
+        required: false
+        type: string
 
 # 设置工作流权限
 permissions:
   contents: write  # 允许写入内容（推送、创建 Release 等）
   pages: write     # 允许部署到 GitHub Pages
   id-token: write  # 允许 OIDC 令牌生成
+
+# 获取当前触发类型（自动发布还是手动触发）
+env:
+  IS_WORKFLOW_DISPATCH: ${{ github.event_name == 'workflow_dispatch' }}
+  RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag_name || github.ref_name }}
+  RELEASE_ID: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.release_id || github.event.release.id }}
 
 jobs:
   build:
@@ -102,7 +118,7 @@ jobs:
         run: |
           cd Flutter/json_to_dart
           flutter config --enable-web
-          flutter build web --release --web-renderer html --base-href "/JsonToDart/"
+          flutter build web --release --web-renderer html
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
@@ -113,8 +129,11 @@ jobs:
           target-folder: .
 
   create_release:
-    name: Create Release
+    name: Create/Update Release
     needs: [build, deploy_web]
+    if: >
+      github.event_name != 'workflow_dispatch' || 
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.release_id == '')
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
@@ -126,9 +145,52 @@ jobs:
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: Release ${{ env.RELEASE_TAG }}
           files: |
             artifacts/linux-release/linux.tar.gz
             artifacts/macos-release/macos.zip
             artifacts/windows-release/windows.zip
+          generate_release_notes: true
+          draft: false
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  update_release:
+    name: Update Release
+    needs: [build, create_release]
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_id != ''
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+      
+      - name: Upload to existing Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_id: ${{ env.RELEASE_ID }}
+          file: artifacts/linux-release/linux.tar.gz
+          asset_name: linux.tar.gz
+          overwrite: true
+
+      - name: Upload macOS artifact to Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_id: ${{ env.RELEASE_ID }}
+          file: artifacts/macos-release/macos.zip
+          asset_name: macos.zip
+          overwrite: true
+
+      - name: Upload Windows artifact to Release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          release_id: ${{ env.RELEASE_ID }}
+          file: artifacts/windows-release/windows.zip
+          asset_name: windows.zip
+          overwrite: true
