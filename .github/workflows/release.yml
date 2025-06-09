@@ -1,0 +1,134 @@
+name: Release Build
+
+on:
+  release:
+    types: [created]
+
+# 设置工作流权限
+permissions:
+  contents: write  # 允许写入内容（推送、创建 Release 等）
+  pages: write     # 允许部署到 GitHub Pages
+  id-token: write  # 允许 OIDC 令牌生成
+
+jobs:
+  build:
+    name: Build Desktop & Web
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            platform: linux
+            artifact: linux.tar.gz
+          - os: macos-latest
+            platform: macos
+            artifact: macos.zip
+          - os: windows-latest
+            platform: windows
+            artifact: windows.zip
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          cache-key: 'flutter-3.16.9'
+          cache-path: '~/.pub-cache'
+
+      - name: Enable desktop
+        run: |
+          flutter config --enable-${{ matrix.platform }}
+          flutter doctor -v
+
+      - name: Install dependencies
+        run: |
+          cd Flutter/json_to_dart
+          flutter pub get
+
+      - name: Build desktop
+        run: |
+          cd Flutter/json_to_dart
+          if [ "${{ matrix.platform }}" = "windows" ]; then
+            flutter build windows --release
+            7z a -r ../${{ matrix.artifact }} build/windows/runner/Release/*
+          elif [ "${{ matrix.platform }}" = "macos" ]; then
+            flutter build macos --release
+            cd build/macos/Build/Products/release
+            zip -r ../../../../../${{ matrix.artifact }} *.app
+          else
+            flutter build linux --release
+            tar -czf ../../${{ matrix.artifact }} -C build/linux/x64/release/bundle .
+          fi
+        shell: bash
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.platform }}-release
+          path: Flutter/json_to_dart/${{ matrix.artifact }}
+
+  deploy_web:
+    name: Deploy Web
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+          cache-key: 'flutter-3.16.9'
+          cache-path: '~/.pub-cache'
+
+      - name: Install dependencies
+        run: |
+          cd Flutter/json_to_dart
+          flutter pub get
+
+      - name: Build web
+        run: |
+          cd Flutter/json_to_dart
+          flutter config --enable-web
+          flutter build web --release --web-renderer html --base-href "/JsonToDart/"
+
+      - name: Deploy to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: Flutter/json_to_dart/build/web
+          branch: gh-pages
+          clean: true
+          target-folder: .
+
+  create_release:
+    name: Create Release
+    needs: [build, deploy_web]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+      
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            artifacts/linux-release/linux.tar.gz
+            artifacts/macos-release/macos.zip
+            artifacts/windows-release/windows.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
