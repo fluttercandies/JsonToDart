@@ -39,7 +39,7 @@ jobs:
         with:
           channel: stable
           cache: true
-          cache-key: 'flutter-3.16.9'
+          cache-key: 'flutter-3.24.1'
           cache-path: '~/.pub-cache'
 
       - name: Enable desktop
@@ -90,7 +90,7 @@ jobs:
         with:
           channel: stable
           cache: true
-          cache-key: 'flutter-3.16.9'
+          cache-key: 'flutter-3.24.1'
           cache-path: '~/.pub-cache'
 
       - name: Install dependencies
