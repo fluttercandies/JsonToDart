@@ -46,17 +46,14 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
         with:
-          channel: stable
-          cache: true
-          cache-key: 'flutter-3.24.1'
-          cache-path: '~/.pub-cache'
+          version: 3.24.1
 
       - name: Display flutter info
         run: |
@@ -97,17 +94,14 @@ jobs:
     
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
         with:
-          channel: stable
-          cache: true
-          cache-key: 'flutter-3.24.1'
-          cache-path: '~/.pub-cache'
+          version: 3.24.1
 
       - name: Install dependencies
         run: |
@@ -136,13 +130,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
       
       - name: Create Release
         id: create_release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.RELEASE_TAG }}
           name: Release ${{ env.RELEASE_TAG }}
@@ -163,7 +157,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: artifacts
       
