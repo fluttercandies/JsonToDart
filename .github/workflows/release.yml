@@ -49,6 +49,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      
+      - name: Install Linux Dependencies
+        if: matrix.platform == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgtk-3-dev ninja-build liblzma-dev libstdc++-12-dev
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
