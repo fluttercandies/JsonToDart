@@ -31,17 +31,21 @@ jobs:
     name: Build Desktop & Web
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false  # 允许继续执行，即使某些作业失败
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
             platform: linux
+            build_target: build/linux/x64/release/bundle/json_to_dart
             artifact: linux.tar.gz
           - os: macos-latest
             platform: macos
-            artifact: macos.zip
+            build_target: build/macos/Build/Products/Release/json_to_dart.app
+            artifact: macos.tar.gz
           - os: windows-latest
             platform: windows
+            build_target: "build\\windows\\x64\\runner\\Release\\json_to_dart.exe"
             artifact: windows.zip
     
     steps:
@@ -75,14 +79,15 @@ jobs:
           cd Flutter/json_to_dart
           if [ "${{ matrix.platform }}" = "windows" ]; then
             flutter build windows --release
-            7z a -r ../${{ matrix.artifact }} build/windows/runner/Release/*
+            7z a -r ${{ matrix.artifact }} ${{ matrix.build_target }}
           elif [ "${{ matrix.platform }}" = "macos" ]; then
             flutter build macos --release
-            cd build/macos/Build/Products/release
-            zip -r ../../../../../${{ matrix.artifact }} *.app
+            cd ${{ matrix.build_target }}
+            cd ..
+            tar -czf ${{ matrix.artifact }} ${{ matrix.build_target }}
           else
             flutter build linux --release
-            tar -czf ../../${{ matrix.artifact }} -C build/linux/x64/release/bundle .
+            tar -czf ${{ matrix.artifact }} -C ${{ matrix.build_target }} .
           fi
         shell: bash
 
