@@ -58,9 +58,8 @@ jobs:
           cache-key: 'flutter-3.24.1'
           cache-path: '~/.pub-cache'
 
-      - name: Enable desktop
+      - name: Display flutter info
         run: |
-          flutter config --enable-${{ matrix.platform }}
           flutter doctor -v
 
       - name: Install dependencies
@@ -118,7 +117,6 @@ jobs:
       - name: Build web
         run: |
           cd Flutter/json_to_dart
-          flutter config --enable-web
           flutter build web --release --web-renderer html
 
       - name: Deploy to GitHub Pages
