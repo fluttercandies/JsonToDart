@@ -5,6 +5,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:json_to_dart/models/ff_config.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 import 'main_controller.dart';
 import 'models/config.dart';
 import 'pages/json_text_field.dart';
@@ -17,7 +19,11 @@ import 'widget/drag_icon.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   await ConfigSetting().init();
-  Get.put(MainController());
+  registerConfig(FFJsonToDartConfig());
+  final MainController controller = MainController();
+  Get.put(controller);
+  registerController(controller);
+
   runApp(MyApp());
 }
 

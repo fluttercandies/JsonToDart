@@ -1,3 +1,7 @@
+## 2.0.0
+
+* Code refactor and import json_to_dart_library
+
 ## 1.5.2
 
 * Add deepCopy option

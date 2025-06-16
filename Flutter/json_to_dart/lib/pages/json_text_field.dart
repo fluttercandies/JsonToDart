@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/style/color.dart';
-import 'package:json_to_dart/utils/extension.dart';
 
 class JsonTextField extends StatelessWidget {
   @override

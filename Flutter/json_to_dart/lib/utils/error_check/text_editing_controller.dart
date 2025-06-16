@@ -1,9 +1,6 @@
 import 'package:diff_match_patch/diff_match_patch.dart';
 import 'package:flutter/material.dart';
-import 'package:json_to_dart/models/dart_object.dart';
-import 'package:json_to_dart/models/dart_property.dart';
-
-import '../camel_under_score_converter.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 
 class PropertyNameCheckerTextEditingController
     extends ErrorCheckerTextEditingController {
@@ -21,8 +18,7 @@ class PropertyNameCheckerTextEditingController
     // double double;
     // List List;
     // List<int> int;
-    if (property is DartObject &&
-        (property as DartObject).className.value == text) {
+    if (property is DartObject && (property as DartObject).className == text) {
       return errorTextSpan(style);
     } else if (property.value is List) {
       if (text == 'List') {
