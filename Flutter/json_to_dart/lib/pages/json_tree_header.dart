@@ -5,8 +5,7 @@ import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/text.dart';
-import 'package:json_to_dart/utils/enums.dart';
-import 'package:json_to_dart/utils/extension.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 
 import '../widget/checkBox.dart';
 

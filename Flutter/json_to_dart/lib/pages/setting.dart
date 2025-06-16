@@ -7,11 +7,10 @@ import 'package:json_to_dart/models/config.dart';
 import 'package:json_to_dart/pages/result.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/text.dart';
-import 'package:json_to_dart/utils/enums.dart';
-import 'package:json_to_dart/utils/extension.dart';
 import 'package:json_to_dart/widget/button.dart';
 import 'package:json_to_dart/widget/checkBox.dart';
 import 'package:json_to_dart/widget/picker.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 
 class SettingWidget extends StatelessWidget {
   const SettingWidget({Key? key}) : super(key: key);
@@ -33,7 +32,8 @@ class SettingWidget extends StatelessWidget {
           title: appLocalizations.generateButtonLabel,
           icon: Icons.flag,
           onPressed: () {
-            final String? dartText = controller.generateDart();
+            final String? dartText =
+                controller.generateDartCode(controller.dartObject);
             if (dartText == null) {
               return;
             }

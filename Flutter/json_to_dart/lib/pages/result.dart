@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
-import 'package:json_to_dart/utils/extension.dart';
+import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/widget/button.dart';
 
 class ResultDialog extends StatelessWidget {

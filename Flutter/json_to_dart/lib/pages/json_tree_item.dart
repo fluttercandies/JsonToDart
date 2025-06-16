@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/style/color.dart';
 import 'package:json_to_dart/style/size.dart';
 import 'package:json_to_dart/style/text.dart';
-import 'package:json_to_dart/utils/enums.dart';
-import 'package:json_to_dart/utils/extension.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 
 import '../models/config.dart';
 import '../widget/checkBox.dart';
@@ -25,8 +25,8 @@ class JsonTreeItem extends StatefulWidget {
       this.depth = 0,
       this.isArrayOject = false})
       : super(key: key);
-  final DartObject object;
-  final DartProperty property;
+  final FFDartObject object;
+  final FFDartPropertyMixin property;
   final bool isArray;
   final bool isObject;
   final int depth;
@@ -42,8 +42,8 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
     const Color borderColor = ColorPlate.borderGray;
     final int finalDepth = widget.object.depth + widget.depth + 1;
 
-    final DartObject object = widget.object;
-    final DartProperty property = widget.property;
+    final FFDartObject object = widget.object;
+    final FFDartPropertyMixin property = widget.property;
 
     const double w = 10.0;
 
@@ -65,12 +65,11 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
     if (widget.isArray) {
       if (object.objectKeys.containsKey(property.key)) {
         final DartObject oject = object.objectKeys[property.key]!;
-        String typeString =
-            property.getTypeString(className: oject.className.value);
+        String typeString = property.getTypeString(className: oject.className);
         List<String> ss;
         String start;
         String end;
-        if (oject.className.value != '') {
+        if (oject.className != '') {
           typeString = typeString.replaceAll('<${oject.className}>', '<>');
         }
         typeString = typeString.replaceAll('?', '');
@@ -97,7 +96,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
                 children: <Widget>[
                   Text(start),
                   Obx(() {
-                    return Text(oject.className.value);
+                    return Text(oject.className);
                   }),
                   Text(end),
                 ],
@@ -140,7 +139,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
             ),
           ),
           child: ClassNameTextField(
-            property: property as DartObject,
+            property: property as FFDartObject,
           ),
         ),
       ));
@@ -177,7 +176,7 @@ class _JsonTreeItemState extends State<JsonTreeItem> {
                 ),
               ),
               child: Obx(() {
-                property.propertyAccessorType.value =
+                property.propertyAccessorType =
                     ConfigSetting().propertyAccessorType.value;
                 return PropertyAccessorTypeDropdownButton(property: property);
               }))
@@ -234,7 +233,7 @@ class ClassNameTextField extends StatelessWidget {
     Key? key,
     required this.property,
   }) : super(key: key);
-  final DartObject property;
+  final FFDartObject property;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -259,9 +258,9 @@ class ClassNameTextField extends StatelessWidget {
             ),
             controller: property.classNameTextEditingController,
             onChanged: (String value) {
-              if (property.className.value != value) {
-                property.className.value = value;
-                property.updateError(property.className);
+              if (property.className != value) {
+                property.className = value;
+                property.checkError(property.className);
               }
             },
           ),
@@ -274,7 +273,7 @@ class ClassNameTextField extends StatelessWidget {
 class PropertyNameTextField extends StatelessWidget {
   const PropertyNameTextField({Key? key, required this.property})
       : super(key: key);
-  final DartProperty property;
+  final FFDartPropertyMixin property;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -303,9 +302,9 @@ class PropertyNameTextField extends StatelessWidget {
             border: InputBorder.none,
           ),
           onChanged: (String value) {
-            if (property.name.value != value) {
-              property.name.value = value;
-              property.updateError(property.name);
+            if (property.name != value) {
+              property.name = value;
+              property.checkError(property.name);
             }
           },
         )),
@@ -319,7 +318,7 @@ class NullableCheckBox extends StatelessWidget {
     Key? key,
     required this.property,
   }) : super(key: key);
-  final DartProperty property;
+  final FFDartPropertyMixin property;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
@@ -340,16 +339,16 @@ class PropertyAccessorTypeDropdownButton extends StatelessWidget {
     Key? key,
     required this.property,
   }) : super(key: key);
-  final DartProperty property;
+  final FFDartPropertyMixin property;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       return DropdownButton<PropertyAccessorType>(
           onChanged: (PropertyAccessorType? value) {
-            property.propertyAccessorType.value = value!;
+            property.propertyAccessorType = value!;
           },
           underline: Container(),
-          value: property.propertyAccessorType.value,
+          value: property.propertyAccessorType,
           items: PropertyAccessorType.values
               .where((PropertyAccessorType element) =>
                   element == PropertyAccessorType.none ||
@@ -374,19 +373,17 @@ class DartTypeDropdownButton extends StatelessWidget {
     Key? key,
     required this.property,
   }) : super(key: key);
-  final DartProperty property;
+  final FFDartPropertyMixin property;
 
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       return DropdownButton<DartType>(
         onChanged: (DartType? value) {
-          property.type.value = value!;
+          property.type = value!;
         },
         underline: Container(),
-        value: property.type.value == DartType.Null
-            ? DartType.Object
-            : property.type.value,
+        value: property.type == DartType.Null ? DartType.Object : property.type,
         items: DartType.values
             .where((DartType e) => e != DartType.Null)
             .map<DropdownMenuItem<DartType>>(

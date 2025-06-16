@@ -4,6 +4,8 @@ import 'package:json_to_dart/main_controller.dart';
 import 'package:json_to_dart/models/dart_object.dart';
 import 'package:json_to_dart/models/dart_property.dart';
 import 'package:json_to_dart/style/color.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
+
 import 'json_tree_item.dart';
 
 class JsonTree extends StatelessWidget {
@@ -44,8 +46,14 @@ class JsonTree extends StatelessWidget {
   void _drawOject(List<Widget> result, DartObject object, {int depth = 0}) {
     ///root
     if (object.depth == 0) {
-      _drawPoperty(result, object, object,
-          isArray: false, isObject: true, depth: -1);
+      _drawPoperty(
+        result,
+        object,
+        object,
+        isArray: false,
+        isObject: true,
+        depth: -1,
+      );
     }
 
     for (final DartProperty item in object.properties) {
@@ -70,14 +78,17 @@ class JsonTree extends StatelessWidget {
   }
 
   void _drawPoperty(
-      List<Widget> result, DartObject object, DartProperty property,
-      {bool isArray = false,
-      bool isObject = false,
-      int depth = 0,
-      bool isArrayOject = false}) {
+    List<Widget> result,
+    DartObject object,
+    DartProperty property, {
+    bool isArray = false,
+    bool isObject = false,
+    int depth = 0,
+    bool isArrayOject = false,
+  }) {
     result.add(JsonTreeItem(
-      object,
-      property,
+      object as FFDartObject,
+      property as FFDartPropertyMixin,
       isArray: isArray,
       isObject: isObject,
       isArrayOject: isArrayOject,

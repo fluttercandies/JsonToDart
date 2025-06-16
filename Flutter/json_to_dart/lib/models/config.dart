@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
-import 'package:json_to_dart/utils/enums.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart';
 
 part 'config.g.dart';
 

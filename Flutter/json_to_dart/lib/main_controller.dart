@@ -5,17 +5,16 @@ import 'package:dartx/dartx.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:json_to_dart/models/dart_property.dart';
-import 'package:json_to_dart/utils/dart_helper.dart';
-import 'package:json_to_dart/utils/extension.dart';
-import 'package:json_to_dart/utils/my_string_buffer.dart';
+import 'package:json_to_dart_library/json_to_dart_library.dart' hide StringE;
 
 import 'models/config.dart';
-import 'models/dart_object.dart';
+
+AppLocalizations get appLocalizations => AppLocalizations.of(Get.context!)!;
 
 void showAlertDialog(String msg, [IconData data = Icons.warning]) {
   SmartDialog.show(
@@ -34,7 +33,7 @@ void showAlertDialog(String msg, [IconData data = Icons.warning]) {
   );
 }
 
-class MainController extends GetxController {
+class MainController extends GetxController with JsonToDartControllerMixin {
   final TextEditingController _textEditingController = TextEditingController();
 
   final TextEditingController fileHeaderHelpController = TextEditingController()
@@ -49,10 +48,6 @@ class MainController extends GetxController {
   }
 
   TextEditingController get textEditingController => _textEditingController;
-
-  Set<DartProperty> allProperties = <DartProperty>{};
-  Set<DartObject> allObjects = <DartObject>{};
-  Set<DartObject> printedObjects = <DartObject>{};
 
   Future<void> formatJsonAndCreateDartObject() async {
     allProperties.clear();
@@ -80,7 +75,7 @@ class MainController extends GetxController {
         handleError(error, stackTrace);
       });
 
-      final DartObject? extendedObject = createDartObject(jsonData);
+      final DartObject? extendedObject = dynamicToDartObject(jsonData);
       // final DartObject? extendedObject =
       //     await compute<dynamic, DartObject?>(createDartObject, jsonData)
       //         .onError((Object? error, StackTrace stackTrace) {
@@ -116,16 +111,14 @@ class MainController extends GetxController {
     SmartDialog.dismiss();
   }
 
-  String? generateDart() {
-    // allProperties.clear();
-    // allObjects.clear();
+  @override
+  String? generateDartCode(DartObject? dartObject) {
     printedObjects.clear();
 
     if (dartObject != null) {
       final DartObject? errorObject = allObjects.firstOrNullWhere(
           (DartObject element) =>
-              element.classError.isNotEmpty ||
-              element.propertyError.isNotEmpty);
+              element.hasClassError || element.hasPropertyError);
       if (errorObject != null) {
         showAlertDialog(errorObject.classError.join('\n') +
             '\n' +
@@ -133,15 +126,15 @@ class MainController extends GetxController {
         return null;
       }
 
-      final DartProperty? errorProperty = allProperties.firstOrNullWhere(
-          (DartProperty element) => element.propertyError.isNotEmpty);
+      final DartProperty? errorProperty = allProperties
+          .firstOrNullWhere((DartProperty element) => element.hasPropertyError);
 
       if (errorProperty != null) {
         showAlertDialog(errorProperty.propertyError.join('\n'));
         return null;
       }
 
-      final MyStringBuffer sb = MyStringBuffer();
+      final CustomStringBuffer sb = CustomStringBuffer();
       try {
         if (ConfigSetting().fileHeaderInfo.isNotEmpty) {
           String info = ConfigSetting().fileHeaderInfo;
@@ -191,7 +184,7 @@ class MainController extends GetxController {
                   : DartHelper.asTMethod);
         }
 
-        sb.writeLine(dartObject!.toString());
+        sb.writeLine(dartObject.toString());
         String result = sb.toString();
 
         final DartFormatter formatter = DartFormatter(
@@ -248,32 +241,15 @@ class MainController extends GetxController {
       dartObject!.updatePropertyAccessorType();
     }
   }
-}
 
-DartObject? createDartObject(dynamic jsonData) {
-  DartObject? extendedObject;
+  @override
+  void handleError(Object? e, StackTrace stack) {
+    print('$e');
+    print('$stack');
+    showAlertDialog(appLocalizations.formatErrorInfo, Icons.error);
 
-  if (jsonData is Map) {
-    extendedObject = DartObject(
-      depth: 0,
-      keyValuePair:
-          MapEntry<String, dynamic>('Root', jsonData as Map<String, dynamic>),
-      nullable: false,
-      uid: 'Root',
-    );
-  } else if (jsonData is List) {
-    final Map<String, List<dynamic>> root = <String, List<dynamic>>{
-      'Root': jsonData
-    };
-    extendedObject = DartObject(
-      depth: 0,
-      keyValuePair: MapEntry<String, dynamic>('Root', root),
-      nullable: false,
-      uid: 'Root',
-    ).objectKeys['Root']!
-      ..decDepth();
+    Clipboard.setData(ClipboardData(text: '$e\n$stack'));
   }
-  return extendedObject;
 }
 
 String? formatJson(dynamic jsonData) {
@@ -287,12 +263,4 @@ String? formatJson(dynamic jsonData) {
     return const JsonEncoder.withIndent('  ').convert(jsonObject);
   }
   return null;
-}
-
-void handleError(Object? e, StackTrace stack) {
-  print('$e');
-  print('$stack');
-  showAlertDialog(appLocalizations.formatErrorInfo, Icons.error);
-
-  Clipboard.setData(ClipboardData(text: '$e\n$stack'));
 }
