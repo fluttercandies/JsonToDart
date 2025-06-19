@@ -433,10 +433,10 @@ packages:
     dependency: "direct main"
     description:
       name: json_to_dart_library
-      sha256: a836da5efc4de2164cc18f6259fc86c88a8ab2dff8470c2913b20cc8e4e9137a
+      sha256: d33fb8fbeac0a329d6dc0f43c1868daa6b920ca9300d64d1b1df5e8444263aa0
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   leak_tracker:
     dependency: transitive
     description:

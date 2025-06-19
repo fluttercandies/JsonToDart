@@ -1,3 +1,7 @@
+## 2.0.1
+
+* update json_to_dart_library to fix asT
+
 ## 2.0.0
 
 * Code refactor and import json_to_dart_library

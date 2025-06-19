@@ -34,7 +34,7 @@ dependencies:
 
   hive: any
   hive_flutter: any
-  json_to_dart_library: ^0.0.3
+  json_to_dart_library: ^0.0.4
   nested: any
 
 dependency_overrides:
