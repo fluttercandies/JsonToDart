@@ -83,7 +83,6 @@ jobs:
           elif [ "${{ matrix.platform }}" = "macos" ]; then
             flutter build macos --release
             cd ${{ matrix.build_target }}
-            cd ..
             tar -czf ${{ matrix.artifact }} ${{ matrix.build_target }}
           else
             flutter build linux --release
