@@ -63,7 +63,7 @@ jobs:
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
         with:
-          version: 3.24.1
+          version: 3.27.4
 
       - name: Display flutter info
         run: |
