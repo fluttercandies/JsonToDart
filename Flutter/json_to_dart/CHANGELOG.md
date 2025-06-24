@@ -1,3 +1,7 @@
+## 2.0.2
+
+* Fix wrong copyWith method
+
 ## 2.0.1
 
 * update json_to_dart_library to fix asT
