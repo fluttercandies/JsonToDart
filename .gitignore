@@ -23,3 +23,5 @@
 /Silverlight/obj/Debug
 /Silverlight/Bin/Debug
 /.vs/JsonToDart/v15/.suo
+
+.idea/
