@@ -37,7 +37,7 @@ jobs:
         include:
           - os: ubuntu-latest
             platform: linux
-            build_target: build/linux/x64/release/bundle/json_to_dart
+            build_target: build/linux/x64/release/bundle
             artifact: linux.tar.gz
           - os: macos-latest
             platform: macos
@@ -45,7 +45,7 @@ jobs:
             artifact: macos.tar.gz
           - os: windows-latest
             platform: windows
-            build_target: "build\\windows\\x64\\runner\\Release\\json_to_dart.exe"
+            build_target: "build\\windows\\x64\\runner\\Release"
             artifact: windows.zip
     
     steps:
@@ -62,8 +62,6 @@ jobs:
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
-        with:
-          version: 3.27.4
 
       - name: Display flutter info
         run: |
@@ -79,7 +77,10 @@ jobs:
           cd Flutter/json_to_dart
           if [ "${{ matrix.platform }}" = "windows" ]; then
             flutter build windows --release
-            7z a -r ${{ matrix.artifact }} ${{ matrix.build_target }}
+            ZIP_DIR=$(dirname "${{ matrix.build_target }}")
+            PARENT_OF_RUNNER=$(dirname "$ZIP_DIR")
+            RELEASE_DIR="${PARENT_OF_RUNNER}\\Release"
+            pwsh -command "Compress-Archive -Path '${RELEASE_DIR}\*' -DestinationPath '${{ matrix.artifact }}'"
           elif [ "${{ matrix.platform }}" = "macos" ]; then
             flutter build macos --release
             APP_PARENT_DIR=$(dirname "${{ matrix.build_target }}")
@@ -113,8 +114,6 @@ jobs:
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
-        with:
-          version: 3.24.1
 
       - name: Install dependencies
         run: |
