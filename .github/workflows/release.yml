@@ -77,10 +77,8 @@ jobs:
           cd Flutter/json_to_dart
           if [ "${{ matrix.platform }}" = "windows" ]; then
             flutter build windows --release
-            ZIP_DIR=$(dirname "${{ matrix.build_target }}")
-            PARENT_OF_RUNNER=$(dirname "$ZIP_DIR")
-            RELEASE_DIR="${PARENT_OF_RUNNER}\\Release"
-            pwsh -command "Compress-Archive -Path '${RELEASE_DIR}\*' -DestinationPath '${{ matrix.artifact }}'"
+            ZIP_DIR="${{ matrix.build_target }}"
+            pwsh -command "Compress-Archive -Path '${ZIP_DIR}\*' -DestinationPath '${{ matrix.artifact }}'"
           elif [ "${{ matrix.platform }}" = "macos" ]; then
             flutter build macos --release
             APP_PARENT_DIR=$(dirname "${{ matrix.build_target }}")
