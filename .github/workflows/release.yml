@@ -82,11 +82,14 @@ jobs:
             7z a -r ${{ matrix.artifact }} ${{ matrix.build_target }}
           elif [ "${{ matrix.platform }}" = "macos" ]; then
             flutter build macos --release
-            cd ${{ matrix.build_target }}
-            tar -czf ${{ matrix.artifact }} ${{ matrix.build_target }}
+            APP_PARENT_DIR=$(dirname "${{ matrix.build_target }}")
+            APP_FILENAME=$(basename "${{ matrix.build_target }}")
+            tar -czf "${{ matrix.artifact }}" -C "$APP_PARENT_DIR" "$APP_FILENAME"
           else
             flutter build linux --release
-            tar -czf ${{ matrix.artifact }} -C ${{ matrix.build_target }} .
+            TAR_DIR=$(dirname "${{ matrix.build_target }}")
+            APP_DIR=$(basename "${{ matrix.build_target }}")
+            tar -czf "${{ matrix.artifact }}" -C "$TAR_DIR" "$APP_DIR"
           fi
         shell: bash
 
