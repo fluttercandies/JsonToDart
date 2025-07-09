@@ -62,6 +62,8 @@ jobs:
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
+        with:
+          cache: true
 
       - name: Display flutter info
         run: |
@@ -112,6 +114,8 @@ jobs:
 
       - name: Setup Flutter
         uses: flutter-actions/setup-flutter@v4
+        with:
+          cache: true
 
       - name: Install dependencies
         run: |
@@ -121,7 +125,7 @@ jobs:
       - name: Build web
         run: |
           cd Flutter/json_to_dart
-          flutter build web --release --web-renderer html
+          flutter build web --release
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
