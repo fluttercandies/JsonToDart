@@ -33,9 +33,9 @@ jobs:
     strategy:
       fail-fast: false  # 允许继续执行，即使某些作业失败
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-22.04, macos-latest, windows-latest]
         include:
-          - os: ubuntu-latest
+          - os: ubuntu-22.04
             platform: linux
             build_target: build/linux/x64/release/bundle
             artifact: linux.tar.gz
@@ -104,7 +104,7 @@ jobs:
   deploy_web:
     name: Deploy Web
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     
     steps:
       - name: Checkout code
@@ -139,7 +139,7 @@ jobs:
     if: >
       github.event_name != 'workflow_dispatch' || 
       (github.event_name == 'workflow_dispatch' && github.event.inputs.release_id == '')
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -166,7 +166,7 @@ jobs:
     name: Update Release
     needs: [build, create_release]
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_id != ''
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
