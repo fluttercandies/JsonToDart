@@ -1,3 +1,7 @@
+## 2.0.3
+
+* Support json_schema
+
 ## 2.0.2
 
 * Fix wrong copyWith method

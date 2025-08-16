@@ -10,6 +10,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:json_to_dart/l10n/app_localizations.dart';
+import 'package:json_schema/json_schema.dart';
 import 'package:json_to_dart_library/json_to_dart_library.dart' hide StringE;
 
 import 'models/config.dart';
@@ -69,11 +70,17 @@ class MainController extends GetxController with JsonToDartControllerMixin {
         inputText = text.replaceAll('.0', '.1');
       }
 
-      final dynamic jsonData =
-          await compute<String, dynamic>(jsonDecode, inputText)
-              .onError((Object? error, StackTrace stackTrace) {
+      dynamic jsonData = await compute<String, dynamic>(jsonDecode, inputText)
+          .onError((Object? error, StackTrace stackTrace) {
         handleError(error, stackTrace);
       });
+
+      // If the JSON data is a Map and contains a valid JSON Schema, convert it
+      if (jsonData is Map && JsonSchemaHelper.isJsonSchema(jsonData)) {
+        jsonData = JsonSchemaHelper.createJsonWithJsonSchema(
+          JsonSchema.create(jsonData),
+        );
+      }
 
       final DartObject? extendedObject = dynamicToDartObject(jsonData);
       // final DartObject? extendedObject =
