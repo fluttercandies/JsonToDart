@@ -156,7 +156,7 @@ jobs:
           name: Release ${{ env.RELEASE_TAG }}
           files: |
             artifacts/linux-release/linux.tar.gz
-            artifacts/macos-release/macos.zip
+            artifacts/macos-release/macos.tar.gz
             artifacts/windows-release/windows.zip
           generate_release_notes: true
           draft: false
@@ -189,8 +189,8 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           release_id: ${{ env.RELEASE_ID }}
-          file: artifacts/macos-release/macos.zip
-          asset_name: macos.zip
+          file: artifacts/macos-release/macos.tar.gz
+          asset_name: macos.tar.gz
           overwrite: true
 
       - name: Upload Windows artifact to Release
