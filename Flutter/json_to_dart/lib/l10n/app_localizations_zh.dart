@@ -1,5 +1,3 @@
-// ignore: unused_import
-import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -91,8 +89,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get fileHeader => '文件头信息';
 
   @override
-  String get fileHeaderHelp =>
-      '可以在这里添加 Copyright，导入 Dart 代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式.';
+  String get fileHeaderHelp => '可以在这里添加 Copyright，导入 Dart 代码，创建人信息等等。支持[Date yyyy MM-dd]来生成时间，Date后面为日期格式.';
 
   @override
   String get nullsafety => '空安全';
@@ -165,7 +162,7 @@ class AppLocalizationsZh extends AppLocalizations {
 
 /// The translations for Chinese, using the Han script (`zh_Hant`).
 class AppLocalizationsZhHant extends AppLocalizationsZh {
-  AppLocalizationsZhHant() : super('zh_Hant');
+  AppLocalizationsZhHant(): super('zh_Hant');
 
   @override
   String get formatButtonLabel => '格式化';
@@ -250,8 +247,7 @@ class AppLocalizationsZhHant extends AppLocalizationsZh {
   String get fileHeader => '文件头信息';
 
   @override
-  String get fileHeaderHelp =>
-      '可以在這裏添加 Copyright，導入 Dart 代碼，創建人資訊等等。支持[Date yyyy MM-dd]來生成時間，Date後面為日期格式。';
+  String get fileHeaderHelp => '可以在這裏添加 Copyright，導入 Dart 代碼，創建人資訊等等。支持[Date yyyy MM-dd]來生成時間，Date後面為日期格式。';
 
   @override
   String get nullsafety => '空安全';

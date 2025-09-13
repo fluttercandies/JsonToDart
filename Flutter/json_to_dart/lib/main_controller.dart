@@ -9,8 +9,8 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:json_to_dart/l10n/app_localizations.dart';
 import 'package:json_schema/json_schema.dart';
+import 'package:json_to_dart/l10n/app_localizations.dart';
 import 'package:json_to_dart_library/json_to_dart_library.dart' hide StringE;
 
 import 'models/config.dart';

@@ -1,3 +1,7 @@
+## 2.0.4
+
+* update json_to_dart_library
+  
 ## 2.0.3
 
 * Support json_schema
