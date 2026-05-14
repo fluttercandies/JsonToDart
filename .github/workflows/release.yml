@@ -14,12 +14,6 @@ on:
         required: false
         type: string
 
-# 设置工作流权限
-permissions:
-  contents: write  # 允许写入内容（推送、创建 Release 等）
-  pages: write     # 允许部署到 GitHub Pages
-  id-token: write  # 允许 OIDC 令牌生成
-
 # 获取当前触发类型（自动发布还是手动触发）
 env:
   IS_WORKFLOW_DISPATCH: ${{ github.event_name == 'workflow_dispatch' }}
@@ -30,6 +24,8 @@ jobs:
   build:
     name: Build Desktop & Web
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
     strategy:
       fail-fast: false  # 允许继续执行，即使某些作业失败
       matrix:
@@ -105,6 +101,8 @@ jobs:
     name: Deploy Web
     needs: build
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     
     steps:
       - name: Checkout code
@@ -142,6 +140,8 @@ jobs:
       github.event_name != 'workflow_dispatch' || 
       (github.event_name == 'workflow_dispatch' && github.event.inputs.release_id == '')
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
@@ -169,6 +169,8 @@ jobs:
     needs: [build, create_release]
     if: github.event_name == 'workflow_dispatch' && github.event.inputs.release_id != ''
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - name: Download all artifacts
         uses: actions/download-artifact@v4
